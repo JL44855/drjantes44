@@ -1,1435 +1,2620 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>DR Jantes – Jantes & Services</title>
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-    :root{
-      --gold:#c9a84c;--gold-light:#e8c96a;--dark:#0a0a0a;
-      --dark2:#111;--dark3:#1a1a1a;--dark4:#222;
-      --text:#eee;--text-muted:#888;--radius:10px;
-    }
-    html{scroll-behavior:smooth}
-    body{font-family:'Segoe UI',sans-serif;background:var(--dark);color:var(--text)}
-    nav{
-      position:fixed;top:0;width:100%;z-index:1000;
-      background:rgba(10,10,10,0.97);backdrop-filter:blur(10px);
-      border-bottom:1px solid #2a2a2a;
-      display:flex;align-items:center;justify-content:space-between;
-      padding:0 40px;height:70px;
-    }
-    .logo{font-size:1.6rem;font-weight:800;letter-spacing:2px;color:var(--gold);text-decoration:none;cursor:pointer}
-    .logo span{color:var(--text)}
-    .nav-links{display:flex;gap:28px;list-style:none}
-    .nav-links a{
-      color:var(--text-muted);text-decoration:none;font-size:.85rem;
-      letter-spacing:1px;text-transform:uppercase;transition:color .3s;cursor:pointer;
-    }
-    .nav-links a:hover,.nav-links a.active{color:var(--gold)}
-    .nav-cta{
-      background:var(--gold);color:#000;padding:10px 22px;border-radius:6px;
-      font-weight:700;font-size:.85rem;letter-spacing:1px;
-      border:none;cursor:pointer;transition:background .3s;
-    }
-    .nav-cta:hover{background:var(--gold-light)}
-    .burger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
-    .burger span{display:block;width:24px;height:2px;background:var(--text);transition:all .3s}
-    .page{display:none;padding-top:70px;min-height:100vh}
-    .page.active{display:block}
-    /* HERO */
-    .hero{
-      min-height:calc(100vh - 70px);
-      background:linear-gradient(135deg,#0a0a0a 0%,#1a1100 50%,#0a0a0a 100%);
-      display:flex;align-items:center;justify-content:center;
-      text-align:center;padding:60px 20px;position:relative;overflow:hidden;
-    }
-    .hero::before{
-      content:'';position:absolute;inset:0;
-      background:radial-gradient(ellipse at center,rgba(201,168,76,.15) 0%,transparent 70%);
-    }
-    .hero-content{position:relative;z-index:1;max-width:700px}
-    .hero-badge{
-      display:inline-block;border:1px solid var(--gold);color:var(--gold);
-      font-size:.75rem;letter-spacing:3px;text-transform:uppercase;
-      padding:6px 18px;border-radius:50px;margin-bottom:24px;
-    }
-    .hero h1{font-size:clamp(2.2rem,6vw,4.5rem);font-weight:900;line-height:1.1;margin-bottom:20px}
-    .hero h1 span{color:var(--gold)}
-    .hero p{font-size:1.05rem;color:var(--text-muted);margin:0 auto 40px;line-height:1.7}
-    .hero-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
-    .btn-primary{
-      background:var(--gold);color:#000;padding:14px 32px;border-radius:8px;
-      font-weight:700;font-size:.95rem;border:none;cursor:pointer;
-      transition:all .3s;letter-spacing:.5px;
-    }
-    .btn-primary:hover{background:var(--gold-light);transform:translateY(-2px)}
-    .btn-secondary{
-      border:1px solid #444;color:var(--text);padding:14px 32px;border-radius:8px;
-      font-weight:600;font-size:.95rem;background:transparent;cursor:pointer;transition:all .3s;
-    }
-    .btn-secondary:hover{border-color:var(--gold);color:var(--gold)}
-    .stats{display:flex;gap:50px;justify-content:center;margin-top:60px;flex-wrap:wrap}
-    .stat{text-align:center}
-    .stat strong{display:block;font-size:2rem;font-weight:800;color:var(--gold)}
-    .stat span{font-size:.78rem;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase}
-    section{padding:80px 20px}
-    .section-label{display:block;color:var(--gold);font-size:.73rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;text-align:center}
-    .section-title{font-size:clamp(1.7rem,4vw,2.6rem);font-weight:800;text-align:center;margin-bottom:12px}
-    .section-sub{text-align:center;color:var(--text-muted);max-width:540px;margin:0 auto 50px;line-height:1.7;font-size:.95rem}
-    .container{max-width:1200px;margin:0 auto}
-    /* SERVICES */
-    .services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px}
-    .service-card{
-      background:var(--dark3);border:1px solid #2a2a2a;border-radius:var(--radius);
-      padding:28px 24px;transition:border-color .3s,transform .3s;
-    }
-    .service-card:hover{border-color:var(--gold);transform:translateY(-4px)}
-    .service-icon{font-size:2rem;margin-bottom:16px;display:block}
-    .service-card h3{font-size:1rem;margin-bottom:8px;font-weight:700}
-    .service-card p{color:var(--text-muted);font-size:.85rem;line-height:1.6}
-    /* PROMO CARDS */
-    .promos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:24px}
-    .promo-card{
-      background:var(--dark3);border:1px solid #2a2a2a;border-radius:var(--radius);
-      overflow:hidden;transition:transform .3s,border-color .3s;position:relative;cursor:pointer;
-    }
-    .promo-card:hover{transform:translateY(-6px);border-color:var(--gold)}
-    .promo-img{width:100%;height:170px;display:flex;align-items:center;justify-content:center;position:relative}
-    .jante-bg{background:linear-gradient(135deg,#1a1500,#2a2200)}
-    .pneu-bg{background:linear-gradient(135deg,#0a0f0a,#152015)}
-    .pack-bg{background:linear-gradient(135deg,#100018,#200030)}
-    .acc-bg{background:linear-gradient(135deg,#001212,#002020)}
-    .badge-promo{
-      position:absolute;top:10px;left:10px;background:#e53;color:#fff;
-      font-size:.68rem;font-weight:800;padding:3px 10px;border-radius:50px;
-    }
-    .badge-new{
-      position:absolute;top:10px;left:10px;background:var(--gold);color:#000;
-      font-size:.68rem;font-weight:800;padding:3px 10px;border-radius:50px;
-    }
-    .promo-info{padding:18px}
-    .promo-info h3{font-size:.97rem;font-weight:700;margin-bottom:6px}
-    .price-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
-    .price-new{color:var(--gold);font-weight:800;font-size:1.05rem}
-    .price-old{color:var(--text-muted);font-size:.82rem;text-decoration:line-through}
-    .discount{background:rgba(229,85,51,.15);color:#e55;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:50px}
-    .promo-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px}
-    .tag{background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);color:var(--gold);font-size:.7rem;padding:3px 9px;border-radius:50px}
-    .btn-devis{
-      width:100%;background:transparent;border:1px solid var(--gold);color:var(--gold);
-      padding:9px;border-radius:6px;font-weight:600;font-size:.83rem;cursor:pointer;transition:all .3s;
-    }
-    .btn-devis:hover{background:var(--gold);color:#000}
-    /* CATALOGUE TABS */
-    .cat-tabs{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:40px}
-    .cat-tab{
-      background:transparent;border:1px solid #333;color:var(--text-muted);
-      padding:9px 22px;border-radius:50px;font-size:.83rem;cursor:pointer;transition:all .3s;
-    }
-    .cat-tab.active,.cat-tab:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.08)}
-    .cat-section{display:none}
-    .cat-section.active{display:block}
-    /* PRODUCT CARDS */
-    .products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:24px}
-    .product-card{
-      background:var(--dark3);border:1px solid #2a2a2a;border-radius:var(--radius);
-      overflow:hidden;transition:transform .3s,border-color .3s;
-    }
-    .product-card:hover{transform:translateY(-5px);border-color:var(--gold)}
-    .product-img{width:100%;height:180px;display:flex;align-items:center;justify-content:center;position:relative}
-    .prod-jante{background:linear-gradient(135deg,#1a1500,#2a2200)}
-    .prod-pneu{background:linear-gradient(135deg,#0a0f0a,#152015)}
-    .prod-pack{background:linear-gradient(135deg,#100018,#200030)}
-    .prod-acc{background:linear-gradient(135deg,#001212,#002020)}
-    .product-badge{
-      position:absolute;top:10px;right:10px;background:var(--gold);color:#000;
-      font-size:.68rem;font-weight:700;padding:3px 9px;border-radius:50px;
-    }
-    .product-badge.sale{background:#e53;color:#fff}
-    .product-info{padding:20px}
-    .product-info h3{font-size:.97rem;font-weight:700;margin-bottom:6px}
-    .product-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-    .product-size{color:var(--text-muted);font-size:.8rem}
-    .product-price{color:var(--gold);font-weight:800;font-size:1.05rem}
-    .product-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}
-    /* RDV */
-    .rdv-wrapper{display:grid;grid-template-columns:1fr 1.6fr;gap:50px;align-items:start}
-    .rdv-info h2{font-size:1.7rem;font-weight:800;margin-bottom:14px}
-    .rdv-info p{color:var(--text-muted);line-height:1.7;margin-bottom:28px;font-size:.93rem}
-    .rdv-steps{display:flex;flex-direction:column;gap:18px}
-    .step{display:flex;gap:14px;align-items:flex-start}
-    .step-num{
-      background:var(--gold);color:#000;width:30px;height:30px;border-radius:50%;
-      display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.82rem;flex-shrink:0;
-    }
-    .step-text h4{font-size:.92rem;margin-bottom:3px}
-    .step-text p{color:var(--text-muted);font-size:.83rem}
-    .rdv-form{background:var(--dark3);border:1px solid #2a2a2a;border-radius:14px;padding:32px}
-    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    .form-group{margin-bottom:16px}
-    .form-group label{display:block;font-size:.75rem;letter-spacing:.5px;color:var(--text-muted);margin-bottom:6px;text-transform:uppercase}
-    .form-group input,.form-group select,.form-group textarea{
-      width:100%;background:var(--dark4);border:1px solid #333;color:var(--text);
-      border-radius:8px;padding:11px 13px;font-size:.88rem;transition:border-color .3s;
-      outline:none;font-family:inherit;
-    }
-    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--gold)}
-    .form-group select option{background:var(--dark4)}
-    .form-group textarea{height:80px;resize:vertical}
-    .time-slots{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:18px}
-    .slot{
-      background:var(--dark4);border:1px solid #333;color:var(--text-muted);
-      border-radius:6px;padding:8px 4px;font-size:.76rem;text-align:center;cursor:pointer;transition:all .3s;
-    }
-    .slot:hover,.slot.selected{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.08)}
-    .slot.unavailable{opacity:.3;cursor:not-allowed;pointer-events:none}
-    .slot-label{font-size:.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:9px;display:block}
-    .btn-submit{
-      width:100%;background:var(--gold);color:#000;border:none;padding:14px;
-      border-radius:8px;font-weight:800;font-size:.97rem;cursor:pointer;transition:all .3s;
-    }
-    .btn-submit:hover{background:var(--gold-light);transform:translateY(-2px)}
-    /* CONTACT */
-    .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:start}
-    .contact-info h2{font-size:1.7rem;font-weight:800;margin-bottom:20px}
-    .contact-item{display:flex;gap:14px;margin-bottom:22px}
-    .contact-icon{
-      font-size:1.2rem;width:44px;height:44px;
-      background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);
-      border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
-    }
-    .contact-item h4{font-size:.8rem;color:var(--text-muted);margin-bottom:3px}
-    .contact-item p{font-size:.92rem;font-weight:600}
-    .map-box{
-      background:var(--dark3);border:1px solid #2a2a2a;border-radius:var(--radius);
-      height:280px;display:flex;align-items:center;justify-content:center;
-      flex-direction:column;gap:10px;color:var(--gold);font-size:2.8rem;
-    }
-    .map-box p{font-size:.87rem;color:var(--text-muted)}
-    /* REVIEWS */
-    .reviews-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:22px}
-    .review-card{background:var(--dark3);border:1px solid #2a2a2a;border-radius:var(--radius);padding:26px}
-    .stars{color:var(--gold);font-size:1rem;margin-bottom:12px}
-    .review-card p{color:var(--text-muted);font-size:.88rem;line-height:1.7;margin-bottom:18px}
-    .reviewer{display:flex;align-items:center;gap:10px}
-    .avatar{width:38px;height:38px;border-radius:50%;background:var(--gold);color:#000;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem}
-    .reviewer-info h4{font-size:.88rem;font-weight:700}
-    .reviewer-info span{font-size:.76rem;color:var(--text-muted)}
-    /* FOOTER */
-    footer{background:var(--dark2);border-top:1px solid #222;padding:50px 40px 28px}
-    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:36px;max-width:1200px;margin:0 auto 36px}
-    .footer-brand p{color:var(--text-muted);font-size:.85rem;line-height:1.6;margin-top:12px}
-    footer h4{font-size:.75rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);margin-bottom:14px}
-    footer ul{list-style:none;display:flex;flex-direction:column;gap:9px}
-    footer ul a{color:var(--text-muted);text-decoration:none;font-size:.85rem;transition:color .3s;cursor:pointer}
-    footer ul a:hover{color:var(--gold)}
-    .footer-bottom{
-      max-width:1200px;margin:0 auto;padding-top:22px;border-top:1px solid #222;
-      display:flex;justify-content:space-between;align-items:center;
-      font-size:.79rem;color:var(--text-muted);flex-wrap:wrap;gap:10px;
-    }
-    /* LOGIN PIN */
-    .login-page{
-      min-height:100vh;display:flex;align-items:center;justify-content:center;
-      background:var(--dark);padding:20px;
-    }
-    .login-box{
-      background:var(--dark3);border:1px solid #2a2a2a;border-radius:16px;
-      padding:44px 36px;width:100%;max-width:360px;text-align:center;
-    }
-    .login-box .logo-lg{font-size:2rem;font-weight:900;color:var(--gold);letter-spacing:2px;margin-bottom:6px}
-    .login-box .logo-lg span{color:var(--text)}
-    .login-box .subtitle{color:var(--text-muted);font-size:.88rem;margin-bottom:32px}
-    .pin-display{display:flex;gap:14px;justify-content:center;margin-bottom:28px}
-    .pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid #444;background:transparent;transition:all .3s}
-    .pin-dot.filled{background:var(--gold);border-color:var(--gold)}
-    .pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
-    .pin-btn{
-      background:var(--dark4);border:1px solid #333;color:var(--text);
-      height:56px;border-radius:10px;font-size:1.25rem;font-weight:600;
-      cursor:pointer;transition:all .3s;
-    }
-    .pin-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.08)}
-    .pin-btn:active{transform:scale(.95)}
-    .pin-btn.del{font-size:1rem;color:var(--text-muted)}
-    .pin-error{color:#e55;font-size:.83rem;margin-top:10px;min-height:20px;transition:all .3s}
-    .pin-hint{color:var(--text-muted);font-size:.75rem;margin-top:16px}
-    /* ADMIN */
-    .admin-layout{display:flex;min-height:calc(100vh - 70px)}
-    .admin-sidebar{
-      width:230px;flex-shrink:0;background:var(--dark2);
-      border-right:1px solid #222;padding:28px 0;
-      display:flex;flex-direction:column;position:sticky;top:70px;height:calc(100vh - 70px);overflow-y:auto;
-    }
-    .admin-sidebar-logo{padding:0 22px 22px;border-bottom:1px solid #222;margin-bottom:16px}
-    .admin-sidebar-logo span{font-size:.72rem;color:var(--text-muted);letter-spacing:1.5px;text-transform:uppercase}
-    .admin-nav-group{margin-bottom:8px}
-    .admin-nav-label{font-size:.65rem;color:#444;letter-spacing:2px;text-transform:uppercase;padding:8px 22px 4px}
-    .admin-nav-item{
-      display:flex;align-items:center;gap:10px;padding:11px 22px;
-      cursor:pointer;transition:all .3s;font-size:.87rem;color:var(--text-muted);
-      border-left:3px solid transparent;
-    }
-    .admin-nav-item:hover,.admin-nav-item.active{color:var(--gold);background:rgba(201,168,76,.06);border-left-color:var(--gold)}
-    .admin-nav-item .icon{font-size:1rem;width:20px;text-align:center}
-    .admin-main{flex:1;padding:36px;overflow-y:auto;background:var(--dark)}
-    .admin-page{display:none}
-    .admin-page.active{display:block}
-    .admin-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;flex-wrap:wrap;gap:14px}
-    .admin-header h2{font-size:1.4rem;font-weight:800}
-    .admin-header p{color:var(--text-muted);font-size:.85rem;margin-top:3px}
-    .add-btn{
-      background:var(--gold);color:#000;border:none;padding:10px 22px;
-      border-radius:8px;font-weight:700;font-size:.83rem;cursor:pointer;transition:background .3s;
-    }
-    .add-btn:hover{background:var(--gold-light)}
-    /* STAT CARDS */
-    .admin-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:18px;margin-bottom:36px}
-    .admin-stat-card{
-      background:var(--dark3);border:1px solid #2a2a2a;border-radius:var(--radius);
-      padding:22px;display:flex;flex-direction:column;gap:6px;
-    }
-    .admin-stat-card .icon{font-size:1.6rem}
-    .admin-stat-card .val{font-size:1.7rem;font-weight:800;color:var(--gold)}
-    .admin-stat-card .lbl{font-size:.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px}
-    /* TABLE */
-    .table-wrap{background:var(--dark3);border:1px solid #2a2a2a;border-radius:var(--radius);overflow:hidden;overflow-x:auto}
-    .table-head{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:1px solid #2a2a2a;flex-wrap:wrap;gap:10px}
-    .table-head h3{font-size:.97rem;font-weight:700}
-    .search-input{
-      background:var(--dark4);border:1px solid #333;color:var(--text);
-      padding:8px 14px;border-radius:8px;font-size:.83rem;outline:none;width:220px;
-    }
-    .search-input:focus{border-color:var(--gold)}
-    table{width:100%;border-collapse:collapse;min-width:600px}
-    th{background:var(--dark4);padding:11px 15px;text-align:left;font-size:.73rem;letter-spacing:.8px;text-transform:uppercase;color:var(--text-muted)}
-    td{padding:13px 15px;border-top:1px solid #1e1e1e;font-size:.86rem}
-    tr:hover td{background:rgba(201,168,76,.02)}
-    .status-badge{display:inline-block;padding:3px 10px;border-radius:50px;font-size:.7rem;font-weight:700;letter-spacing:.5px}
-    .s-pending{background:rgba(255,165,0,.15);color:orange}
-    .s-confirmed{background:rgba(0,200,100,.15);color:#0c6}
-    .s-done{background:rgba(100,100,255,.15);color:#99f}
-    .s-cancelled{background:rgba(229,85,51,.15);color:#e55}
-    .action-btns{display:flex;gap:5px}
-    .action-btn{background:none;border:1px solid #2a2a2a;color:var(--text-muted);padding:4px 10px;border-radius:5px;font-size:.73rem;cursor:pointer;transition:all .2s}
-    .action-btn:hover{border-color:var(--gold);color:var(--gold)}
-    .action-btn.del:hover{border-color:#e55;color:#e55}
-    /* ADMIN PRODUITS */
-    .admin-prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px}
-    .admin-prod-card{background:var(--dark3);border:1px solid #2a2a2a;border-radius:var(--radius);overflow:hidden}
-    .admin-prod-img{height:120px;display:flex;align-items:center;justify-content:center;font-size:2.8rem;position:relative}
-    .admin-prod-info{padding:14px}
-    .admin-prod-info h4{font-size:.93rem;font-weight:700;margin-bottom:3px}
-    .admin-prod-info .cat-tag{font-size:.7rem;color:var(--text-muted);margin-bottom:6px}
-    .admin-prod-info .price{color:var(--gold);font-weight:800;margin-bottom:12px;font-size:.97rem}
-    .admin-prod-actions{display:flex;gap:7px}
-    .btn-edit{flex:1;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);color:var(--gold);padding:7px;border-radius:6px;font-size:.78rem;cursor:pointer;transition:all .2s}
-    .btn-edit:hover{background:rgba(201,168,76,.2)}
-    .btn-del{background:rgba(229,85,51,.1);border:1px solid rgba(229,85,51,.3);color:#e55;padding:7px 10px;border-radius:6px;font-size:.78rem;cursor:pointer;transition:all .2s}
-    .btn-del:hover{background:rgba(229,85,51,.2)}
-    /* MODAL */
-    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:3000;display:none;align-items:center;justify-content:center;padding:20px}
-    .modal-overlay.open{display:flex}
-    .modal{background:var(--dark3);border:1px solid #2a2a2a;border-radius:14px;padding:32px;max-width:480px;width:100%;position:relative;max-height:88vh;overflow-y:auto}
-    .modal-close{position:absolute;top:14px;right:18px;background:none;border:none;color:var(--text-muted);font-size:1.3rem;cursor:pointer;transition:color .2s}
-    .modal-close:hover{color:var(--gold)}
-    .modal h3{font-size:1.2rem;margin-bottom:20px;font-weight:800}
-    /* TOAST */
-    .toast{position:fixed;bottom:28px;right:28px;background:var(--dark3);border:1px solid var(--gold);color:var(--text);padding:14px 22px;border-radius:10px;font-size:.88rem;transform:translateY(100px);opacity:0;transition:all .4s;z-index:9999;max-width:300px}
-    .toast.show{transform:translateY(0);opacity:1}
-    .toast strong{color:var(--gold)}
-    /* PROMO SECTION */
-    .promo-section-head{display:flex;align-items:center;gap:12px;margin-bottom:24px;flex-wrap:wrap}
-    .promo-section-head h3{font-size:1.1rem;font-weight:700}
-    .promo-count-badge{background:rgba(229,85,51,.15);color:#e55;font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:50px}
-    /* TOGGLE PROMO */
-    .toggle-promo{display:flex;align-items:center;gap:8px;font-size:.83rem;color:var(--text-muted);cursor:pointer;margin-bottom:14px}
-    .toggle-switch{width:36px;height:20px;background:#333;border-radius:50px;position:relative;transition:background .3s;flex-shrink:0}
-    .toggle-switch::after{content:'';position:absolute;width:14px;height:14px;background:#fff;border-radius:50%;top:3px;left:3px;transition:left .3s}
-    .toggle-switch.on{background:var(--gold)}
-    .toggle-switch.on::after{left:19px}
-    @media(max-width:900px){
-      .rdv-wrapper,.contact-grid{grid-template-columns:1fr}
-      .footer-grid{grid-template-columns:1fr 1fr}
-      .admin-sidebar{width:100%;height:auto;position:relative;top:0;flex-direction:row;flex-wrap:wrap;padding:8px}
-      .admin-nav-label{display:none}
-      .admin-nav-item{border-left:none;border-bottom:3px solid transparent;padding:10px 14px}
-      .admin-nav-item.active{border-bottom-color:var(--gold);border-left-color:transparent}
-      nav{padding:0 18px}
-      .nav-links{display:none}
-      .burger{display:flex}
-    }
-    @media(max-width:600px){
-      .form-row{grid-template-columns:1fr}
-      .time-slots{grid-template-columns:repeat(3,1fr)}
-      .stats{gap:24px}
-      .footer-grid{grid-template-columns:1fr}
-      .admin-main{padding:20px}
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title id="page-title">DR JANTES</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;900&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --r:#c0392b;--r2:#962d22;--r3:#7a1a10;
+  --dk:#060606;--md:#0e0e0e;--s1:#141414;--s2:#1a1a1a;--s3:#222;
+  --b1:#1e1e1e;--b2:#2a2a2a;--b3:#363636;
+  --t1:#f2f2f2;--t2:#b8b8b8;--mu:#5a5a5a;--mu2:#3e3e3e;
+  --g1:#1db954;--g2:#158a3e;--am:#d4850f;--bl:#1a7ac0;--pu:#8b5cf6;
+  --glow:0 0 30px rgba(192,57,43,.12)
+}
+html,body{font-family:'Barlow',sans-serif;background:var(--dk);color:var(--t1);font-size:14px}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--dk)}::-webkit-scrollbar-thumb{background:var(--b3);border-radius:2px}
+
+/* SCREENS — super simple */
+.SCR{display:none}
+.SCR.ON{display:block}
+#scr-admin.ON{display:flex;height:100vh;overflow:hidden}
+
+/* TAGS */
+.tag{font-size:10px;font-weight:700;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.5px;padding:2px 8px;border-radius:3px;display:inline-block;white-space:nowrap}
+.tg{background:#0b2018;color:#2ecc71;border:1px solid #1a4a28}.tr{background:#220d0d;color:#e87070;border:1px solid #4a1a1a}.ta{background:#221508;color:#f0b040;border:1px solid #5a3a10}.tb{background:#0b1828;color:#60a8e0;border:1px solid #1a3a5a}.tgr{background:#181818;color:var(--mu);border:1px solid var(--b2)}
+
+/* BUTTONS */
+.btn{background:transparent;border:1px solid var(--b2);color:var(--mu);border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:7px 14px;cursor:pointer;transition:all .15s}
+.btn:hover{border-color:var(--mu);color:var(--t1)}
+.btn.P{background:var(--r);border-color:var(--r);color:#fff}.btn.P:hover{background:var(--r2)}
+.btn.G{background:var(--g2);border-color:var(--g2);color:#fff}
+.btn.D{border-color:#5a1a1a;color:#e87070}.btn.D:hover{background:#1a0505}
+.btn.SM{padding:4px 8px;font-size:10px}
+
+/* FORMS */
+.fg{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
+.fg label{font-size:10px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.7px}
+.fg input,.fg select,.fg textarea{background:var(--s2);border:1px solid var(--b2);border-radius:4px;color:var(--t1);font-family:'Barlow',sans-serif;font-size:13px;padding:8px 10px;outline:none;transition:border .15s;width:100%}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--r);box-shadow:0 0 0 3px rgba(192,57,43,.1);background:var(--s3)}
+.fg input::placeholder,.fg textarea::placeholder{color:var(--mu2)}
+.fg select option{background:var(--s2)}
+.fg textarea{height:70px;resize:vertical}
+.fg.s2{grid-column:1/-1}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fgrid.g3{grid-template-columns:1fr 1fr 1fr}
+.fgrid.g1{grid-template-columns:1fr}
+.fact{display:flex;gap:7px;justify-content:flex-end;padding-top:12px;border-top:1px solid var(--b1);margin-top:4px}
+
+/* CARD */
+.card{background:var(--s1);border:1px solid rgba(255,255,255,.05);border-radius:10px;overflow:hidden;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.ch{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid rgba(255,255,255,.04);flex-wrap:wrap;gap:8px;background:rgba(255,255,255,.02)}
+.ct{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#fff}
+.cb{padding:16px}
+.chr{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+
+/* STATS */
+.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px;margin-bottom:14px}
+.sc{background:linear-gradient(135deg,var(--s1) 0%,var(--dk) 100%);border:1px solid var(--b2);border-radius:10px;padding:16px;position:relative;overflow:hidden;transition:all .2s}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:10px 10px 0 0}
+.sc.R::before{background:var(--r)}.sc.G::before{background:var(--g1)}.sc.A::before{background:var(--am)}.sc.B::before{background:var(--bl)}.sc.P::before{background:var(--pu)}
+.sl{font-size:9px;color:var(--mu);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
+.sv{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:#fff;line-height:1;margin-bottom:3px}
+.ss{font-size:10px;color:var(--mu)}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse}
+thead tr{background:var(--s2)}
+th{padding:8px 12px;text-align:left;font-size:9px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.7px;border-bottom:1px solid var(--b1);white-space:nowrap}
+td{padding:8px 12px;border-bottom:1px solid var(--b1);font-size:13px;color:var(--t2);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--s2)}
+.ox{overflow-x:auto}
+
+/* STOCK BAR */
+.sbar{display:flex;align-items:center;gap:6px}
+.sbar-t{width:68px;height:4px;background:var(--b1);border-radius:2px;overflow:hidden;flex-shrink:0}
+.sbar-f{height:100%;border-radius:2px}
+.sfok{background:var(--g1)}.sflow{background:var(--am)}.sfout{background:var(--r)}
+
+/* TOGGLE */
+.tog{position:relative;width:34px;height:18px;flex-shrink:0}
+.tog input{opacity:0;width:0;height:0;position:absolute}
+.tog-s{position:absolute;inset:0;background:var(--b2);border-radius:9px;cursor:pointer;transition:.18s}
+.tog-s::before{content:'';position:absolute;width:12px;height:12px;left:3px;top:3px;background:var(--mu);border-radius:50%;transition:.18s}
+.tog input:checked+.tog-s{background:var(--r)}
+.tog input:checked+.tog-s::before{transform:translateX(16px);background:#fff}
+
+/* MODAL */
+.mbg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;align-items:center;justify-content:center}
+.mbg.ON{display:flex}
+.modal{background:var(--s1);border:1px solid var(--b2);border-radius:10px;padding:22px;width:500px;max-width:95vw;max-height:90vh;overflow-y:auto;animation:mIn .18s ease}
+.modal.L{width:650px}
+@keyframes mIn{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
+.mtitle{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;text-transform:uppercase;color:#fff;margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between}
+.mclose{background:transparent;border:none;color:var(--mu);font-size:20px;cursor:pointer;line-height:1}
+.mclose:hover{color:#e87070}
+
+/* CALENDAR */
+.calhd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.calmon{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;color:#fff;text-transform:uppercase}
+.calnav{background:transparent;border:1px solid var(--b2);color:var(--mu);border-radius:3px;width:25px;height:25px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.calnav:hover{border-color:var(--r);color:var(--t1)}
+.calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.caldn{font-size:9px;color:var(--mu);text-align:center;padding:3px 0;font-weight:700;text-transform:uppercase}
+.calcell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:3px;font-size:11px;cursor:pointer;border:1px solid transparent;transition:all .12s;color:var(--mu);position:relative}
+.calcell.today{border-color:var(--r);color:var(--r);font-weight:700}
+.calcell.sel{background:var(--r);color:#fff;border-color:var(--r)}
+.calcell.hasrdv::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:3px;height:3px;background:var(--r);border-radius:50%}
+.calcell.sel.hasrdv::after{background:#fff}
+.calcell:not(.empty):hover:not(.sel){background:var(--s3);color:var(--t1)}
+.calcell.empty{cursor:default}
+
+/* WEEK GRID */
+.wkgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.wkday{background:var(--s2);border:1px solid var(--b1);border-radius:5px;overflow:hidden}
+.wkdh{padding:5px;text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--mu);background:var(--md);border-bottom:1px solid var(--b1)}
+.wkdb{padding:5px;min-height:50px;display:flex;flex-direction:column;gap:3px}
+.cchip{padding:3px 4px;border-radius:2px;font-size:9px;font-weight:700;font-family:'Barlow Condensed',sans-serif;text-align:center;background:#0a1a0a;color:#2ecc71;border:1px solid #1a4a1a}
+
+/* MINI CHART */
+.mchart{display:flex;align-items:flex-end;gap:3px;height:48px}
+.mcb{flex:1;border-radius:2px 2px 0 0;background:var(--r);opacity:.6;min-width:7px;position:relative}
+.mcb.today{opacity:1}
+.mcb:hover{opacity:.85}
+.mcb .mctip{display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:var(--s3);border:1px solid var(--b2);border-radius:3px;padding:2px 5px;font-size:9px;white-space:nowrap;margin-bottom:2px;pointer-events:none}
+.mcb:hover .mctip{display:block}
+.mclbls{display:flex;gap:3px;margin-top:3px}
+.mclbl{flex:1;text-align:center;font-size:9px;color:var(--mu);text-transform:uppercase}
+
+/* TOAST */
+#toast{position:fixed;bottom:20px;right:20px;padding:10px 16px;border-radius:6px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;z-index:2000;transform:translateY(60px);opacity:0;transition:all .3s;pointer-events:none;max-width:300px}
+#toast.on{transform:translateY(0);opacity:1}
+#toast.tg{background:var(--g2);color:#fff;border:1px solid var(--g1)}
+#toast.tr{background:var(--r2);color:#fff;border:1px solid var(--r)}
+#toast.ta{background:#7a4a08;color:#fff;border:1px solid var(--am)}
+
+/* LIGHTBOX */
+#lb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:1000;align-items:center;justify-content:center;flex-direction:column}
+#lb.ON{display:flex}
+#lb img{max-width:88vw;max-height:78vh;border-radius:5px;object-fit:contain}
+#lb video{max-width:88vw;max-height:78vh;border-radius:5px}
+#lb-x{position:absolute;top:14px;right:18px;background:transparent;border:none;color:#fff;font-size:26px;cursor:pointer;opacity:.65;line-height:1}
+#lb-x:hover{opacity:1}
+#lb-cap{color:var(--mu);font-size:12px;margin-top:8px;text-align:center;max-width:500px}
+
+/* ═══ CLIENT SCREEN ═══ */
+#scr-client{background:var(--dk)}
+.cnav{background:var(--md);border-bottom:2px solid var(--r);padding:0 28px;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;flex-wrap:wrap;gap:8px}
+.clogo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:27px;color:#fff;letter-spacing:1.5px;cursor:pointer;line-height:1;flex-shrink:0}
+.clogo span{color:var(--r)}
+.ctabs{display:flex;gap:3px;flex-wrap:wrap}
+.ctab{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:7px 14px;border:none;cursor:pointer;border-radius:4px;background:transparent;color:var(--mu);transition:all .18s}
+.ctab.on{background:rgba(192,57,43,.18);color:var(--r);box-shadow:inset 0 0 0 1px rgba(192,57,43,.35)}
+.ctab:hover:not(.on){background:var(--s2);color:var(--t2)}
+.alink{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:5px 11px;border:1px solid var(--b2);border-radius:3px;color:var(--mu);background:transparent;cursor:pointer;transition:all .15s;flex-shrink:0}
+.alink:hover{border-color:rgba(192,57,43,.5);color:var(--t2);background:rgba(192,57,43,.08)}
+
+.cpage{display:none}.cpage.on{display:block}
+
+/* Hero */
+.hero{background:linear-gradient(135deg,#0e0404 0%,var(--dk) 50%,#0c0c0c 100%);padding:56px 32px 44px;border-bottom:none;box-shadow:inset 0 -1px 0 rgba(192,57,43,.25),0 1px 0 rgba(192,57,43,.1)}
+.hero h1{font-family:'Barlow Condensed',sans-serif;font-size:60px;font-weight:900;color:#fff;line-height:.93;margin-bottom:14px;letter-spacing:-1.5px;text-shadow:0 2px 30px rgba(0,0,0,.4)}
+.hero p{font-size:13px;color:var(--mu);margin-bottom:24px}
+.hstats{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:26px}
+.hstat strong{display:block;font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:700;color:#fff;line-height:1;border-left:2px solid var(--r);padding-left:10px}
+.hstat span{display:block;font-size:9px;color:var(--mu);text-transform:uppercase;letter-spacing:1px;margin-top:2px;padding-left:10px}
+.hbtns{display:flex;gap:9px;flex-wrap:wrap}
+.hbtn{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:11px 22px;border-radius:4px;cursor:pointer;border:none;transition:all .15s}
+.hbtn.solid{background:var(--r);color:#fff}.hbtn.solid:hover{background:var(--r2)}
+.hbtn.out{background:transparent;border:1px solid var(--r);color:var(--t1)}.hbtn.out:hover{background:rgba(192,57,43,.12)}
+
+.ccontent{padding:26px 30px}
+.cttl{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:700;color:#fff;text-transform:uppercase;margin-bottom:3px}
+.csub{font-size:13px;color:var(--mu);margin-bottom:18px}
+
+/* Cat filters */
+.cfs{display:flex;gap:5px;margin-bottom:16px;flex-wrap:wrap}
+.cf{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:5px 11px;border:1px solid var(--b2);border-radius:3px;cursor:pointer;color:var(--mu);background:transparent;transition:all .15s}
+.cf.on{border-color:var(--r);background:var(--r);color:#fff}
+.cf:hover:not(.on){border-color:var(--mu);color:var(--t1)}
+
+/* Prod grid */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:11px}
+.pcard{background:var(--s1);border:1px solid var(--b1);border-radius:7px;overflow:hidden;transition:all .15s}
+.pcard:hover{border-color:var(--r);transform:translateY(-2px)}
+.pcard-img{height:96px;display:flex;align-items:center;justify-content:center;background:var(--md);font-size:44px}
+.pcard-body{padding:12px}
+.pcard-cat{font-size:9px;color:var(--r);font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:3px}
+.pcard-name{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;color:#fff;margin-bottom:3px}
+.pcard-desc{font-size:11px;color:var(--mu);margin-bottom:7px;line-height:1.4}
+.pcard-price{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:var(--r)}
+.pcard-price span{font-size:10px;color:var(--mu);font-weight:400;font-family:'Barlow',sans-serif}
+
+/* Services */
+.sgrd{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:28px}
+.scard{background:var(--s1);border:1px solid var(--b1);border-radius:7px;padding:14px;cursor:pointer;transition:all .15s}
+.scard:hover{border-color:var(--r);transform:translateY(-2px)}
+.scard .ico{font-size:26px;margin-bottom:7px}
+.scard .nm{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:#fff;margin-bottom:3px}
+.scard .dc{font-size:11px;color:var(--mu);margin-bottom:7px}
+.scard .pr{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;color:var(--r)}
+
+/* Gallery */
+.ggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:11px}
+.gcard{background:var(--s1);border:1px solid var(--b1);border-radius:7px;overflow:hidden;cursor:pointer;transition:all .15s}
+.gcard:hover{border-color:var(--r);transform:translateY(-2px)}
+.gthumb{width:100%;height:170px;object-fit:cover;display:block}
+.gph{width:100%;height:170px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--s2);font-size:38px;gap:5px}
+.gph small{font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:1px}
+.ginfo{padding:10px 12px}
+.ginfo h4{font-size:13px;font-weight:600;color:#fff;margin-bottom:3px}
+.ginfo p{font-size:11px;color:var(--mu)}
+
+/* Client form */
+.fpanel{background:var(--s1);border:1px solid var(--b1);border-radius:7px;padding:18px;margin-bottom:12px}
+.fpanel h3{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;text-transform:uppercase;color:#fff;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--b1)}
+.bigbtn{width:100%;background:var(--r);color:#fff;border:none;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:11px;cursor:pointer;margin-top:4px;transition:background .15s}
+.bigbtn:hover{background:var(--r2)}
+.confirmbox{background:#0a1a0a;border:1px solid #2ecc71;border-radius:7px;padding:14px;text-align:center;margin-top:11px}
+.confirmbox h4{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:#2ecc71;text-transform:uppercase;margin-bottom:5px}
+.confirmbox p{font-size:12px;color:var(--mu)}
+.crenbox{background:var(--s1);border:1px solid var(--b1);border-radius:7px;padding:14px;margin-bottom:11px}
+.crenbox h3{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;color:#fff;margin-bottom:10px}
+.crenrow{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--b1)}
+.crenrow:last-child{border-bottom:none}
+.dv-row{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid var(--b1)}
+.dv-row:last-child{border-bottom:none}
+.dv-row span.ico{font-size:15px;width:22px;flex-shrink:0}
+.dv-row span.nm{flex:1;font-size:13px;color:var(--t2)}
+.dv-row span.pr{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--r);margin-right:5px;white-space:nowrap}
+.dv-row input[type=number]{width:50px;background:var(--s2);border:1px solid var(--b2);border-radius:3px;color:var(--t1);font-size:13px;padding:4px 6px;outline:none;text-align:center}
+.tbox{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;background:var(--s2);border:1px solid var(--r);border-radius:5px;margin-top:9px}
+.tbox span{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;color:var(--mu)}
+.tbox strong{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;color:var(--r)}
+
+/* ═══ LOGIN SCREEN ═══ */
+#scr-login{min-height:100vh;background:var(--dk);display:none;align-items:center;justify-content:center}
+#scr-login.ON{display:flex}
+.lbox{background:linear-gradient(135deg,var(--s1) 0%,#100808 100%);border:1px solid rgba(192,57,43,.2);border-radius:14px;padding:40px;width:390px;max-width:95vw;text-align:center;box-shadow:0 0 60px rgba(192,57,43,.08),0 20px 60px rgba(0,0,0,.5)}
+.llogo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:50px;color:#fff;letter-spacing:2px;line-height:1;text-shadow:0 0 40px rgba(192,57,43,.3)}
+.llogo span{color:var(--r)}
+.lsub{font-size:9px;color:var(--mu);text-transform:uppercase;letter-spacing:3px;margin-bottom:28px;margin-top:3px}
+.pinrow{display:flex;gap:9px;justify-content:center;margin-bottom:16px}
+.pind{width:44px;height:52px;background:var(--s2);border:1px solid var(--b2);border-radius:6px;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;text-align:center;outline:none;transition:all .15s}
+.pind:focus{border-color:var(--r);background:var(--s3);box-shadow:0 0 0 2px rgba(192,57,43,.2)}
+.perr{height:16px;font-size:11px;color:#e87070;margin-bottom:9px}
+.lback{width:100%;background:transparent;border:1px solid var(--b2);border-radius:4px;color:var(--mu);font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:7px;cursor:pointer;margin-top:7px;transition:all .15s}
+.lback:hover{border-color:var(--mu);color:var(--t1)}
+
+/* ═══ ADMIN SCREEN ═══ */
+#scr-admin{background:var(--dk)}
+#aside{width:220px;background:linear-gradient(180deg,#0e0808 0%,var(--md) 100%);border-right:1px solid rgba(255,255,255,.04);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+#amain{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;background:var(--dk)}
+#atbar{height:54px;background:rgba(12,12,12,.98);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,.04);display:flex;align-items:center;justify-content:space-between;padding:0 22px;flex-shrink:0;box-shadow:0 1px 0 rgba(0,0,0,.3)}
+#acontent{flex:1;overflow-y:auto;padding:20px;background:var(--dk)}
+.apage{display:none}.apage.on{display:block}
+
+/* Sidebar */
+.sblogo{padding:14px 14px 12px;border-bottom:1px solid var(--b1)}
+.sblt{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:24px;color:#fff;letter-spacing:1.5px}
+.sblt span{color:var(--r)}
+.sbls{font-size:9px;color:var(--mu);text-transform:uppercase;letter-spacing:2px;margin-top:2px}
+.sbsec{font-size:9px;font-weight:700;color:var(--mu2);text-transform:uppercase;letter-spacing:1.5px;padding:12px 14px 4px}
+.sbi{display:flex;align-items:center;gap:8px;padding:8px 14px;cursor:pointer;transition:all .12s;border-left:2px solid transparent;color:var(--mu);font-size:13px;font-weight:500}
+.sbi svg{width:13px;height:13px;flex-shrink:0;opacity:.5;transition:opacity .12s}
+.sbi:hover{background:var(--s2);color:var(--t2)}
+.sbi:hover svg{opacity:.8}
+.sbi.on{background:rgba(192,57,43,.12);color:#fff;border-left-color:var(--r);box-shadow:inset 0 0 0 1px rgba(192,57,43,.15)}
+.sbi.on svg{opacity:1}
+.sbadge{margin-left:auto;color:#fff;font-size:9px;font-weight:700;border-radius:9px;padding:1px 6px;font-family:'Barlow Condensed',sans-serif}
+.sbadge.r{background:var(--r)}.sbadge.g{background:var(--g2)}.sbadge.a{background:var(--am)}
+.sbfoot{margin-top:auto;padding:12px 14px;border-top:1px solid var(--b1)}
+.sbuser{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.sbav{width:30px;height:30px;border-radius:50%;background:var(--r);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.sbuname{font-size:11px;font-weight:600;color:var(--t1)}
+.sbrole{font-size:10px;color:var(--mu)}
+.sbout{width:100%;background:transparent;border:1px solid var(--b2);border-radius:3px;color:var(--mu);font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:5px;cursor:pointer;transition:all .15s}
+.sbout:hover{border-color:var(--r);color:#e87070}
+
+/* Topbar */
+.atitle{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.5px}
+.tbr{display:flex;align-items:center;gap:8px}
+.tbdate{font-size:11px;color:var(--mu);border-left:1px solid var(--b1);padding-left:9px;white-space:nowrap}
+
+/* SETTINGS */
+.stabs{display:flex;gap:2px;margin-bottom:18px;background:var(--s2);padding:3px;border-radius:5px;flex-wrap:wrap}
+.stab{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:5px 11px;border:none;cursor:pointer;border-radius:3px;background:transparent;color:var(--mu);transition:all .15s;white-space:nowrap}
+.stab.on{background:var(--s1);color:#fff}
+.ssec{display:none}.ssec.on{display:block}
+.nrow{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--b1);gap:11px}
+.nrow:last-child{border-bottom:none}
+.nlbl{font-size:13px;font-weight:500;color:var(--t1);margin-bottom:2px}
+.nsub{font-size:11px;color:var(--mu)}
+.erow{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--b1);cursor:pointer;transition:all .12s;border-radius:3px}
+.erow:hover{background:var(--s2);padding-left:5px}
+.erow:last-child{border-bottom:none}
+.eico{font-size:19px;width:28px;text-align:center;flex-shrink:0}
+.enm{font-size:13px;font-weight:500;color:var(--t1);margin-bottom:1px}
+.edc{font-size:11px;color:var(--mu)}
+.csw{width:28px;height:28px;border-radius:5px;cursor:pointer;border:2px solid transparent;transition:all .15s;flex-shrink:0}
+.csw:hover{transform:scale(1.1)}
+.csw.on{border-color:#fff;box-shadow:0 0 0 2px var(--r)}
+.tarif-inp{width:76px;background:var(--s2);border:1px solid var(--b2);border-radius:3px;color:var(--t1);font-size:13px;padding:4px 6px;outline:none;text-align:right}
+.tarif-inp:focus{border-color:var(--r)}
+.dzone{border:2px dashed var(--b2);border-radius:7px;padding:28px;text-align:center;cursor:pointer;transition:all .2s;position:relative;margin-bottom:12px;overflow:hidden}
+.dzone:hover,.dzone.drag{border-color:var(--r);background:rgba(192,57,43,.05)}
+.dzone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.dzone-ico{font-size:32px;margin-bottom:6px;opacity:.45}
+.dzone-t{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;color:var(--t2);margin-bottom:3px}
+.dzone-s{font-size:11px;color:var(--mu)}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:9px;margin-top:10px}
+.mcard{background:var(--s2);border:1px solid var(--b1);border-radius:7px;overflow:hidden;position:relative}
+.mcard:hover .movl{opacity:1}
+.mthumb{width:100%;height:125px;object-fit:cover;display:block}
+.mph{width:100%;height:125px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--md);font-size:28px;gap:4px}
+.mph small{font-size:9px;color:var(--mu);text-transform:uppercase;letter-spacing:1px}
+.movl{position:absolute;top:0;left:0;right:0;height:125px;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center;gap:5px;opacity:0;transition:opacity .15s}
+.moa{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:3px;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;padding:4px 7px;cursor:pointer}
+.moa:hover{background:rgba(192,57,43,.7)}
+.mbadge{position:absolute;top:5px;left:5px;font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;padding:2px 5px;border-radius:2px}
+.mbd.ph{background:rgba(26,111,168,.85);color:#a0d4ff}
+.mbd.vi{background:rgba(124,77,189,.85);color:#d0b0ff}
+.mvis{position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%}
+.minfo{padding:7px 9px}
+.mname{font-size:11px;color:#fff;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+.mmeta{font-size:10px;color:var(--mu);display:flex;justify-content:space-between}
+.urow{display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap}
+.uinp{flex:1;min-width:160px;background:var(--s2);border:1px solid var(--b2);border-radius:4px;color:var(--t1);font-family:'Barlow',sans-serif;font-size:13px;padding:8px 10px;outline:none}
+.uinp:focus{border-color:var(--r)}
+.dzgr{border:1px solid var(--b2);border-radius:5px;padding:14px;margin-bottom:12px}
+.dzgrt{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;color:var(--t2);margin-bottom:8px}
+.dangerbox{padding:11px;background:#1a0505;border:1px solid #5a1a1a;border-radius:5px;margin-bottom:12px}
+.pico{width:30px;height:30px;background:var(--s2);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.empty{text-align:center;padding:34px;color:var(--mu)}
+.eico{font-size:30px;margin-bottom:8px;opacity:.3}
+.rdv-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-bottom:1px solid var(--b1);border-left:3px solid var(--r)}
+.rdv-item:last-child{border-bottom:none}
+.rdv-item:hover{background:var(--s2)}
+.rdvt{font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:700;color:var(--r);line-height:1;min-width:44px}
+.rdvd{font-size:9px;color:var(--mu);margin-top:1px;text-transform:uppercase}
+.prevbox{background:var(--s2);border-radius:5px;padding:12px;text-align:center;border:1px solid var(--b1);margin-top:8px}
+.mtabs{display:flex;gap:2px;background:var(--s2);padding:3px;border-radius:4px;width:fit-content;margin-bottom:12px}
+.mtab{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:4px 11px;border:none;cursor:pointer;border-radius:3px;background:transparent;color:var(--mu);transition:all .15s}
+.mtab.on{background:var(--s1);color:#fff}
+
+/* ════ PHOTO EDITOR ════ */
+.photo-row{display:grid;grid-template-columns:140px 1fr;gap:14px;align-items:start;padding:14px 0;border-bottom:1px solid var(--b1)}
+.photo-row:last-child{border-bottom:none}
+.photo-preview{width:140px;height:90px;border-radius:6px;object-fit:cover;background:var(--s2);border:1px solid var(--b2);display:block}
+.photo-preview-ph{width:140px;height:90px;border-radius:6px;background:var(--s2);border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;font-size:28px}
+.photo-label{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;color:#fff;margin-bottom:6px;letter-spacing:.5px}
+.photo-zone{border:1px dashed var(--b2);border-radius:5px;padding:8px 10px;cursor:pointer;transition:all .15s;position:relative;margin-bottom:7px;background:var(--s2);display:flex;align-items:center;gap:8px}
+.photo-zone:hover{border-color:var(--r);background:rgba(192,57,43,.05)}
+.photo-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.photo-zone-txt{font-size:12px;color:var(--mu)}
+.photo-url-row{display:flex;gap:7px}
+.photo-url-inp{flex:1;background:var(--s3);border:1px solid var(--b2);border-radius:4px;color:var(--t1);font-family:'Barlow',sans-serif;font-size:12px;padding:7px 10px;outline:none}
+.photo-url-inp:focus{border-color:var(--r)}
+.photo-apply{background:var(--r);border:none;border-radius:4px;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;padding:7px 12px;cursor:pointer;white-space:nowrap;transition:background .15s}
+.photo-apply:hover{background:var(--r2)}
+.photo-desc{font-size:11px;color:var(--mu);margin-bottom:6px}
+
+/* ════ CATALOGUE TABS ════ */
+.cat-tabs{display:flex;gap:3px;margin-bottom:22px;flex-wrap:wrap;background:var(--s2);padding:4px;border-radius:8px}
+.cattab{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:8px 16px;border:none;cursor:pointer;border-radius:5px;background:transparent;color:var(--mu);transition:all .18s;white-space:nowrap}
+.cattab.on{background:var(--s1);color:#fff;box-shadow:0 1px 4px rgba(0,0,0,.4)}
+.cattab:hover:not(.on){background:rgba(255,255,255,.05);color:var(--t2)}
+.cattab.promo-tab{color:var(--am)}
+.cattab.promo-tab.on{background:rgba(212,133,15,.15);color:var(--am);box-shadow:0 1px 4px rgba(212,133,15,.2),inset 0 0 0 1px rgba(212,133,15,.2)}
+.cattab-section{display:none}.cattab-section.on{display:block}
+
+/* ══════════════════════════════
+   CATALOGUE PREMIUM
+══════════════════════════════ */
+
+/* Topbar */
+.cl-topbar{display:flex;align-items:center;gap:10px;padding:20px 28px 0;flex-wrap:wrap}
+.cl-search-box{flex:1;min-width:220px;position:relative}
+.cl-search-inp{width:100%;background:var(--s2);border:1px solid var(--b2);border-radius:7px;color:var(--t1);font-family:'Barlow',sans-serif;font-size:13px;padding:11px 38px 11px 36px;outline:none;transition:all .2s}
+.cl-search-inp:focus{border-color:var(--r);background:var(--s3);box-shadow:0 0 0 3px rgba(192,57,43,.1)}
+.cl-search-inp::placeholder{color:var(--mu2)}
+.cl-view-btn{background:var(--s2);border:1px solid var(--b2);color:var(--mu);border-radius:5px;padding:8px 10px;cursor:pointer;display:flex;align-items:center;transition:all .15s}
+.cl-view-btn.on{background:var(--r);border-color:var(--r);color:#fff}
+.cl-view-btn:hover:not(.on){border-color:var(--mu);color:var(--t1)}
+
+/* Filtres */
+.cl-filters{display:flex;align-items:center;gap:10px;padding:12px 28px;background:var(--s1);border-bottom:1px solid var(--b1);flex-wrap:wrap}
+.cl-filter-group{display:flex;align-items:center;gap:7px}
+.cl-filter-lbl{font-size:10px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+.cl-filter-val{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:var(--t2);min-width:30px}
+.cl-filter-sel{background:var(--s2);border:1px solid var(--b2);border-radius:4px;color:var(--t1);font-family:'Barlow',sans-serif;font-size:12px;padding:5px 8px;outline:none;cursor:pointer;transition:border .15s}
+.cl-filter-sel:focus{border-color:var(--r)}
+.cl-filter-div{width:1px;height:18px;background:var(--b2);flex-shrink:0}
+.cl-filter-reset{background:transparent;border:1px solid var(--b2);border-radius:4px;color:var(--mu);font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:5px 10px;cursor:pointer;transition:all .15s;white-space:nowrap}
+.cl-filter-reset:hover{border-color:var(--r);color:var(--t2)}
+.cl-count{margin-left:auto;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:var(--mu);white-space:nowrap}
+
+/* Onglets */
+.cl-tabs{display:flex;gap:0;padding:0 28px;background:var(--md);border-bottom:1px solid var(--b1);overflow-x:auto}
+.cl-tab{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:14px 18px;border:none;cursor:pointer;background:transparent;color:var(--mu);border-bottom:2px solid transparent;transition:all .18s;white-space:nowrap}
+.cl-tab.on{color:#fff;border-bottom-color:var(--r)}
+.cl-tab:hover:not(.on){color:var(--t2);background:rgba(255,255,255,.03)}
+.cl-tab-promo{color:var(--am) !important}
+.cl-tab-promo.on{border-bottom-color:var(--am) !important}
+
+/* Sections */
+.cl-section{display:none;padding:22px 28px}
+.cl-section.on{display:block}
+
+/* Grille produits */
+.cl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin-bottom:8px}
+.cl-grid.list{grid-template-columns:1fr}
+
+/* Cards produits — PREMIUM */
+.cl-card{background:var(--s1);border:1px solid rgba(255,255,255,.05);border-radius:10px;overflow:hidden;cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .2s;position:relative}
+.cl-card:hover{transform:translateY(-4px);border-color:rgba(192,57,43,.35);box-shadow:0 12px 32px rgba(0,0,0,.5),0 0 0 1px rgba(192,57,43,.15)}
+.cl-card-img{height:110px;overflow:hidden;position:relative;background:var(--md)}
+.cl-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.cl-card:hover .cl-card-img img{transform:scale(1.07)}
+.cl-card-img-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.6) 0%,transparent 50%);display:flex;align-items:flex-end;padding:8px}
+.cl-card-emoji{position:absolute;top:8px;right:8px;font-size:22px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.6))}
+.cl-card-body{padding:12px 14px}
+.cl-card-cat{font-size:9px;font-weight:700;color:var(--r);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px}
+.cl-card-name{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:#fff;margin-bottom:3px;line-height:1.2}
+.cl-card-desc{font-size:11px;color:var(--mu);margin-bottom:10px;line-height:1.45;min-height:28px}
+.cl-card-footer{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.cl-card-price{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:var(--r);line-height:1}
+.cl-card-unit{font-size:10px;color:var(--mu);font-weight:400;font-family:'Barlow',sans-serif}
+.cl-card-stk{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;padding:2px 7px;border-radius:3px}
+.cl-card-stk.ok{background:#0b2018;color:#2ecc71;border:1px solid #1a4a28}
+.cl-card-stk.low{background:#221508;color:#f0b040;border:1px solid #5a3a10}
+.cl-card-stk.out{background:#220d0d;color:#e87070;border:1px solid #4a1a1a}
+.cl-card-stk.svc{background:#0b1828;color:#60a8e0;border:1px solid #1a3a5a}
+.cl-card-dv{position:absolute;bottom:12px;right:12px;background:rgba(192,57,43,.15);border:1px solid rgba(192,57,43,.3);border-radius:4px;color:var(--r);font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;padding:4px 9px;cursor:pointer;opacity:0;transition:all .15s}
+.cl-card:hover .cl-card-dv{opacity:1}
+.cl-card-dv:hover{background:var(--r);color:#fff}
+
+/* Card mode liste */
+.cl-card.list{display:flex;flex-direction:row;border-radius:7px}
+.cl-card.list .cl-card-img{height:72px;width:90px;flex-shrink:0;border-radius:0}
+.cl-card.list .cl-card-body{flex:1;padding:10px 12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.cl-card.list .cl-card-cat{min-width:72px}
+.cl-card.list .cl-card-name{flex:1;min-width:120px;margin-bottom:0}
+.cl-card.list .cl-card-desc{display:none}
+.cl-card.list .cl-card-footer{margin-left:auto;gap:10px}
+.cl-card.list .cl-card-dv{position:static;opacity:1;margin-left:6px}
+.cl-card.list .cl-card-emoji{top:4px;right:4px;font-size:16px}
+
+/* Empty state */
+.cl-empty{text-align:center;padding:50px 20px;color:var(--mu)}
+
+/* Résultats recherche */
+.cl-results-header{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px;padding:0 28px}
+
+/* Séparateur promos */
+.cl-promo-sep{display:flex;align-items:center;gap:14px;margin:30px 0 16px}
+.cl-promo-sep-line{flex:1;height:1px;background:rgba(212,133,15,.2)}
+.cl-promo-sep-txt{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;text-transform:uppercase;color:var(--am);letter-spacing:.5px;white-space:nowrap}
+
+/* Boutons taille promo */
+.cl-promo-sizes{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:18px}
+.cl-ps-btn{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:6px 14px;border:1px solid var(--b2);border-radius:4px;background:transparent;color:var(--mu);cursor:pointer;transition:all .15s}
+.cl-ps-btn.on{background:var(--am);border-color:var(--am);color:#fff}
+.cl-ps-btn:hover:not(.on){border-color:var(--mu);color:var(--t2)}
+
+/* Promos cards */
+.cl-promo-card{{background:linear-gradient(135deg,var(--s1) 0%,var(--dk) 100%);border:1px solid rgba(255,255,255,.05);border-radius:10px;overflow:hidden;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.3)}}
+.cl-promo-card:hover{{border-color:rgba(212,133,15,.4);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.4)}}
+.cl-promo-price{{font-family:'Barlow Condensed',sans-serif;font-size:40px;font-weight:900;color:var(--am);line-height:1}}
+.cl-promo-unit{{font-size:12px;color:var(--mu);font-family:'Barlow',sans-serif}}
+.cl-promo-dims{{display:flex;flex-wrap:wrap;gap:5px;margin:10px 0}}
+.cl-promo-dim{{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:var(--t1);padding:4px 9px;letter-spacing:.5px;transition:all .15s}}
+.cl-promo-dim:hover{{background:rgba(212,133,15,.15);border-color:rgba(212,133,15,.3);color:var(--am)}}
+.cl-promo-brand{{display:flex;align-items:center;gap:6px;margin-top:8px;padding-top:8px;border-top:1px solid var(--b1)}}
+.cl-promo-tag{{background:rgba(212,133,15,.12);border:1px solid rgba(212,133,15,.25);border-radius:20px;color:var(--am);font-size:11px;font-weight:600;padding:3px 10px;display:inline-flex;align-items:center;gap:4px;margin-top:8px}}
+
+/* Clim card */
+.clim-card{{background:linear-gradient(135deg,#0a1a2a 0%,#0d0d14 100%);border:1px solid #1a3a5a;border-radius:10px;overflow:hidden;transition:all .2s}}
+.clim-card:hover{{border-color:#2a5a8a;transform:translateY(-2px)}}
+
+/* Modal detail */
+.cl-modal-bg{{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:600;align-items:center;justify-content:center;backdrop-filter:blur(3px)}}
+.cl-modal-bg.on{{display:flex}}
+.cl-modal{{background:var(--s1);border:1px solid var(--b2);border-radius:12px;width:480px;max-width:95vw;max-height:90vh;overflow-y:auto;animation:mIn .2s ease;position:relative}}
+.cl-modal-close{{position:absolute;top:12px;right:14px;background:rgba(255,255,255,.08);border:none;color:var(--t2);font-size:22px;cursor:pointer;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;transition:all .15s;line-height:1;z-index:1}}
+.cl-modal-close:hover{{background:rgba(192,57,43,.3);color:#fff}}
+.cl-modal-body{{padding:16px 20px 20px}}
+.cl-modal-cat{{font-size:10px;font-weight:700;color:var(--r);text-transform:uppercase;letter-spacing:2px}}
+.cl-modal-name{{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:900;color:#fff;margin-top:4px;margin-bottom:6px;line-height:1.1}}
+.cl-modal-desc{{font-size:13px;color:var(--t2);line-height:1.6;padding:10px 12px;background:var(--s2);border-radius:5px}}
+.cl-modal-price{{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:900;color:var(--r);line-height:1}}
+
+
+/* ══════════════════════════════
+   PROMOS PREMIUM INTERFACE
+══════════════════════════════ */
+
+/* Navigation tailles — pills horizontales */
+.pm-nav{display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;margin-bottom:24px;scrollbar-width:none}
+.pm-nav::-webkit-scrollbar{display:none}
+.pm-nav-btn{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:8px 18px;border-radius:30px;border:1px solid var(--b2);background:transparent;color:var(--mu);cursor:pointer;transition:all .18s;white-space:nowrap;flex-shrink:0}
+.pm-nav-btn.on{background:var(--r);border-color:var(--r);color:#fff;box-shadow:0 4px 14px rgba(192,57,43,.35)}
+.pm-nav-btn:hover:not(.on){border-color:var(--t2);color:var(--t2)}
+
+/* Header taille */
+.pm-size-header{display:flex;align-items:baseline;gap:12px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--b2)}
+.pm-size-title{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:900;color:#fff;text-transform:uppercase;letter-spacing:1px}
+.pm-size-from{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:var(--am);text-transform:uppercase}
+.pm-size-badge{background:rgba(212,133,15,.12);border:1px solid rgba(212,133,15,.25);color:var(--am);font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:3px 10px;border-radius:20px}
+
+/* Grille de cards promos */
+.pm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-bottom:32px}
+
+/* Card promo — design premium */
+.pm-card{background:var(--s1);border:1px solid var(--b2);border-radius:12px;overflow:hidden;transition:all .2s;position:relative}
+.pm-card:hover{border-color:rgba(212,133,15,.4);transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,.5)}
+.pm-card.special{border-color:rgba(192,57,43,.35)}
+.pm-card-top{height:3px;background:linear-gradient(90deg,var(--am),rgba(212,133,15,.3))}
+.pm-card.special .pm-card-top{background:linear-gradient(90deg,var(--r),var(--r2))}
+.pm-card-header{padding:16px 18px 12px;border-bottom:1px solid var(--b2)}
+.pm-price-row{display:flex;align-items:baseline;gap:8px;margin-bottom:4px}
+.pm-price{font-family:'Barlow Condensed',sans-serif;font-size:48px;font-weight:900;color:var(--am);line-height:1}
+.pm-card.special .pm-price{color:var(--r)}
+.pm-price-suffix{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;color:var(--mu)}
+.pm-subtitle{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;color:var(--t2);letter-spacing:.5px;margin-bottom:3px}
+.pm-included{font-size:11px;color:var(--g1);display:flex;align-items:center;gap:4px}
+.pm-card-body{padding:14px 18px}
+.pm-dims-label{font-size:9px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.pm-dims{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+.pm-dim{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:5px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--t1);padding:5px 10px;letter-spacing:.5px;cursor:pointer;transition:all .15s;user-select:none}
+.pm-dim:hover{background:rgba(212,133,15,.15);border-color:rgba(212,133,15,.4);color:var(--am)}
+.pm-brand-row{display:flex;align-items:center;gap:6px;padding-top:10px;border-top:1px solid var(--b2);margin-bottom:4px}
+.pm-brand-name{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.5px}
+.pm-card-footer{padding:0 18px 16px}
+.pm-rdv-btn{width:100%;background:linear-gradient(135deg,var(--r),var(--r2));border:none;border-radius:6px;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:12px;cursor:pointer;transition:all .2s;box-shadow:0 2px 10px rgba(192,57,43,.25)}
+.pm-rdv-btn:hover{box-shadow:0 4px 18px rgba(192,57,43,.45);transform:translateY(-1px)}
+.pm-rdv-btn.blue{background:linear-gradient(135deg,#1a6fa8,#0d4a7a);box-shadow:0 2px 10px rgba(26,111,168,.25)}
+.pm-rdv-btn.blue:hover{box-shadow:0 4px 18px rgba(26,111,168,.45)}
+.pm-tag-4{background:rgba(192,57,43,.12);padding:6px 18px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;color:var(--r);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid rgba(192,57,43,.15)}
+.pm-sans-rdv{display:inline-flex;align-items:center;gap:5px;background:rgba(29,185,84,.08);border:1px solid rgba(29,185,84,.2);border-radius:20px;padding:4px 10px;font-size:11px;color:var(--g1);font-weight:600;margin-bottom:10px}
+
+/* Section info bar */
+.pm-infobar{display:flex;align-items:center;gap:16px;padding:10px 16px;background:rgba(212,133,15,.06);border:1px solid rgba(212,133,15,.15);border-radius:8px;margin-bottom:20px;flex-wrap:wrap}
+.pm-infobar-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--t2)}
+.pm-infobar-item strong{color:#fff}
+
+/* Empty promo */
+.pm-empty{text-align:center;padding:40px;color:var(--mu)}
+
+</style>
 </head>
 <body>
-<!-- ═══════════ NAV ═══════════ -->
-<nav>
-  <div class="logo" onclick="showPage('accueil')">DR<span>Jantes</span></div>
-  <ul class="nav-links" id="navLinks">
-    <li><a onclick="showPage('accueil')" id="nav-accueil" class="active">Accueil</a></li>
-    <li><a onclick="showPage('catalogue')" id="nav-catalogue">Catalogue</a></li>
-    <li><a onclick="showPage('rdv')" id="nav-rdv">Rendez-vous</a></li>
-    <li><a onclick="showPage('contact')" id="nav-contact">Contact</a></li>
-    <li><a onclick="showPage('admin-gate')" id="nav-admin">Admin ⚙️</a></li>
-  </ul>
-  <button class="nav-cta" onclick="showPage('rdv')">Prendre RDV</button>
-  <button class="burger" onclick="toggleMenu()" id="burger">
-    <span></span><span></span><span></span>
-  </button>
-</nav>
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
-<!-- ═══════════ PAGE ACCUEIL ═══════════ -->
-<div class="page active" id="page-accueil">
-  <!-- HERO -->
-  <div class="hero">
-    <div class="hero-content">
-      <span class="hero-badge">⚡ Spécialiste Jantes & Pneus</span>
-      <h1>L'excellence<br><span>au bout de vos roues</span></h1>
-      <p>Jantes alu, pneus, équilibrage, géométrie — tout pour sublimer votre véhicule avec les meilleurs produits du marché.</p>
-      <div class="hero-btns">
-        <button class="btn-primary" onclick="showPage('catalogue')">Voir le catalogue</button>
-        <button class="btn-secondary" onclick="showPage('rdv')">Prendre rendez-vous</button>
-      </div>
-      <div class="stats">
-        <div class="stat"><strong>500+</strong><span>Clients satisfaits</span></div>
-        <div class="stat"><strong>200+</strong><span>Modèles de jantes</span></div>
-        <div class="stat"><strong>10+</strong><span>Ans d'expérience</span></div>
-        <div class="stat"><strong>4.9★</strong><span>Note moyenne</span></div>
-      </div>
+
+<!-- ══════ CLIENT ══════ -->
+<div id="scr-client" class="SCR ON">
+  <nav class="cnav" style="position:relative">
+    <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--r) 0%,rgba(192,57,43,.4) 60%,transparent 100%)"></div>
+    <div class="clogo" onclick="cPage('accueil')" id="cl-logo">DR<span>.</span>JANTES</div>
+    <div class="ctabs">
+      <button class="ctab on" onclick="cPage('accueil',this)">Accueil</button>
+      <button class="ctab" onclick="goSection('sec-catalogue')" id="nav-catalogue">Catalogue</button>
+      <button class="ctab" onclick="goSection('sec-galerie')" id="nav-galerie">Galerie</button>
+      <button class="ctab" onclick="cPage('rdv',this)">Rendez-vous</button>
+      <button class="ctab" onclick="cPage('devis',this)">Devis</button>
     </div>
-  </div>
-  <!-- SERVICES -->
-  <section style="background:var(--dark2)">
-    <div class="container">
-      <span class="section-label">Ce que nous faisons</span>
-      <h2 class="section-title">Nos Services</h2>
-      <p class="section-sub">Une gamme complète de services pour votre véhicule, réalisés par des experts passionnés.</p>
-      <div class="services-grid">
-        <div class="service-card"><span class="service-icon">🔧</span><h3>Montage de Jantes</h3><p>Installation professionnelle sur tous types de véhicules.</p></div>
-        <div class="service-card"><span class="service-icon">⚖️</span><h3>Équilibrage</h3><p>Équilibrage précis pour un confort de conduite optimal.</p></div>
-        <div class="service-card"><span class="service-icon">📐</span><h3>Géométrie</h3><p>Réglage 3D pour une tenue de route parfaite.</p></div>
-        <div class="service-card"><span class="service-icon">🛞</span><h3>Remplacement Pneus</h3><p>Large choix toutes saisons, été, hiver des meilleures marques.</p></div>
-        <div class="service-card"><span class="service-icon">✨</span><h3>Rénovation Jantes</h3><p>Réparation et remise en état de vos jantes abîmées.</p></div>
-        <div class="service-card"><span class="service-icon">🚗</span><h3>Diagnostic Roues</h3><p>Contrôle complet avec rapport détaillé et recommandations.</p></div>
-      </div>
-    </div>
-  </section>
-  <!-- PROMOS ACCUEIL -->
-  <section style="background:var(--dark)">
-    <div class="container">
-      <span class="section-label">Offres limitées</span>
-      <h2 class="section-title">Promotions en cours</h2>
-      <p class="section-sub">Profitez de nos meilleures offres sur une sélection de jantes, pneus et packs.</p>
-      <div class="promos-grid" id="home-promos"></div>
-    </div>
-  </section>
-  <!-- AVIS -->
-  <section style="background:var(--dark2)">
-    <div class="container">
-      <span class="section-label">Ils nous font confiance</span>
-      <h2 class="section-title">Avis Clients</h2>
-      <p class="section-sub">La satisfaction de nos clients est notre priorité absolue.</p>
-      <div class="reviews-grid">
-        <div class="review-card"><div class="stars">★★★★★</div><p>"Service impeccable, jantes montées en moins d'une heure. Ma voiture a l'air neuve !"</p><div class="reviewer"><div class="avatar">JM</div><div class="reviewer-info"><h4>Jean-Marc L.</h4><span>BMW Série 5</span></div></div></div>
-        <div class="review-card"><div class="stars">★★★★★</div><p>"Prix imbattables, équipe professionnelle et conseil de qualité. Je recommande !"</p><div class="reviewer"><div class="avatar">SC</div><div class="reviewer-info"><h4>Sophie C.</h4><span>Audi A4</span></div></div></div>
-        <div class="review-card"><div class="stars">★★★★☆</div><p>"Très bon accueil, explications claires. Géométrie faite avec soin. Merci !"</p><div class="reviewer"><div class="avatar">KD</div><div class="reviewer-info"><h4>Karim D.</h4><span>Mercedes C220</span></div></div></div>
-      </div>
-    </div>
-  </section>
-  <!-- CONTACT RAPIDE -->
-  <section style="background:var(--dark)">
-    <div class="container" style="text-align:center">
-      <span class="section-label">Nous joindre</span>
-      <h2 class="section-title">Contactez-nous</h2>
-      <p class="section-sub">Une question ? Un devis ? Notre équipe répond rapidement.</p>
-      <div style="display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:10px">
-        <div class="service-card" style="max-width:220px;text-align:center">
-          <span class="service-icon">📞</span>
-          <h3>Téléphone</h3>
-          <p style="color:var(--gold);font-weight:700">+33 1 23 45 67 89</p>
+    <button class="alink" onclick="goLogin()">⚙ Admin</button>
+  </nav>
+
+  <div class="cpage on" id="cp-accueil">
+
+    <!-- ══ HERO ══ -->
+    <div class="hero" style="position:relative;overflow:hidden">
+      <div style="position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1400&q=80');background-size:cover;background-position:center;opacity:.13;pointer-events:none;z-index:0"></div>
+      <div style="position:relative;z-index:1">
+        <div style="font-size:10px;color:var(--r);font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:8px;font-family:'Barlow Condensed',sans-serif">Orvault — Nantes</div>
+        <h1 id="site-slogan">Spécialiste<br>Pneus & Jantes</h1>
+        <p><span id="cl-addr">18 Rue de Tourneuve, 44700 Orvault</span> &nbsp;·&nbsp; <span id="cl-tel">07 66 35 05 39</span></p>
+        <div class="hstats">
+          <div class="hstat"><strong>15€</strong><span>Montage dès</span></div>
+          <div class="hstat"><strong>50€</strong><span>Réno. jante</span></div>
+          <div class="hstat"><strong id="h-nprods">24</strong><span>Produits</span></div>
+          
         </div>
-        <div class="service-card" style="max-width:220px;text-align:center">
-          <span class="service-icon">✉️</span>
-          <h3>Email</h3>
-          <p style="color:var(--gold);font-weight:700">contact@drjantes.fr</p>
-        </div>
-        <div class="service-card" style="max-width:220px;text-align:center">
-          <span class="service-icon">🕐</span>
-          <h3>Horaires</h3>
-          <p>Lun–Sam : 8h–19h</p>
+        <div class="hbtns">
+          <button class="hbtn solid" onclick="cPage('rdv')">Prendre rendez-vous →</button>
+          <button class="hbtn out" onclick="goSection('sec-catalogue')">Voir le catalogue</button>
         </div>
       </div>
-      <button class="btn-primary" style="margin-top:36px" onclick="showPage('contact')">Voir la page contact</button>
     </div>
-  </section>
-  <!-- FOOTER -->
-  <footer>
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <div class="logo">DR<span>Jantes</span></div>
-        <p>Votre spécialiste jantes et pneus depuis plus de 10 ans. Qualité, expertise et passion au service de votre véhicule.</p>
-      </div>
-      <div>
-        <h4>Navigation</h4>
-        <ul>
-          <li><a onclick="showPage('accueil')">Accueil</a></li>
-          <li><a onclick="showPage('catalogue')">Catalogue</a></li>
-          <li><a onclick="showPage('rdv')">Rendez-vous</a></li>
-          <li><a onclick="showPage('contact')">Contact</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Services</h4>
-        <ul>
-          <li><a>Montage Jantes</a></li>
-          <li><a>Équilibrage</a></li>
-          <li><a>Géométrie 3D</a></li>
-          <li><a>Rénovation</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Contact</h4>
-        <ul>
-          <li><a>+33 1 23 45 67 89</a></li>
-          <li><a>contact@drjantes.fr</a></li>
-          <li><a>12 Rue des Jantes, Paris</a></li>
-          <li><a>Lun–Sam 8h–19h</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>© 2025 DR Jantes — Tous droits réservés</span>
-      <span>Fait avec ❤️ pour nos clients</span>
-    </div>
-  </footer>
-</div>
-<!-- ═══════════ PAGE CATALOGUE ═══════════ -->
-<div class="page" id="page-catalogue">
-  <section style="background:var(--dark);min-height:calc(100vh - 70px)">
-    <div class="container">
-      <span class="section-label">Notre gamme complète</span>
-      <h2 class="section-title">Catalogue</h2>
-      <p class="section-sub">Découvrez l'ensemble de nos produits : jantes, pneus, packs et accessoires.</p>
-      <div class="cat-tabs">
-        <button class="cat-tab active" onclick="switchCat('jantes',this)">🔵 Jantes</button>
-        <button class="cat-tab" onclick="switchCat('pneus',this)">⚫ Pneus</button>
-        <button class="cat-tab" onclick="switchCat('packs',this)">📦 Packs</button>
-        <button class="cat-tab" onclick="switchCat('accessoires',this)">🔩 Accessoires</button>
-        <button class="cat-tab" onclick="switchCat('promos-cat',this)">🔥 Promotions</button>
-      </div>
-      <!-- JANTES -->
-      <div class="cat-section active" id="cat-jantes">
-        <div class="products-grid" id="grid-jantes"></div>
-      </div>
-      <!-- PNEUS -->
-      <div class="cat-section" id="cat-pneus">
-        <div class="products-grid" id="grid-pneus"></div>
-      </div>
-      <!-- PACKS -->
-      <div class="cat-section" id="cat-packs">
-        <div class="products-grid" id="grid-packs"></div>
-      </div>
-      <!-- ACCESSOIRES -->
-      <div class="cat-section" id="cat-accessoires">
-        <div class="products-grid" id="grid-accessoires"></div>
-      </div>
-      <!-- PROMOS -->
-      <div class="cat-section" id="cat-promos-cat">
-        <div class="promo-section-head">
-          <h3>🔥 Toutes les promotions</h3>
-          <span class="promo-count-badge" id="promo-count-badge">0 offres</span>
+
+    <!-- ══ BANDE D'IMAGES ══ -->
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:3px;height:180px;overflow:hidden">
+      <div style="overflow:hidden;position:relative;cursor:pointer" onclick="goSection('sec-catalogue')">
+        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&q=80" alt="Atelier DR Jantes" style="width:100%;height:100%;object-fit:cover;transition:transform .5s" onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'">
+        <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(192,57,43,.3),transparent 60%)"></div>
+        <div style="position:absolute;bottom:14px;left:14px">
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:900;color:#fff;text-transform:uppercase;text-shadow:0 1px 8px rgba(0,0,0,.8)">Spécialiste pneus & jantes</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.8);margin-top:2px">Orvault — Nantes</div>
         </div>
-        <div class="products-grid" id="grid-promos-cat"></div>
+      </div>
+      <div style="overflow:hidden;cursor:pointer" onclick="goSection('sec-catalogue')">
+        <img src="https://images.unsplash.com/photo-1600712242805-5f78671b24da?w=400&q=80" alt="Jantes" style="width:100%;height:100%;object-fit:cover;transition:transform .5s" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'">
+      </div>
+      <div style="overflow:hidden;cursor:pointer" onclick="goSection('sec-galerie')">
+        <img src="https://images.unsplash.com/photo-1625047509248-ec889cbff17f?w=400&q=80" alt="Atelier" style="width:100%;height:100%;object-fit:cover;transition:transform .5s" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'">
       </div>
     </div>
-  </section>
-</div>
-<!-- ═══════════ PAGE RDV ═══════════ -->
-<div class="page" id="page-rdv">
-  <section style="background:var(--dark2);min-height:calc(100vh - 70px)">
-    <div class="container">
-      <span class="section-label">Réservation en ligne</span>
-      <h2 class="section-title">Prendre Rendez-vous</h2>
-      <p class="section-sub">Réservez votre créneau en quelques secondes. Confirmation immédiate par email.</p>
-      <div class="rdv-wrapper">
-        <div class="rdv-info">
-          <h2>Pourquoi choisir DR Jantes ?</h2>
-          <p>Notre équipe de professionnels s'occupe de tout. Déposez votre véhicule et repartez avec des roues parfaites.</p>
-          <div class="rdv-steps">
-            <div class="step"><div class="step-num">1</div><div class="step-text"><h4>Choisissez votre service</h4><p>Montage, géométrie, pneus ou diagnostic.</p></div></div>
-            <div class="step"><div class="step-num">2</div><div class="step-text"><h4>Sélectionnez une date</h4><p>Créneaux disponibles du lundi au samedi.</p></div></div>
-            <div class="step"><div class="step-num">3</div><div class="step-text"><h4>Confirmez vos infos</h4><p>Nom, véhicule et coordonnées.</p></div></div>
-            <div class="step"><div class="step-num">4</div><div class="step-text"><h4>C'est confirmé !</h4><p>Vous recevez une confirmation immédiate.</p></div></div>
+
+    <div class="ccontent">
+
+      <!-- ══ SERVICES ══ -->
+      <div class="cttl">Nos services</div>
+      <div class="csub">Cliquez pour explorer le catalogue</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:32px">
+        <div class="scard" onclick="goSection('sec-catalogue');clTab('pneus',document.querySelector('[data-tab=pneus]'))" style="padding:0;overflow:hidden">
+          <div style="height:140px;overflow:hidden;position:relative">
+            <img src="https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=600&q=80" alt="Pneus" style="width:100%;height:100%;object-fit:cover;transition:transform .4s" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'">
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75),transparent 60%)"></div>
+            <div style="position:absolute;bottom:0;left:0;right:0;padding:12px 14px">
+              <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;color:#fff;text-transform:uppercase">Pneus</div>
+              <div style="font-size:11px;color:rgba(255,255,255,.7)">Été, hiver, 4 saisons, run flat</div>
+            </div>
+            <div style="position:absolute;top:10px;right:10px;background:var(--r);color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;padding:3px 8px;border-radius:3px">dès 49€</div>
           </div>
         </div>
-        <div class="rdv-form">
-          <form onsubmit="submitRdv(event)">
-            <div class="form-row">
-              <div class="form-group"><label>Prénom *</label><input type="text" id="rdv-prenom" placeholder="Jean" required></div>
-              <div class="form-group"><label>Nom *</label><input type="text" id="rdv-nom" placeholder="Dupont" required></div>
+        <div class="scard" onclick="goSection('sec-catalogue');clTab('jantes',document.querySelector('[data-tab=jantes]'))" style="padding:0;overflow:hidden">
+          <div style="height:140px;overflow:hidden;position:relative">
+            <img src="https://images.unsplash.com/photo-1600712242805-5f78671b24da?w=600&q=80" alt="Jantes" style="width:100%;height:100%;object-fit:cover;transition:transform .4s" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'">
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75),transparent 60%)"></div>
+            <div style="position:absolute;bottom:0;left:0;right:0;padding:12px 14px">
+              <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;color:#fff;text-transform:uppercase">Jantes</div>
+              <div style="font-size:11px;color:rgba(255,255,255,.7)">Alu, acier, diamantée, rénovation</div>
             </div>
-            <div class="form-row">
-              <div class="form-group"><label>Téléphone *</label><input type="tel" id="rdv-tel" placeholder="06 12 34 56 78" required></div>
-              <div class="form-group"><label>Email</label><input type="email" id="rdv-email" placeholder="jean@email.com"></div>
+            <div style="position:absolute;top:10px;right:10px;background:var(--r);color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;padding:3px 8px;border-radius:3px">dès 40€</div>
+          </div>
+        </div>
+        <div class="scard" onclick="goSection('sec-catalogue');clTab('freinage',document.querySelector('[data-tab=freinage]'))" style="padding:0;overflow:hidden">
+          <div style="height:140px;overflow:hidden;position:relative">
+            <img src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=600&q=80" alt="Freinage" style="width:100%;height:100%;object-fit:cover;transition:transform .4s" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'">
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75),transparent 60%)"></div>
+            <div style="position:absolute;bottom:0;left:0;right:0;padding:12px 14px">
+              <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;color:#fff;text-transform:uppercase">Freinage</div>
+              <div style="font-size:11px;color:rgba(255,255,255,.7)">Plaquettes, disques, kit complet</div>
             </div>
-            <div class="form-group">
-              <label>Véhicule *</label>
-              <input type="text" id="rdv-vehicule" placeholder="Ex: Renault Clio 2020" required>
+            <div style="position:absolute;top:10px;right:10px;background:var(--r);color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;padding:3px 8px;border-radius:3px">dès 30€</div>
+          </div>
+        </div>
+        <div class="scard" onclick="goSection('sec-catalogue');clTab('services',document.querySelector('[data-tab=services]'))" style="padding:0;overflow:hidden">
+          <div style="height:140px;overflow:hidden;position:relative">
+            <img src="https://images.unsplash.com/photo-1615906655593-ad0386982a0f?w=600&q=80" alt="Services" style="width:100%;height:100%;object-fit:cover;transition:transform .4s" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'">
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75),transparent 60%)"></div>
+            <div style="position:absolute;bottom:0;left:0;right:0;padding:12px 14px">
+              <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;color:#fff;text-transform:uppercase">Services</div>
+              <div style="font-size:11px;color:rgba(255,255,255,.7)">Diagnostic, équilibrage, montage</div>
             </div>
-            <div class="form-group">
-              <label>Service souhaité *</label>
-              <select id="rdv-service" required>
-                <option value="">Choisir un service...</option>
-                <option>Montage de jantes</option>
-                <option>Équilibrage</option>
-                <option>Géométrie 3D</option>
-                <option>Remplacement de pneus</option>
-                <option>Rénovation de jantes</option>
-                <option>Diagnostic roues</option>
-                <option>Pack complet</option>
-              </select>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><label>Date souhaitée *</label><input type="date" id="rdv-date" required></div>
-              <div class="form-group"><label>Préférence</label>
-                <select id="rdv-periode">
-                  <option>Matin (8h–12h)</option>
-                  <option>Après-midi (13h–17h)</option>
-                  <option>Fin de journée (17h–19h)</option>
-                </select>
-              </div>
-            </div>
-            <span class="slot-label">Créneaux disponibles</span>
-            <div class="time-slots">
-              <div class="slot" onclick="selectSlot(this)">08h00</div>
-              <div class="slot" onclick="selectSlot(this)">09h00</div>
-              <div class="slot unavailable">10h00</div>
-              <div class="slot" onclick="selectSlot(this)">11h00</div>
-              <div class="slot unavailable">13h00</div>
-              <div class="slot" onclick="selectSlot(this)">14h00</div>
-              <div class="slot" onclick="selectSlot(this)">15h00</div>
-              <div class="slot unavailable">16h00</div>
-              <div class="slot" onclick="selectSlot(this)">17h00</div>
-              <div class="slot" onclick="selectSlot(this)">18h00</div>
-            </div>
-            <div class="form-group"><label>Message / Précisions</label><textarea id="rdv-message" placeholder="Informations supplémentaires..."></textarea></div>
-            <button type="submit" class="btn-submit">✅ Confirmer le rendez-vous</button>
-          </form>
+            <div style="position:absolute;top:10px;right:10px;background:var(--r);color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;padding:3px 8px;border-radius:3px">dès 5€</div>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
-</div>
-<!-- ═══════════ PAGE CONTACT ═══════════ -->
-<div class="page" id="page-contact">
-  <section style="background:var(--dark);min-height:calc(100vh - 70px)">
-    <div class="container">
-      <span class="section-label">Nous joindre</span>
-      <h2 class="section-title">Contact</h2>
-      <p class="section-sub">Notre équipe est disponible du lundi au samedi pour répondre à toutes vos questions.</p>
-      <div class="contact-grid">
-        <div class="contact-info">
-          <h2>Parlons de votre projet</h2>
-          <div class="contact-item">
-            <div class="contact-icon">📞</div>
-            <div><h4>Téléphone</h4><p>+33 1 23 45 67 89</p></div>
-          </div>
-          <div class="contact-item">
-            <div class="contact-icon">✉️</div>
-            <div><h4>Email</h4><p>contact@drjantes.fr</p></div>
-          </div>
-          <div class="contact-item">
-            <div class="contact-icon">📍</div>
-            <div><h4>Adresse</h4><p>12 Rue des Jantes, 75001 Paris</p></div>
-          </div>
-          <div class="contact-item">
-            <div class="contact-icon">🕐</div>
-            <div><h4>Horaires</h4><p>Lun–Ven : 8h–19h | Sam : 9h–17h</p></div>
-          </div>
-          <div style="margin-top:30px">
-            <button class="btn-primary" onclick="showPage('rdv')">📅 Prendre un RDV</button>
+
+      <!-- ══ POURQUOI NOUS ══ -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:40px;align-items:center">
+        <div style="border-radius:10px;overflow:hidden;position:relative;height:260px">
+          <img src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=800&q=80" alt="Atelier montage pneus" style="width:100%;height:100%;object-fit:cover">
+          <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(192,57,43,.4),transparent 60%)"></div>
+          <div style="position:absolute;bottom:16px;left:16px;right:16px">
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:#fff;text-transform:uppercase;line-height:1">Montage professionnel</div>
           </div>
         </div>
         <div>
-          <div class="map-box">
-            <span>📍</span>
-            <p>12 Rue des Jantes, Paris</p>
-            <p style="font-size:.78rem;color:#555">Intégrez votre Google Maps ici</p>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;color:#fff;text-transform:uppercase;margin-bottom:16px;line-height:1.1">Pourquoi choisir<br><span style="color:var(--r)">DR JANTES ?</span></div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--s1);border:1px solid var(--b1);border-radius:6px;border-left:3px solid var(--r)"><span style="font-size:18px;flex-shrink:0">⚡</span><div><div style="font-weight:600;font-size:13px;color:#fff;margin-bottom:2px">Montage rapide</div><div style="font-size:11px;color:var(--mu)">Pneus montés et équilibrés en quelques minutes</div></div></div>
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--s1);border:1px solid var(--b1);border-radius:6px;border-left:3px solid var(--am)"><span style="font-size:18px;flex-shrink:0">💶</span><div><div style="font-weight:600;font-size:13px;color:#fff;margin-bottom:2px">Prix compétitifs</div><div style="font-size:11px;color:var(--mu)">Montage + équilibrage inclus dans tous nos tarifs</div></div></div>
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--s1);border:1px solid var(--b1);border-radius:6px;border-left:3px solid var(--g1)"><span style="font-size:18px;flex-shrink:0">📍</span><div><div style="font-weight:600;font-size:13px;color:#fff;margin-bottom:2px">Localisation</div><div style="font-size:11px;color:var(--mu)"><span id="cl-addr4">18 Rue de Tourneuve, Orvault</span></div></div></div>
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--s1);border:1px solid var(--b1);border-radius:6px;border-left:3px solid var(--bl)"><span style="font-size:18px;flex-shrink:0">🛞</span><div><div style="font-weight:600;font-size:13px;color:#fff;margin-bottom:2px">Large choix</div><div style="font-size:11px;color:var(--mu)">Toutes dimensions, toutes marques, en stock</div></div></div>
           </div>
-          <div class="rdv-form" style="margin-top:24px">
-            <h3 style="font-size:1rem;font-weight:700;margin-bottom:18px">Envoyer un message</h3>
-            <form onsubmit="submitContact(event)">
-              <div class="form-row">
-                <div class="form-group"><label>Nom</label><input type="text" placeholder="Votre nom" required></div>
-                <div class="form-group"><label>Email</label><input type="email" placeholder="email@exemple.fr" required></div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════
+           SECTION CATALOGUE (intégrée)
+      ══════════════════════════════════ -->
+      <div id="sec-catalogue" style="scroll-margin-top:70px">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:6px">
+          <div class="cttl" style="margin:0">Catalogue</div>
+          <div style="flex:1;height:1px;background:var(--b2)"></div>
+          <div style="font-size:11px;color:var(--mu)">Cliquez sur un produit pour plus de détails</div>
+        </div>
+        <div class="csub" style="margin-bottom:20px">Tous nos produits, promotions et services</div>
+
+        <!-- Topbar recherche -->
+        <div class="cl-topbar" style="padding:0 0 0 0;margin-bottom:12px">
+          <div class="cl-search-box">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--mu);pointer-events:none"><circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.3"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+            <input id="cl-q" class="cl-search-inp" type="text" placeholder="Rechercher un produit, une dimension..." oninput="clSearch(this.value)">
+            <button id="cl-q-clear" onclick="clClear()" style="display:none;position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--mu);font-size:20px;cursor:pointer;line-height:1">×</button>
+          </div>
+          <div style="display:flex;gap:4px;flex-shrink:0">
+            <button class="cl-view-btn on" id="cl-vg" onclick="clSetView('grid',this)" title="Grille"><svg width="14" height="14" viewBox="0 0 14 14"><rect x="1" y="1" width="5" height="5" rx="1" fill="currentColor"/><rect x="8" y="1" width="5" height="5" rx="1" fill="currentColor"/><rect x="1" y="8" width="5" height="5" rx="1" fill="currentColor"/><rect x="8" y="8" width="5" height="5" rx="1" fill="currentColor"/></svg></button>
+            <button class="cl-view-btn" id="cl-vl" onclick="clSetView('list',this)" title="Liste"><svg width="14" height="14" viewBox="0 0 14 14"><rect x="1" y="2" width="12" height="2" rx="1" fill="currentColor"/><rect x="1" y="6" width="12" height="2" rx="1" fill="currentColor"/><rect x="1" y="10" width="12" height="2" rx="1" fill="currentColor"/></svg></button>
+          </div>
+        </div>
+
+        <!-- Filtres -->
+        <div class="cl-filters" id="cl-filters" style="margin-bottom:12px;border-radius:7px">
+          <div class="cl-filter-group">
+            <span class="cl-filter-lbl">Prix</span>
+            <span class="cl-filter-val" id="cl-pmin-lbl">0€</span>
+            <input type="range" id="cl-pmin" min="0" max="500" value="0" step="5" style="width:70px;accent-color:var(--r);cursor:pointer" oninput="clUpdatePrice()">
+            <span style="font-size:10px;color:var(--mu)">—</span>
+            <input type="range" id="cl-pmax" min="0" max="500" value="500" step="5" style="width:70px;accent-color:var(--r);cursor:pointer" oninput="clUpdatePrice()">
+            <span class="cl-filter-val" id="cl-pmax-lbl">500€+</span>
+          </div>
+          <div class="cl-filter-div"></div>
+          <div class="cl-filter-group">
+            <span class="cl-filter-lbl">Tri</span>
+            <select id="cl-tri" class="cl-filter-sel" onchange="clRender()"><option value="">Défaut</option><option value="pa">Prix ↑</option><option value="pd">Prix ↓</option><option value="az">A → Z</option><option value="za">Z → A</option></select>
+          </div>
+          <div class="cl-filter-div"></div>
+          <div class="cl-filter-group">
+            <span class="cl-filter-lbl">Stock</span>
+            <select id="cl-st" class="cl-filter-sel" onchange="clRender()"><option value="">Tout</option><option value="ok">Disponible</option><option value="low">Faible</option></select>
+          </div>
+          <button class="cl-filter-reset" onclick="clReset()">↺ Reset</button>
+          <span class="cl-count" id="cl-count"></span>
+        </div>
+
+        <!-- Onglets -->
+        <div class="cl-tabs" id="cl-tabs" style="margin-bottom:0">
+          <button class="cl-tab on" data-tab="pneus"    onclick="clTab('pneus',this)">🛞 Pneus</button>
+          <button class="cl-tab"    data-tab="jantes"   onclick="clTab('jantes',this)">⭕ Jantes</button>
+          <button class="cl-tab"    data-tab="freinage" onclick="clTab('freinage',this)">🛑 Freinage</button>
+          <button class="cl-tab"    data-tab="services" onclick="clTab('services',this)">🔧 Services</button>
+          <button class="cl-tab"    data-tab="access"   onclick="clTab('access',this)">🧰 Accessoires</button>
+        </div>
+
+        <!-- Résultats recherche -->
+        <div id="cl-results" style="display:none;padding-top:16px">
+          <div class="cl-results-header" id="cl-results-lbl" style="padding:0"></div>
+          <div class="cl-grid" id="cl-results-grid"></div>
+          <div class="cl-empty" id="cl-results-empty" style="display:none"><div style="font-size:40px;margin-bottom:10px;opacity:.25">🔍</div><div style="font-size:15px;font-weight:600;color:var(--t2)">Aucun résultat</div></div>
+        </div>
+
+        <!-- Sections par onglet -->
+        <div id="cl-content">
+          <div class="cl-section on" id="cls-pneus" style="padding:16px 0">
+            <div class="cl-grid" id="clg-pneus"></div>
+
+            <!-- ══ PROMOS PNEUS PREMIUM ══ -->
+            <div style="margin-top:36px">
+              <div style="display:flex;align-items:center;gap:14px;margin-bottom:6px">
+                <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:var(--am);text-transform:uppercase;letter-spacing:1px">🔥 Promotions pneus neufs</div>
+                <div style="flex:1;height:1px;background:rgba(212,133,15,.2)"></div>
               </div>
-              <div class="form-group"><label>Sujet</label><input type="text" placeholder="Objet de votre message"></div>
-              <div class="form-group"><label>Message</label><textarea placeholder="Votre message..." style="height:100px" required></textarea></div>
-              <button type="submit" class="btn-submit">📨 Envoyer</button>
-            </form>
+              <div class="pm-infobar">
+                <div class="pm-infobar-item">✅ <strong>Montage + Équilibrage inclus</strong></div>
+                <div class="pm-infobar-item">📍 <strong id="cl-addr3">18 Rue de Tourneuve, 44700 Orvault</strong></div>
+                <div class="pm-infobar-item">📞 <a href="tel:0766350539" style="color:var(--am);font-weight:700;text-decoration:none"><span id="cl-tel3">07 66 35 05 39</span></a></div>
+                
+              </div>
+
+              <!-- Navigation tailles -->
+              <div class="pm-nav" id="pm-nav-pneus">
+                <button class="pm-nav-btn on" onclick="pmFilter('pneus','',this)">Tout</button>
+                <button class="pm-nav-btn" onclick="pmFilter('pneus','14',this)">Jante 14</button>
+                <button class="pm-nav-btn" onclick="pmFilter('pneus','15',this)">Jante 15</button>
+                <button class="pm-nav-btn" onclick="pmFilter('pneus','16',this)">Jante 16</button>
+                <button class="pm-nav-btn" onclick="pmFilter('pneus','17',this)">Jante 17</button>
+                <button class="pm-nav-btn" onclick="pmFilter('pneus','18',this)">Jante 18</button>
+                <button class="pm-nav-btn" onclick="pmFilter('pneus','19',this)">Jante 19</button>
+                <button class="pm-nav-btn" onclick="pmFilter('pneus','utilitaires',this)">Utilitaires</button>
+              </div>
+              <div id="pm-grid-pneus"></div>
+            </div>
+          </div>
+          <div class="cl-section" id="cls-jantes" style="padding:16px 0"><div class="cl-grid" id="clg-jantes"></div></div>
+          <div class="cl-section" id="cls-freinage" style="padding:16px 0"><div class="cl-grid" id="clg-freinage"></div></div>
+          <div class="cl-section" id="cls-services" style="padding:16px 0">
+            <div class="cl-grid" id="clg-services"></div>
+            <div class="cl-promo-sep" style="margin-top:28px"><div class="cl-promo-sep-line"></div><div class="cl-promo-sep-txt" style="color:#60a8e0">❄️ Climatisation Auto · Recharge R134a · Dès 50€</div><div class="cl-promo-sep-line"></div></div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-top:16px">
+              <div class="clim-card"><div style="height:3px;background:linear-gradient(90deg,#1a6fa8,#7c4dbd)"></div><div style="padding:18px 18px 12px"><div style="font-family:'Barlow Condensed',sans-serif;font-size:46px;font-weight:900;color:#60a8e0;line-height:1">dès 50€</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;text-transform:uppercase;color:#60a8e0;margin-top:5px">Recharge Climatisation Auto</div><div style="font-size:12px;color:#60a8e0;margin-top:3px">✓ Gaz R134a — Véhicules jusqu'à 2017</div></div><div style="padding:0 18px 12px;display:flex;flex-direction:column;gap:7px"><div style="font-size:12px;color:var(--t2)">❄️ Gaz R134a uniquement</div><div style="font-size:12px;color:var(--t2)">⚡ Service rapide</div><div style="font-size:12px;color:var(--t2)">🔧 Travail professionnel</div></div><div style="padding:0 18px 18px"><button onclick="cPage('rdv')" style="width:100%;background:linear-gradient(135deg,#1a6fa8,#0d4a7a);border:none;border-radius:5px;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;padding:11px;cursor:pointer">Prendre rendez-vous →</button></div></div>
+            </div>
+          </div>
+          <div class="cl-section" id="cls-access" style="padding:16px 0"><div class="cl-grid" id="clg-access"></div></div>
+          </div>
+        </div><!-- /cl-content -->
+      </div><!-- /sec-catalogue -->
+
+      <!-- ══════════════════════════════════
+           SECTION GALERIE (intégrée)
+      ══════════════════════════════════ -->
+      <div id="sec-galerie" style="scroll-margin-top:70px;margin-top:48px">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:6px">
+          <div class="cttl" style="margin:0">Galerie</div>
+          <div style="flex:1;height:1px;background:var(--b2)"></div>
+          <div style="display:flex;gap:5px">
+            <button class="cf on" onclick="gFilter('',this)">Tout</button>
+            <button class="cf" onclick="gFilter('photo',this)">Photos</button>
+            <button class="cf" onclick="gFilter('video',this)">Vidéos</button>
+          </div>
+        </div>
+        <div class="csub" style="margin-bottom:20px">Photos et vidéos de nos réalisations</div>
+        <div class="ggrid" id="c-gallery"></div>
+        <div id="g-empty" class="empty" style="display:none"><div class="eico">📷</div><div>Aucun média disponible</div></div>
+      </div><!-- /sec-galerie -->
+
+      <!-- CTA BAS DE PAGE -->
+      <div style="margin-top:48px;padding:28px;background:linear-gradient(135deg,var(--s1),var(--dk));border:1px solid var(--b2);border-radius:12px;text-align:center">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:#fff;text-transform:uppercase;margin-bottom:8px">Prêt à passer commande ?</div>
+        <div style="font-size:13px;color:var(--mu);margin-bottom:20px">Montage rapide · <span id="cl-addr2">18 Rue de Tourneuve, 44700 Orvault</span></div>
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+          <button class="hbtn solid" onclick="cPage('rdv')">📅 Prendre rendez-vous</button>
+          <button class="hbtn out" onclick="cPage('devis')">📄 Demander un devis gratuit</button>
+          <a href="tel:0766350539" id="cl-tel-link" style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;padding:11px 22px;border-radius:4px;border:1px solid rgba(29,185,84,.4);color:var(--g1);text-decoration:none;transition:all .15s">📞 <span id="cl-tel2">07 66 35 05 39</span></a>
+        </div>
+      </div>
+
+    </div><!-- /ccontent -->
+
+    <!-- Modal detail produit -->
+    <div class="cl-modal-bg" id="cl-modal" onclick="if(event.target===this)clCloseModal()">
+      <div class="cl-modal">
+        <button class="cl-modal-close" onclick="clCloseModal()">×</button>
+        <div class="cl-modal-img-wrap">
+          <img id="clm-img" src="" alt="" style="width:100%;height:200px;object-fit:cover;border-radius:8px 8px 0 0;display:none">
+          <div id="clm-ico" style="font-size:60px;text-align:center;padding:24px 0"></div>
+        </div>
+        <div class="cl-modal-body">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <span class="cl-modal-cat" id="clm-cat"></span>
+            <span class="tag tgr" id="clm-ref"></span>
+          </div>
+          <div class="cl-modal-name" id="clm-name"></div>
+          <div class="cl-modal-desc" id="clm-desc"></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:12px;border-top:1px solid var(--b2)">
+            <div><div class="cl-modal-price" id="clm-price"></div><div style="font-size:10px;color:var(--mu);margin-top:1px" id="clm-unite"></div></div>
+            <span class="tag" id="clm-stock"></span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px">
+            <button class="btn P" style="padding:11px;font-size:13px" onclick="cPage('rdv');clCloseModal()">📅 Prendre RDV</button>
+            <button class="btn G" style="padding:11px;font-size:13px" onclick="clDevisRapide()">📄 Devis rapide</button>
           </div>
         </div>
       </div>
     </div>
-  </section>
-</div>
-<!-- ═══════════ PAGE ADMIN LOGIN ═══════════ -->
-<div class="page" id="page-admin-gate">
-  <div class="login-page">
-    <div class="login-box">
-      <div class="logo-lg">DR<span style="color:var(--text)">Jantes</span></div>
-      <p class="subtitle">Espace Administration<br>Entrez votre code à 6 chiffres</p>
-      <div class="pin-display" id="pinDisplay">
-        <div class="pin-dot" id="dot0"></div>
-        <div class="pin-dot" id="dot1"></div>
-        <div class="pin-dot" id="dot2"></div>
-        <div class="pin-dot" id="dot3"></div>
-        <div class="pin-dot" id="dot4"></div>
-        <div class="pin-dot" id="dot5"></div>
+
+  </div>
+
+  <div class="cpage" id="cp-rdv">
+    <div class="ccontent">
+      <div class="cttl">Rendez-vous</div><div class="csub">Réservez en ligne</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:880px">
+        <div>
+          <div class="fpanel">
+            <h3>Vos informations</h3>
+            <div class="fg"><label>Nom *</label><input id="cn" placeholder="Votre nom"></div>
+            <div class="fg"><label>Téléphone</label><input id="ct" placeholder="06..."></div>
+            <div class="fg"><label>Email</label><input id="ce" placeholder="votre@email.com"></div>
+            <div class="fg"><label>Véhicule</label><input id="cv" placeholder="ex: Renault Clio 3 2008"></div>
+            <div class="fg"><label>Service *</label>
+              <select id="cs">
+                <option value="">— Choisir —</option>
+                <option>Montage pneus + équilibrage</option><option>Équilibrage seul</option>
+                <option>Diagnostic (valise)</option><option>Pose plaquettes avant</option>
+                <option>Pose plaquettes arrière</option><option>Changement disque avant</option>
+                <option>Changement disque arrière</option><option>Rénovation jante</option>
+              </select>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
+              <div class="fg"><label>Date *</label><input type="date" id="cd"></div>
+              <div class="fg"><label>Heure *</label><input type="time" id="ch" step="1800"></div>
+            </div>
+            <div class="fg"><label>Notes</label><textarea id="cno" placeholder="Informations complémentaires..." style="height:55px"></textarea></div>
+            <button class="bigbtn" onclick="submitRdv()">Confirmer le rendez-vous →</button>
+          </div>
+        </div>
+        <div>
+          <div class="crenbox"><h3>Créneaux disponibles</h3><div id="c-crens"></div></div>
+          <div class="crenbox" style="margin-top:10px">
+            <h3>Horaires d'ouverture</h3>
+            <div id="c-horaires-rdv"></div>
+          </div>
+          <div id="rdv-ok" style="display:none" class="confirmbox"><div style="font-size:24px;margin-bottom:5px">✅</div><h4>Rendez-vous confirmé !</h4><p id="rdv-ok-txt"></p></div>
+        </div>
       </div>
-      <div class="pin-pad">
-        <button class="pin-btn" onclick="pinPress('1')">1</button>
-        <button class="pin-btn" onclick="pinPress('2')">2</button>
-        <button class="pin-btn" onclick="pinPress('3')">3</button>
-        <button class="pin-btn" onclick="pinPress('4')">4</button>
-        <button class="pin-btn" onclick="pinPress('5')">5</button>
-        <button class="pin-btn" onclick="pinPress('6')">6</button>
-        <button class="pin-btn" onclick="pinPress('7')">7</button>
-        <button class="pin-btn" onclick="pinPress('8')">8</button>
-        <button class="pin-btn" onclick="pinPress('9')">9</button>
-        <button class="pin-btn" onclick="pinPress('0')">0</button>
-        <button class="pin-btn del" onclick="pinDel()">⌫</button>
-      </div>
-      <div class="pin-error" id="pinError"></div>
-      <p class="pin-hint">Code par défaut : 123456</p>
     </div>
   </div>
-</div>
-<!-- ═══════════ PAGE ADMIN ═══════════ -->
-<div class="page" id="page-admin">
-  <div class="admin-layout">
-    <!-- SIDEBAR -->
-    <div class="admin-sidebar">
-      <div class="admin-sidebar-logo">
-        <div class="logo" style="font-size:1.2rem">DR<span>Jantes</span></div>
-        <span>Administration</span>
-      </div>
-      <div class="admin-nav-group">
-        <div class="admin-nav-label">Tableau de bord</div>
-        <div class="admin-nav-item active" onclick="showAdminPage('dashboard',this)">
-          <span class="icon">📊</span> Dashboard
-        </div>
-      </div>
-      <div class="admin-nav-group">
-        <div class="admin-nav-label">Gestion</div>
-        <div class="admin-nav-item" onclick="showAdminPage('rdvs',this)">
-          <span class="icon">📅</span> Rendez-vous
-        </div>
-        <div class="admin-nav-item" onclick="showAdminPage('produits',this)">
-          <span class="icon">🛞</span> Produits
-        </div>
-        <div class="admin-nav-item" onclick="showAdminPage('promos',this)">
-          <span class="icon">🔥</span> Promotions
-        </div>
-      </div>
-      <div class="admin-nav-group">
-        <div class="admin-nav-label">Catalogue</div>
-        <div class="admin-nav-item" onclick="showAdminPage('cat-jantes',this)">
-          <span class="icon">⭕</span> Jantes
-        </div>
-        <div class="admin-nav-item" onclick="showAdminPage('cat-pneus',this)">
-          <span class="icon">⚫</span> Pneus
-        </div>
-        <div class="admin-nav-item" onclick="showAdminPage('cat-packs',this)">
-          <span class="icon">📦</span> Packs
-        </div>
-        <div class="admin-nav-item" onclick="showAdminPage('cat-accessoires',this)">
-          <span class="icon">🔩</span> Accessoires
-        </div>
-      </div>
-      <div class="admin-nav-group" style="margin-top:auto;padding-top:20px;border-top:1px solid #222">
-        <div class="admin-nav-item" onclick="adminLogout()" style="color:#e55">
-          <span class="icon">🚪</span> Déconnexion
+
+  <div class="cpage" id="cp-devis">
+    <div class="ccontent">
+      <div class="cttl">Devis gratuit</div><div class="csub">Estimez votre intervention instantanément</div>
+      <div style="max-width:600px">
+        <div class="fpanel">
+          <div class="fg"><label>Votre nom *</label><input id="dvn" placeholder="Nom Prénom"></div>
+          <div class="fg"><label>Véhicule</label><input id="dvv" placeholder="ex: Renault Clio 3 2008"></div>
+          <div style="font-size:10px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px;margin-top:3px">Prestations souhaitées</div>
+          <div id="dv-prods" style="margin-bottom:11px"></div>
+          <div class="tbox" id="dv-tbox" style="display:none;margin-bottom:11px"><span>Total estimé TTC</span><strong id="dv-total">0€</strong></div>
+          <button class="bigbtn" onclick="submitDevis()">Envoyer ma demande →</button>
+          <div id="dv-ok" style="display:none;margin-top:11px" class="confirmbox"><div style="font-size:24px;margin-bottom:5px">📄</div><h4>Devis envoyé !</h4><p id="dv-ok-txt"></p></div>
         </div>
       </div>
     </div>
-    <!-- MAIN -->
-    <div class="admin-main">
+  </div>
+
+</div>
+
+<!-- ══════ LOGIN ══════ -->
+<div id="scr-login" class="SCR">
+  <div class="lbox">
+    <div class="llogo">DR<span>.</span>JANTES</div>
+    <div class="lsub">Espace Administrateur</div>
+    <div style="font-size:12px;color:var(--t2);margin-bottom:4px;font-weight:500">Code secret à 6 chiffres</div>
+    <div style="font-size:11px;color:var(--mu);margin-bottom:18px">Code par défaut : <strong style="color:var(--t2)">123456</strong></div>
+    <div class="pinrow" style="gap:7px">
+      <input class="pind" type="password" maxlength="1" id="p0" oninput="pIn(0)" onkeydown="pKey(event,0)">
+      <input class="pind" type="password" maxlength="1" id="p1" oninput="pIn(1)" onkeydown="pKey(event,1)">
+      <input class="pind" type="password" maxlength="1" id="p2" oninput="pIn(2)" onkeydown="pKey(event,2)">
+      <input class="pind" type="password" maxlength="1" id="p3" oninput="pIn(3)" onkeydown="pKey(event,3)">
+      <input class="pind" type="password" maxlength="1" id="p4" oninput="pIn(4)" onkeydown="pKey(event,4)">
+      <input class="pind" type="password" maxlength="1" id="p5" oninput="pIn(5)" onkeydown="pKey(event,5)">
+    </div>
+    <div class="perr" id="perr"></div>
+    <button class="btn P" style="width:100%;padding:11px;font-size:13px;letter-spacing:.5px" onclick="checkPin()">Accéder à l'espace admin →</button>
+    <button class="lback" onclick="goClient()">← Retour au site</button>
+  </div>
+</div>
+
+<!-- ══════ ADMIN ══════ -->
+<div id="scr-admin" class="SCR">
+  <div id="aside">
+    <div class="sblogo">
+      <div class="sblt">DR<span>.</span>JANTES</div>
+      <div class="sbls">Admin Pro</div>
+    </div>
+    <div class="sbsec">Gestion</div>
+    <div class="sbi on" onclick="aPage('dashboard',this)"><svg viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6.5" height="6.5" rx="1" fill="currentColor"/><rect x="8.5" y="1" width="6.5" height="6.5" rx="1" fill="currentColor"/><rect x="1" y="8.5" width="6.5" height="6.5" rx="1" fill="currentColor"/><rect x="8.5" y="8.5" width="6.5" height="6.5" rx="1" fill="currentColor"/></svg>Tableau de bord</div>
+    <div class="sbi" onclick="aPage('produits',this)"><svg viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2" fill="none"/><rect x="9" y="2" width="5" height="5" rx="1" fill="currentColor" opacity=".5"/><rect x="2" y="9" width="5" height="5" rx="1" fill="currentColor" opacity=".5"/><rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2" fill="none"/></svg>Produits<span class="sbadge g" id="sb-np">24</span></div>
+    <div class="sbi" onclick="aPage('stock',this)"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1L15 4.5v7L8 15 1 11.5v-7L8 1z" stroke="currentColor" stroke-width="1.2" fill="none"/><path d="M8 8v6.5M8 8L1 4.5M8 8l7-3.5" stroke="currentColor" stroke-width="1"/></svg>Stock<span class="sbadge a" id="sb-na">0</span></div>
+    <div class="sbi" onclick="aPage('creneaux',this)"><svg viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="12" rx="1" stroke="currentColor" stroke-width="1.2" fill="none"/><path d="M5 1v4M11 1v4M1 7h14" stroke="currentColor" stroke-width="1.2"/></svg>Créneaux</div>
+    <div class="sbi" onclick="aPage('rdvs',this)"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5.5" r="3" stroke="currentColor" stroke-width="1.2" fill="none"/><path d="M2 14.5c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5" stroke="currentColor" stroke-width="1.2"/></svg>Rendez-vous<span class="sbadge r" id="sb-nr">0</span></div>
+    <div class="sbsec">Outils</div>
+    <div class="sbi" onclick="aPage('devisadmin',this)"><svg viewBox="0 0 16 16" fill="none"><rect x="2" y="1" width="12" height="14" rx="1" stroke="currentColor" stroke-width="1.2" fill="none"/><path d="M5 5h6M5 8h6M5 11h4" stroke="currentColor" stroke-width="1.2"/></svg>Devis</div>
+    <div class="sbi" onclick="aPage('settings',this)"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.2" fill="none"/><path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3.4 3.4l1.4 1.4M11.2 11.2l1.4 1.4M3.4 12.6l1.4-1.4M11.2 4.8l1.4-1.4" stroke="currentColor" stroke-width="1.2"/></svg>Paramètres</div>
+    <div class="sbfoot">
+      <div class="sbuser"><div class="sbav">DJ</div><div><div class="sbuname">DR Jantes</div><div class="sbrole">Administrateur</div></div></div>
+      <button class="sbout" onclick="goClient()">← Site client</button>
+    </div>
+  </div>
+
+  <div id="amain">
+    <div id="atbar">
+      <div class="atitle" id="atitle">Tableau de bord</div>
+      <div class="tbr">
+        <button class="btn P" id="acta" onclick="adminCTA()">+ Nouveau</button>
+        <div class="tbdate" id="tbdate"></div>
+        <div style="width:1px;height:22px;background:var(--b2);margin:0 2px"></div>
+        <button class="btn" style="padding:6px 11px;display:flex;align-items:center;gap:5px" onclick="aPage('settings',document.querySelector('.sbi[onclick*=settings]'))" title="Paramètres">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.4" fill="none"/><path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3.4 3.4l1.4 1.4M11.2 11.2l1.4 1.4M3.4 12.6l1.4-1.4M11.2 4.8l1.4-1.4" stroke="currentColor" stroke-width="1.2"/></svg>
+          <span style="font-size:10px">Paramètres</span>
+        </button>
+        <button class="btn" style="padding:6px 11px;display:flex;align-items:center;gap:5px;border-color:#3a1a1a;color:#e87070" onclick="confirmLogout()" title="Déconnexion">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M6 2H2v12h4M11 5l3 3-3 3M7 8h7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          <span style="font-size:10px">Déconnexion</span>
+        </button>
+      </div>
+    </div>
+    <div id="acontent">
+
       <!-- DASHBOARD -->
-      <div class="admin-page active" id="admin-dashboard">
-        <div class="admin-header">
-          <div><h2>Tableau de bord</h2><p>Bienvenue dans votre espace de gestion DR Jantes</p></div>
-        </div>
-        <div class="admin-stats">
-          <div class="admin-stat-card"><span class="icon">📅</span><span class="val" id="stat-rdv">0</span><span class="lbl">Rendez-vous</span></div>
-          <div class="admin-stat-card"><span class="icon">⏳</span><span class="val" id="stat-pending">0</span><span class="lbl">En attente</span></div>
-          <div class="admin-stat-card"><span class="icon">🛞</span><span class="val" id="stat-prod">0</span><span class="lbl">Produits</span></div>
-          <div class="admin-stat-card"><span class="icon">🔥</span><span class="val" id="stat-promo">0</span><span class="lbl">En promo</span></div>
-        </div>
-        <!-- Derniers RDV -->
-        <div class="table-wrap">
-          <div class="table-head"><h3>Derniers rendez-vous</h3></div>
-          <table>
-            <thead><tr><th>Client</th><th>Service</th><th>Date</th><th>Statut</th><th>Actions</th></tr></thead>
-            <tbody id="dash-rdv-tbody"></tbody>
-          </table>
+      <div class="apage on" id="ap-dashboard">
+        <div class="sgrid" id="d-stats"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div>
+            <div class="card"><div class="ch"><span class="ct">RDV du jour</span><span class="tag tgr" id="d-rdvtag">0 prévu</span></div><div id="d-rdvlist"></div></div>
+            <div class="card"><div class="ch"><span class="ct">Activité semaine</span></div><div class="cb"><div class="mchart" id="d-chart"></div><div class="mclbls" id="d-clbls"></div></div></div>
+          </div>
+          <div>
+            <div class="card"><div class="ch"><span class="ct">Alertes stock</span><span class="tag tgr" id="d-stocktag">0</span></div><div id="d-stocklist"></div></div>
+            <div class="card"><div class="ch"><span class="ct">Derniers devis</span></div><div id="d-dvislist"></div></div>
+          </div>
         </div>
       </div>
+
+      <!-- PRODUITS -->
+      <div class="apage" id="ap-produits">
+        <div class="card">
+          <div class="ch">
+            <div style="display:flex;align-items:center;gap:9px"><span class="ct">Catalogue</span><span style="font-size:11px;color:var(--mu)" id="p-lbl"></span></div>
+            <div class="chr">
+              <select class="btn" style="padding:5px 10px" id="p-filter" onchange="renderProds(this.value)">
+                <option value="">Toutes catégories</option>
+                <option>Pneus</option><option>Jantes</option><option>Freinage</option><option>Services</option><option>Accessoires</option>
+              </select>
+              <button class="btn P" onclick="openPModal(null)">+ Ajouter</button>
+            </div>
+          </div>
+          <div class="ox"><table><thead><tr><th>Réf.</th><th>Produit</th><th>Cat.</th><th>Prix</th><th>Stock</th><th>Statut</th><th>Actions</th></tr></thead><tbody id="p-tbody"></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- STOCK -->
+      <div class="apage" id="ap-stock">
+        <div class="sgrid" id="s-stats"></div>
+        <div class="card">
+          <div class="ch"><span class="ct">Gestion du stock</span><button class="btn P" onclick="openRModal(null)">+ Réapprovisionner</button></div>
+          <div class="ox"><table><thead><tr><th>Produit</th><th>Cat.</th><th>Stock</th><th>Seuil</th><th>Niveau</th><th>Statut</th><th>Action</th></tr></thead><tbody id="s-tbody"></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- CRÉNEAUX -->
+      <div class="apage" id="ap-creneaux">
+        <div class="card"><div class="ch"><span class="ct">Vue semaine</span><button class="btn P" onclick="openCModal()">+ Ajouter créneau</button></div><div class="cb"><div class="wkgrid" id="wk-grid"></div></div></div>
+        <div class="card"><div class="ch"><span class="ct">Liste des créneaux</span></div><table><thead><tr><th>Jour</th><th>Début</th><th>Fin</th><th>Durée</th><th>Récurrence</th><th>Statut</th><th>Action</th></tr></thead><tbody id="cr-tbody"></tbody></table></div>
+      </div>
+
       <!-- RDV -->
-      <div class="admin-page" id="admin-rdvs">
-        <div class="admin-header">
-          <div><h2>Rendez-vous</h2><p>Gérez tous vos rendez-vous clients</p></div>
-        </div>
-        <div class="table-wrap">
-          <div class="table-head">
-            <h3>Tous les rendez-vous</h3>
-            <input class="search-input" placeholder="🔍 Rechercher..." oninput="filterRdv(this.value)">
+      <div class="apage" id="ap-rdvs">
+        <div style="display:grid;grid-template-columns:1fr 280px;gap:14px">
+          <div>
+            <div class="card">
+              <div class="ch">
+                <span class="ct">Rendez-vous <span style="font-size:11px;color:var(--mu);font-weight:400" id="rdv-flbl"></span></span>
+                <div class="chr"><button class="btn" onclick="selDate=null;renderRdvs()">Tous</button><button class="btn P" onclick="openRDVModal()">+ Nouveau RDV</button></div>
+              </div>
+              <div id="rdv-list"></div>
+            </div>
           </div>
-          <table>
-            <thead><tr><th>Client</th><th>Téléphone</th><th>Service</th><th>Date</th><th>Heure</th><th>Véhicule</th><th>Statut</th><th>Actions</th></tr></thead>
-            <tbody id="rdv-tbody"></tbody>
-          </table>
+          <div>
+            <div class="card"><div class="ch"><span class="ct">Calendrier</span></div><div class="cb">
+              <div class="calhd"><button class="calnav" onclick="chM(-1)">‹</button><span class="calmon" id="cal-title"></span><button class="calnav" onclick="chM(1)">›</button></div>
+              <div class="calgrid" id="cal-grid"></div>
+            </div></div>
+          </div>
         </div>
       </div>
-      <!-- PRODUITS (vue globale) -->
-      <div class="admin-page" id="admin-produits">
-        <div class="admin-header">
-          <div><h2>Tous les produits</h2><p>Gérez l'ensemble de votre catalogue</p></div>
-          <button class="add-btn" onclick="openAddProduct()">+ Ajouter un produit</button>
+
+      <!-- DEVIS -->
+      <div class="apage" id="ap-devisadmin">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div class="card"><div class="ch"><span class="ct">Créer un devis</span></div><div class="cb">
+            <div class="fgrid" style="margin-bottom:11px"><div class="fg"><label>Client *</label><input id="adv-c" placeholder="Nom du client"></div><div class="fg"><label>Véhicule</label><input id="adv-v" placeholder="Clio 3 2008"></div></div>
+            <div style="font-size:10px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.7px;margin-bottom:7px">Prestations</div>
+            <div style="display:flex;gap:7px;margin-bottom:9px">
+              <select id="adv-p" style="flex:1;background:var(--s2);border:1px solid var(--b2);border-radius:4px;color:var(--t1);font-family:'Barlow',sans-serif;font-size:13px;padding:8px 10px;outline:none"></select>
+              <input type="number" id="adv-q" value="1" min="1" style="width:58px;background:var(--s2);border:1px solid var(--b2);border-radius:4px;color:var(--t1);font-size:13px;padding:8px;outline:none;text-align:center">
+              <button class="btn P" onclick="addDvLine()">+</button>
+            </div>
+            <div id="dv-lines"></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--s2);border:1px solid var(--r);border-radius:4px;margin-top:8px" id="dv-tbox2" style="display:none">
+              <span style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;color:var(--mu)">Total TTC</span>
+              <strong style="font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:900;color:var(--r)" id="dv-total2">0€</strong>
+            </div>
+            <div class="fact"><button class="btn" onclick="clearDv()">Effacer</button><button class="btn P" onclick="saveDv()">Enregistrer</button></div>
+          </div></div>
+          <div class="card"><div class="ch"><span class="ct">Devis enregistrés</span></div><table><thead><tr><th>Réf.</th><th>Client</th><th>Date</th><th>Montant</th><th>Statut</th><th>Action</th></tr></thead><tbody id="dv-tbody"></tbody></table></div>
         </div>
-        <div class="admin-prod-grid" id="admin-all-prod"></div>
       </div>
-      <!-- PROMOS -->
-      <div class="admin-page" id="admin-promos">
-        <div class="admin-header">
-          <div><h2>Promotions</h2><p>Activez ou désactivez les promotions sur vos produits</p></div>
+
+      <!-- SETTINGS -->
+      <div class="apage" id="ap-settings">
+        <div class="stabs">
+          <button class="stab on" onclick="sstab('atelier',this)">🏪 Atelier</button>
+          <button class="stab" onclick="sstab('catalogue',this)">📦 Catalogue</button>
+          <button class="stab" onclick="sstab('horaires',this)">🕐 Horaires</button>
+          <button class="stab" onclick="sstab('tarifs',this)">💶 Tarifs</button>
+          <button class="stab" onclick="sstab('notifs',this)">🔔 Notifications</button>
+          <button class="stab" onclick="sstab('apparence',this)">🎨 Apparence</button>
+          <button class="stab" onclick="sstab('export',this)">📤 Export</button>
+          <button class="stab" onclick="sstab('photos',this)">🖼️ Photos du site</button>
+          <button class="stab" onclick="sstab('medias',this)">📷 Médias</button>
+          <button class="stab" onclick="sstab('securite',this)">🔒 Sécurité</button>
         </div>
-        <div class="admin-prod-grid" id="admin-promo-grid"></div>
+
+
+        <div class="ssec" id="ss-catalogue">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+
+            <!-- AFFICHAGE -->
+            <div class="card"><div class="ch"><span class="ct">🎨 Affichage</span></div><div class="cb">
+              <div class="nrow"><div><div class="nlbl">Vue par défaut</div><div class="nsub">Grille ou liste au chargement</div></div>
+                <select class="cff-sel" id="cs-view" onchange="saveCatSettings()">
+                  <option value="grid">Grille</option>
+                  <option value="list">Liste</option>
+                </select>
+              </div>
+              <div class="nrow"><div><div class="nlbl">Nombre de colonnes</div><div class="nsub">Taille minimum des cards</div></div>
+                <select class="cff-sel" id="cs-cols" onchange="saveCatSettings()">
+                  <option value="160">Large (160px)</option>
+                  <option value="200" selected>Normal (200px)</option>
+                  <option value="240">Compact (240px)</option>
+                  <option value="280">Grande (280px)</option>
+                </select>
+              </div>
+              <div class="nrow"><div><div class="nlbl">Hauteur des images</div><div class="nsub">Dans les cards produits</div></div>
+                <select class="cff-sel" id="cs-imgH" onchange="saveCatSettings()">
+                  <option value="70">Petite (70px)</option>
+                  <option value="100" selected>Normal (100px)</option>
+                  <option value="130">Grande (130px)</option>
+                  <option value="160">Très grande (160px)</option>
+                </select>
+              </div>
+              <div class="nrow"><div><div class="nlbl">Afficher les photos</div><div class="nsub">Images Unsplash sur les cards</div></div>
+                <label class="tog"><input type="checkbox" id="cs-showImg" checked onchange="saveCatSettings()"><span class="tog-s"></span></label>
+              </div>
+              <div class="nrow" style="border-bottom:none"><div><div class="nlbl">Afficher les descriptions</div><div class="nsub">Texte sous le nom du produit</div></div>
+                <label class="tog"><input type="checkbox" id="cs-showDesc" checked onchange="saveCatSettings()"><span class="tog-s"></span></label>
+              </div>
+            </div></div>
+
+            <!-- FONCTIONNALITES -->
+            <div class="card"><div class="ch"><span class="ct">⚙️ Fonctionnalités</span></div><div class="cb">
+              <div class="nrow"><div><div class="nlbl">Barre de recherche</div><div class="nsub">Recherche par nom, dimension, ref</div></div>
+                <label class="tog"><input type="checkbox" id="cs-search" checked onchange="saveCatSettings()"><span class="tog-s"></span></label>
+              </div>
+              <div class="nrow"><div><div class="nlbl">Filtre par prix</div><div class="nsub">Curseur min / max</div></div>
+                <label class="tog"><input type="checkbox" id="cs-fPrix" checked onchange="saveCatSettings()"><span class="tog-s"></span></label>
+              </div>
+              <div class="nrow"><div><div class="nlbl">Filtre par stock</div><div class="nsub">Disponible / stock faible</div></div>
+                <label class="tog"><input type="checkbox" id="cs-fStock" checked onchange="saveCatSettings()"><span class="tog-s"></span></label>
+              </div>
+              <div class="nrow"><div><div class="nlbl">Tri des produits</div><div class="nsub">Prix, alphabétique, stock</div></div>
+                <label class="tog"><input type="checkbox" id="cs-fTri" checked onchange="saveCatSettings()"><span class="tog-s"></span></label>
+              </div>
+              <div class="nrow"><div><div class="nlbl">Bouton vue grille / liste</div><div class="nsub">Switcher entre les deux vues</div></div>
+                <label class="tog"><input type="checkbox" id="cs-viewSwitch" checked onchange="saveCatSettings()"><span class="tog-s"></span></label>
+              </div>
+              <div class="nrow" style="border-bottom:none"><div><div class="nlbl">Bouton "Devis rapide"</div><div class="nsub">Sur chaque card produit</div></div>
+                <label class="tog"><input type="checkbox" id="cs-devisBt" checked onchange="saveCatSettings()"><span class="tog-s"></span></label>
+              </div>
+            </div></div>
+
+            <!-- ONGLETS VISIBLES -->
+            <div class="card"><div class="ch"><span class="ct">📂 Onglets visibles</span><span style="font-size:11px;color:var(--mu)">Cochez les onglets à afficher</span></div><div class="cb">
+              <div class="nrow"><div><div class="nlbl">🛞 Pneus</div></div><label class="tog"><input type="checkbox" id="cs-tab-pneus" checked onchange="saveCatSettings()"><span class="tog-s"></span></label></div>
+              <div class="nrow"><div><div class="nlbl">⭕ Jantes</div></div><label class="tog"><input type="checkbox" id="cs-tab-jantes" checked onchange="saveCatSettings()"><span class="tog-s"></span></label></div>
+              <div class="nrow"><div><div class="nlbl">🛑 Freinage</div></div><label class="tog"><input type="checkbox" id="cs-tab-freinage" checked onchange="saveCatSettings()"><span class="tog-s"></span></label></div>
+              <div class="nrow"><div><div class="nlbl">🔧 Services</div></div><label class="tog"><input type="checkbox" id="cs-tab-services" checked onchange="saveCatSettings()"><span class="tog-s"></span></label></div>
+              <div class="nrow"><div><div class="nlbl">🧰 Accessoires</div></div><label class="tog"><input type="checkbox" id="cs-tab-accessoires" checked onchange="saveCatSettings()"><span class="tog-s"></span></label></div>
+              <div class="nrow" style="border-bottom:none"><div><div class="nlbl">🔥 Promotions</div></div><label class="tog"><input type="checkbox" id="cs-tab-promos" checked onchange="saveCatSettings()"><span class="tog-s"></span></label></div>
+            </div></div>
+
+            <!-- PRIX -->
+            <div class="card"><div class="ch"><span class="ct">💶 Prix & Stock</span></div><div class="cb">
+              <div class="nrow"><div><div class="nlbl">Afficher les prix</div><div class="nsub">Prix visible sur les cards</div></div>
+                <label class="tog"><input type="checkbox" id="cs-showPrix" checked onchange="saveCatSettings()"><span class="tog-s"></span></label>
+              </div>
+              <div class="nrow"><div><div class="nlbl">Afficher le stock</div><div class="nsub">Badge stock sur les cards</div></div>
+                <label class="tog"><input type="checkbox" id="cs-showStock" checked onchange="saveCatSettings()"><span class="tog-s"></span></label>
+              </div>
+              <div class="nrow"><div><div class="nlbl">Prix max du filtre (€)</div><div class="nsub">Plafond du curseur prix</div></div>
+                <input type="number" id="cs-prixMax" value="500" min="50" max="2000" step="50"
+                  style="width:70px;background:var(--s2);border:1px solid var(--b2);border-radius:4px;color:var(--t1);font-size:13px;padding:5px 8px;outline:none;text-align:right"
+                  oninput="saveCatSettings()">
+              </div>
+              <div class="nrow" style="border-bottom:none"><div><div class="nlbl">Couleur du prix</div><div class="nsub">Couleur affichée sur les cards</div></div>
+                <input type="color" id="cs-prixColor" value="#c0392b"
+                  style="width:34px;height:28px;border:1px solid var(--b2);border-radius:4px;cursor:pointer;background:transparent;padding:2px"
+                  oninput="saveCatSettings()">
+              </div>
+            </div></div>
+
+          </div>
+
+          <!-- APERCU + APPLIQUER -->
+          <div class="card"><div class="ch"><span class="ct">Aperçu des réglages</span><button class="btn P" onclick="applyCatSettings()">✓ Appliquer sur le site</button></div><div class="cb">
+            <div style="display:flex;gap:10px;flex-wrap:wrap" id="cs-preview-badges"></div>
+          </div></div>
+        </div>
+        <div class="ssec on" id="ss-atelier">
+          <div class="card"><div class="ch"><span class="ct">Informations atelier</span></div><div class="cb">
+            <div class="fgrid" style="margin-bottom:11px">
+              <div class="fg"><label>Nom</label><input id="s-nom" value="DR JANTES"></div>
+              <div class="fg"><label>Téléphone</label><input id="s-tel" value="07 66 35 05 39"></div>
+              <div class="fg s2"><label>Adresse</label><input id="s-addr" value="18 Rue de Tourneuve, 44700 Orvault"></div>
+              <div class="fg"><label>Email</label><input id="s-email" value="drjantes44@gmail.com"></div>
+              <div class="fg"><label>SIRET</label><input id="s-siret" value="95085944700027"></div>
+              <div class="fg s2"><label>Message d'accueil</label><textarea id="s-welcome" style="height:50px">Votre spécialiste pneus et jantes à Orvault. Montage rapide, prix compétitifs.</textarea></div>
+            </div>
+            <div style="padding:9px 12px;background:var(--s2);border-radius:5px;border-left:3px solid var(--g1);font-size:12px;color:var(--mu);margin-bottom:12px;margin-top:4px">
+              💡 Ces informations sont affichées directement sur le site client (hero, footer, page RDV, etc.)
+            </div>
+            <div class="fact"><button class="btn P" onclick="saveAtelier()">✓ Enregistrer et appliquer sur le site</button></div>
+          </div></div>
+        </div>
+
+        <div class="ssec" id="ss-horaires">
+          <div class="card"><div class="ch"><span class="ct">Horaires d'ouverture</span></div><div class="cb"><div id="hor-list"></div><div class="fact"><button class="btn P" onclick="saveHoraires()">Enregistrer</button></div></div></div>
+        </div>
+
+        <div class="ssec" id="ss-tarifs">
+          <div class="card"><div class="ch"><span class="ct">Modifier les tarifs</span><span style="font-size:11px;color:var(--mu)">Répercutés automatiquement partout</span></div><div class="cb">
+            <div style="padding:9px;background:var(--s2);border-radius:4px;border-left:3px solid var(--bl);font-size:12px;color:var(--mu);margin-bottom:12px">Les prix modifiés ici s'appliquent au catalogue client et aux devis instantanément.</div>
+            <div class="ox"><table><thead><tr><th>Réf.</th><th>Produit</th><th>Cat.</th><th>Prix actuel (€)</th><th>Unité</th></tr></thead><tbody id="tarifs-tbody"></tbody></table></div>
+            <div class="fact"><button class="btn P" onclick="saveTarifs()">Enregistrer les tarifs</button></div>
+          </div></div>
+        </div>
+
+        <div class="ssec" id="ss-notifs">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+            <div class="card"><div class="ch"><span class="ct">Rappels automatiques</span></div><div class="cb">
+              <div class="nrow"><div><div class="nlbl">Rappel RDV par SMS</div><div class="nsub">Envoyé 24h avant chaque RDV</div></div><label class="tog"><input type="checkbox" checked><span class="tog-s"></span></label></div>
+              <div class="nrow"><div><div class="nlbl">Confirmation par email</div><div class="nsub">Envoyé lors de la réservation</div></div><label class="tog"><input type="checkbox" checked><span class="tog-s"></span></label></div>
+              <div class="nrow"><div><div class="nlbl">Alerte stock critique</div><div class="nsub">Quand un produit passe sous le seuil</div></div><label class="tog"><input type="checkbox" checked><span class="tog-s"></span></label></div>
+              <div class="nrow"><div><div class="nlbl">Nouveau devis reçu</div><div class="nsub">Quand un client soumet une demande</div></div><label class="tog"><input type="checkbox" checked><span class="tog-s"></span></label></div>
+              <div class="nrow" style="border-bottom:none"><div><div class="nlbl">Résumé quotidien 8h</div><div class="nsub">Récap des RDV et activité</div></div><label class="tog"><input type="checkbox"><span class="tog-s"></span></label></div>
+              <div class="fact"><button class="btn P" onclick="toast('Notifications enregistrées !','tg')">Enregistrer</button></div>
+            </div></div>
+            <div class="card"><div class="ch"><span class="ct">Modèles de messages</span></div><div class="cb">
+              <div class="fg"><label>Confirmation RDV</label><textarea style="height:65px">Bonjour {NOM}, votre RDV chez DR JANTES est confirmé le {DATE} à {HEURE}. À bientôt !</textarea></div>
+              <div class="fg"><label>Rappel 24h avant</label><textarea style="height:65px">Rappel : votre RDV chez DR JANTES est demain {DATE} à {HEURE}. 18 Rue de Tourneuve, Orvault.</textarea></div>
+              <div class="fg"><label>Annulation</label><textarea style="height:65px">Votre RDV du {DATE} a été annulé. Contactez-nous au 07 66 35 05 39 pour replanifier.</textarea></div>
+              <div style="font-size:10px;color:var(--mu);margin-bottom:9px">Variables : {NOM} {DATE} {HEURE} {SERVICE}</div>
+              <div class="fact"><button class="btn P" onclick="toast('Messages enregistrés !','tg')">Enregistrer</button></div>
+            </div></div>
+          </div>
+        </div>
+
+        <div class="ssec" id="ss-apparence">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+            <div class="card"><div class="ch"><span class="ct">Couleur principale</span></div><div class="cb">
+              <div style="font-size:11px;color:var(--mu);margin-bottom:10px">Couleur d'accentuation sur tout le site</div>
+              <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px;align-items:center">
+                <div class="csw on" style="background:#c0392b" onclick="setColor('#c0392b',this)"></div>
+                <div class="csw" style="background:#2471a3" onclick="setColor('#2471a3',this)"></div>
+                <div class="csw" style="background:#1e8449" onclick="setColor('#1e8449',this)"></div>
+                <div class="csw" style="background:#d35400" onclick="setColor('#d35400',this)"></div>
+                <div class="csw" style="background:#7d3c98" onclick="setColor('#7d3c98',this)"></div>
+                <div class="csw" style="background:#1a5276" onclick="setColor('#1a5276',this)"></div>
+                <div class="csw" style="background:#212121" onclick="setColor('#212121',this)"></div>
+                <input type="color" id="cc-inp" value="#c0392b" onchange="setColor(this.value,null)" style="width:32px;height:32px;border:1px solid var(--b2);border-radius:4px;cursor:pointer;background:transparent;padding:2px">
+              </div>
+              <div class="fg"><label>Logo texte</label><input id="a-logo" value="DR JANTES" oninput="previewA()"></div>
+              <div class="fg"><label>Slogan</label><input id="a-slogan" value="Spécialiste Pneus & Jantes" oninput="previewA()"></div>
+              <div class="prevbox"><div style="font-size:9px;color:var(--mu);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Aperçu</div><div id="a-prev" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:24px;color:#fff;letter-spacing:1.5px">DR<span id="a-dot" style="color:var(--r)">.</span>JANTES</div><div id="a-sl-prev" style="font-size:11px;color:var(--mu);margin-top:3px">Spécialiste Pneus & Jantes</div></div>
+              <div class="fact"><button class="btn P" onclick="applyA()">Appliquer</button></div>
+            </div></div>
+            <div class="card"><div class="ch"><span class="ct">Options d'affichage</span></div><div class="cb">
+              <div class="nrow"><div><div class="nlbl">Afficher les prix</div><div class="nsub">Tarifs visibles sur le catalogue</div></div><label class="tog"><input type="checkbox" checked><span class="tog-s"></span></label></div>
+              <div class="nrow"><div><div class="nlbl">Devis en ligne</div><div class="nsub">Les clients peuvent demander un devis</div></div><label class="tog"><input type="checkbox" checked><span class="tog-s"></span></label></div>
+              <div class="nrow"><div><div class="nlbl">Galerie visible</div><div class="nsub">Section photos & vidéos sur le site</div></div><label class="tog"><input type="checkbox" checked><span class="tog-s"></span></label></div>
+              <div class="nrow"><div><div class="nlbl">Créneaux visibles</div><div class="nsub">Planning affiché sur la page RDV</div></div><label class="tog"><input type="checkbox" checked><span class="tog-s"></span></label></div>
+              <div class="nrow" style="border-bottom:none"><div><div class="nlbl" style="color:#e87070">Mode maintenance</div><div class="nsub">Affiche "en maintenance" aux clients</div></div><label class="tog"><input type="checkbox"><span class="tog-s"></span></label></div>
+              <div class="fact"><button class="btn P" onclick="toast('Options enregistrées !','tg')">Enregistrer</button></div>
+            </div></div>
+          </div>
+        </div>
+
+        <div class="ssec" id="ss-export">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+            <div class="card"><div class="ch"><span class="ct">Exporter les données</span></div><div class="cb">
+              <div class="erow" onclick="exportD('rdv')"><div class="eico">📅</div><div><div class="enm">Rendez-vous</div><div class="edc">Tous les RDV en CSV</div></div><button class="btn SM P" style="margin-left:auto">CSV ↓</button></div>
+              <div class="erow" onclick="exportD('devis')"><div class="eico">📄</div><div><div class="enm">Devis</div><div class="edc">Historique complet</div></div><button class="btn SM P" style="margin-left:auto">CSV ↓</button></div>
+              <div class="erow" onclick="exportD('produits')"><div class="eico">📦</div><div><div class="enm">Catalogue</div><div class="edc">Prix et stocks inclus</div></div><button class="btn SM P" style="margin-left:auto">CSV ↓</button></div>
+              <div class="erow" onclick="exportD('clients')"><div class="eico">👥</div><div><div class="enm">Liste clients</div><div class="edc">Extraite des RDV et devis</div></div><button class="btn SM P" style="margin-left:auto">CSV ↓</button></div>
+              <div class="erow" onclick="exportD('complet')" style="border:1px solid var(--r);border-radius:4px;padding:9px 11px;margin-top:5px"><div class="eico">🗂️</div><div><div class="enm" style="color:var(--r)">Sauvegarde complète</div><div class="edc">Toutes les données en JSON</div></div><button class="btn SM P" style="margin-left:auto">JSON ↓</button></div>
+            </div></div>
+            <div>
+              <div class="card"><div class="ch"><span class="ct">Importer</span></div><div class="cb">
+                <div class="dzone" style="padding:20px;margin-bottom:0" onclick="document.getElementById('imp-f').click()">
+                  <input type="file" id="imp-f" accept=".json" style="display:none" onchange="importD(event)">
+                  <div class="dzone-ico">📥</div><div class="dzone-t">Importer un fichier JSON</div><div class="dzone-s">Sauvegarde complète uniquement</div>
+                </div>
+                <div id="imp-res" style="display:none;margin-top:9px;padding:9px;background:var(--s2);border-radius:4px;font-size:12px;color:var(--g1)"></div>
+              </div></div>
+              <div class="card"><div class="ch"><span class="ct">Réinitialisation</span></div><div class="cb">
+                <div class="dangerbox"><div style="font-size:11px;color:#e87070;font-weight:600;margin-bottom:3px">⚠ Zone dangereuse</div><div style="font-size:11px;color:var(--mu)">Actions irréversibles. Exportez d'abord.</div></div>
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <button class="btn D" onclick="resetSec('rdv')">Effacer tous les RDV</button>
+                  <button class="btn D" onclick="resetSec('devis')">Effacer tous les devis</button>
+                  <button class="btn D" onclick="resetSec('medias')">Effacer tous les médias</button>
+                </div>
+              </div></div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="ssec" id="ss-photos">
+          <div class="card">
+            <div class="ch">
+              <span class="ct">Photos du site — Modifier les images</span>
+              <button class="btn P" onclick="renderSitePhotos()" style="font-size:10px;padding:5px 10px">↺ Actualiser</button>
+            </div>
+            <div class="cb">
+              <div style="padding:9px 12px;background:var(--s2);border-radius:4px;border-left:3px solid var(--bl);font-size:12px;color:var(--mu);margin-bottom:14px">
+                📁 <strong style="color:var(--t2)">Upload PC</strong> — glisse ou clique pour uploader depuis ton ordinateur &nbsp;·&nbsp;
+                🔗 <strong style="color:var(--t2)">URL</strong> — colle un lien image puis clique <strong style="color:var(--t2)">Appliquer</strong>
+              </div>
+              <div id="site-photos-list">
+                <div class="empty"><div class="eico">🖼️</div><div>Chargement...</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ssec" id="ss-medias">
+          <div class="card"><div class="ch">
+            <div style="display:flex;align-items:center;gap:9px"><span class="ct">Gestionnaire de médias</span><span style="font-size:11px;color:var(--mu)" id="m-lbl"></span></div>
+            <div class="mtabs"><button class="mtab on" onclick="mTab('all',this)">Tous</button><button class="mtab" onclick="mTab('photo',this)">Photos</button><button class="mtab" onclick="mTab('video',this)">Vidéos</button></div>
+          </div><div class="cb">
+            <div id="uz-photo">
+              <div class="dzone" ondragover="uzDrag(event)" ondragleave="uzLeave(event)" ondrop="uzDrop(event,'photo')">
+                <input type="file" accept="image/*" multiple onchange="handleFiles(event,'photo')" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;z-index:2">
+                <div class="dzone-ico">📷</div><div class="dzone-t">Ajouter des photos</div>
+                <div class="dzone-s">Glissez ici ou cliquez pour parcourir</div>
+                <div style="font-size:10px;color:var(--mu2);margin-top:5px;text-transform:uppercase;letter-spacing:.5px">JPG · PNG · WEBP · GIF</div>
+              </div>
+            </div>
+            <div id="uz-video" style="display:none">
+              <div class="dzone" ondragover="uzDrag(event)" ondragleave="uzLeave(event)" ondrop="uzDrop(event,'video')">
+                <input type="file" accept="video/*" multiple onchange="handleFiles(event,'video')" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;z-index:2">
+                <div class="dzone-ico">🎬</div><div class="dzone-t">Ajouter des vidéos</div>
+                <div class="dzone-s">Glissez ici ou cliquez pour parcourir</div>
+                <div style="font-size:10px;color:var(--mu2);margin-top:5px;text-transform:uppercase;letter-spacing:.5px">MP4 · MOV · WEBM</div>
+              </div>
+              <div class="dzgr"><div class="dzgrt">Ajouter une vidéo YouTube</div>
+                <div class="urow">
+                  <input class="uinp" type="url" id="yt-url" placeholder="https://www.youtube.com/watch?v=...">
+                  <input class="uinp" type="text" id="yt-tit" placeholder="Titre" style="max-width:150px">
+                  <button class="btn P" onclick="addYT()">Ajouter</button>
+                </div>
+              </div>
+            </div>
+            <div style="font-size:10px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px" id="m-glbl">Tous les médias</div>
+            <div class="mgrid" id="m-grid"></div>
+            <div id="m-empty" class="empty" style="display:none"><div class="eico">🖼️</div><div>Aucun média. Ajoutez des photos ou vidéos ci-dessus.</div></div>
+          </div></div>
+        </div>
+
+        <div class="ssec" id="ss-securite">
+          <div class="card" style="max-width:460px"><div class="ch"><span class="ct">Sécurité & Accès</span></div><div class="cb">
+            <div style="padding:11px;background:#1a1000;border:1px solid var(--am);border-radius:4px;border-left:3px solid var(--am);margin-bottom:16px"><div style="font-size:12px;color:var(--am);font-weight:600;margin-bottom:3px">⚠ Code PIN actuel actif</div><div style="font-size:11px;color:var(--mu)">Votre code PIN à 4 chiffres protège l'accès à cet espace.</div></div>
+            <div class="fg"><label>Nouveau code (6 chiffres)</label><input id="np1" type="password" placeholder="••••••" maxlength="6"></div>
+            <div class="fg"><label>Confirmer le code</label><input id="np2" type="password" placeholder="••••••" maxlength="6"></div>
+            <div class="fact" style="justify-content:flex-start"><button class="btn P" onclick="savePin()">Mettre à jour le PIN</button></div>
+          </div></div>
+        </div>
+      </div><!-- end settings -->
+
+    </div><!-- end acontent -->
+  </div><!-- end amain -->
+</div><!-- end admin -->
+
+
+<div class="mbg" id="m-prod-view"><div class="modal L">
+  <div class="mtitle">
+    <div style="display:flex;align-items:center;gap:10px">
+      <span id="pm-emoji" style="font-size:22px"></span>
+      <span id="pm-title">Produit</span>
+    </div>
+    <button class="mclose" onclick="cm('m-prod-view')">×</button>
+  </div>
+  <div style="display:grid;grid-template-columns:200px 1fr;gap:18px;margin-bottom:16px">
+    <div>
+      <img id="pm-img" style="width:200px;height:130px;object-fit:cover;border-radius:7px;display:none" alt="">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+        <div style="background:var(--s2);border-radius:5px;padding:9px;text-align:center">
+          <div style="font-size:9px;color:var(--mu);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Référence</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--t2)" id="pm-ref"></div>
+        </div>
+        <div style="background:var(--s2);border-radius:5px;padding:9px;text-align:center">
+          <div style="font-size:9px;color:var(--mu);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Catégorie</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--t2)" id="pm-cat"></div>
+        </div>
+        <div style="background:var(--s2);border-radius:5px;padding:9px;text-align:center">
+          <div style="font-size:9px;color:var(--mu);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Prix</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:900;color:var(--r)" id="pm-prix"></div>
+        </div>
+        <div style="background:var(--s2);border-radius:5px;padding:9px;text-align:center">
+          <div style="font-size:9px;color:var(--mu);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Stock</div>
+          <span id="pm-stock" class="tag tg"></span>
+        </div>
       </div>
-      <!-- CAT JANTES -->
-      <div class="admin-page" id="admin-cat-jantes">
-        <div class="admin-header">
-          <div><h2>⭕ Jantes</h2><p>Gérez votre catalogue de jantes</p></div>
-          <button class="add-btn" onclick="openAddProduct('Jantes')">+ Ajouter</button>
-        </div>
-        <div class="admin-prod-grid" id="admin-grid-jantes"></div>
-      </div>
-      <!-- CAT PNEUS -->
-      <div class="admin-page" id="admin-cat-pneus">
-        <div class="admin-header">
-          <div><h2>⚫ Pneus</h2><p>Gérez votre catalogue de pneus</p></div>
-          <button class="add-btn" onclick="openAddProduct('Pneus')">+ Ajouter</button>
-        </div>
-        <div class="admin-prod-grid" id="admin-grid-pneus"></div>
-      </div>
-      <!-- CAT PACKS -->
-      <div class="admin-page" id="admin-cat-packs">
-        <div class="admin-header">
-          <div><h2>📦 Packs</h2><p>Gérez vos packs combinés</p></div>
-          <button class="add-btn" onclick="openAddProduct('Packs')">+ Ajouter</button>
-        </div>
-        <div class="admin-prod-grid" id="admin-grid-packs"></div>
-      </div>
-      <!-- CAT ACCESSOIRES -->
-      <div class="admin-page" id="admin-cat-accessoires">
-        <div class="admin-header">
-          <div><h2>🔩 Accessoires</h2><p>Gérez vos accessoires</p></div>
-          <button class="add-btn" onclick="openAddProduct('Accessoires')">+ Ajouter</button>
-        </div>
-        <div class="admin-prod-grid" id="admin-grid-accessoires"></div>
+    </div>
+    <div>
+      <div style="font-size:10px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.7px;margin-bottom:5px">Description</div>
+      <div style="font-size:13px;color:var(--t2);line-height:1.6;background:var(--s2);border-radius:5px;padding:12px;margin-bottom:14px" id="pm-desc"></div>
+      <div style="display:flex;gap:8px">
+        <button class="btn P" style="flex:1" onclick="cPage('rdv');cm('m-prod-view')">📅 Prendre RDV</button>
+        <button class="btn G" style="flex:1" onclick="cPage('devis');cm('m-prod-view')">📄 Demander un devis</button>
       </div>
     </div>
   </div>
-</div>
-<!-- ═══════════ MODAL PRODUIT ═══════════ -->
-<div class="modal-overlay" id="modalProduct">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('modalProduct')">✕</button>
-    <h3 id="modal-prod-title">Ajouter un produit</h3>
-    <form onsubmit="saveProduct(event)">
-      <input type="hidden" id="prod-id">
-      <div class="form-row">
-        <div class="form-group"><label>Nom *</label><input type="text" id="prod-nom" required></div>
-        <div class="form-group"><label>Catégorie *</label>
-          <select id="prod-cat" required>
-            <option value="Jantes">Jantes</option>
-            <option value="Pneus">Pneus</option>
-            <option value="Packs">Packs</option>
-            <option value="Accessoires">Accessoires</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>Prix (€) *</label><input type="number" id="prod-prix" step="0.01" required></div>
-        <div class="form-group"><label>Prix barré (€)</label><input type="number" id="prod-prix-old" step="0.01" placeholder="Laisser vide si aucun"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>Taille / Spec</label><input type="text" id="prod-taille" placeholder="Ex: 18 pouces"></div>
-        <div class="form-group"><label>Badge</label><input type="text" id="prod-badge" placeholder="Ex: Nouveau, -20%"></div>
-      </div>
-      <div class="form-group"><label>Description courte</label><textarea id="prod-desc" style="height:70px" placeholder="Description du produit..."></textarea></div>
-      <div class="form-group">
-        <label>Tags (séparés par virgule)</label>
-        <input type="text" id="prod-tags" placeholder="Ex: Aluminium, 5 trous, Sport">
-      </div>
-      <div class="form-group" style="display:flex;align-items:center;gap:12px">
-        <label style="margin:0">En promotion</label>
-        <div class="toggle-switch" id="prod-promo-toggle" onclick="this.classList.toggle('on')"></div>
-      </div>
-      <button type="submit" class="btn-submit" style="margin-top:10px">💾 Enregistrer</button>
-    </form>
+</div></div>
+<!-- MODALS -->
+<div class="mbg" id="m-prod"><div class="modal L">
+  <div class="mtitle"><span id="mp-t">Ajouter un produit</span><button class="mclose" onclick="cm('m-prod')">×</button></div>
+  <div class="fgrid" style="margin-bottom:11px">
+    <div class="fg"><label>Nom *</label><input id="mp-nom" placeholder="ex: Pneu Été Standard"></div>
+    <div class="fg"><label>Catégorie *</label><select id="mp-cat"><option value="">—</option><option>Pneus</option><option>Jantes</option><option>Freinage</option><option>Services</option><option>Accessoires</option></select></div>
+    <div class="fg"><label>Prix (€)</label><input id="mp-p" type="number" min="0" placeholder="49"></div>
+    <div class="fg"><label>Unité</label><input id="mp-u" placeholder="/unité, /roue, M/O"></div>
+    <div class="fg"><label>Stock</label><input id="mp-s" type="number" min="0" value="10"></div>
+    <div class="fg"><label>Seuil</label><input id="mp-sl" type="number" min="0" value="5"></div>
+    <div class="fg"><label>Emoji</label><input id="mp-e" placeholder="🛞" maxlength="4"></div>
+    <div class="fg"><label>Statut</label><select id="mp-st"><option value="Actif">Actif</option><option value="Inactif">Inactif</option></select></div>
+    <div class="fg s2"><label>Description</label><textarea id="mp-d" placeholder="Description courte..."></textarea></div>
   </div>
-</div>
-<!-- ═══════════ MODAL RDV DETAIL ═══════════ -->
-<div class="modal-overlay" id="modalRdv">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('modalRdv')">✕</button>
-    <h3>Détail du rendez-vous</h3>
-    <div id="rdv-detail-content"></div>
-    <div style="margin-top:20px">
-      <label style="font-size:.78rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:8px">Changer le statut</label>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="action-btn" onclick="changeStatus('En attente')">⏳ En attente</button>
-        <button class="action-btn" onclick="changeStatus('Confirmé')">✅ Confirmé</button>
-        <button class="action-btn" onclick="changeStatus('Terminé')">🏁 Terminé</button>
-        <button class="action-btn del" onclick="changeStatus('Annulé')">❌ Annulé</button>
+  <div class="fact"><button class="btn" onclick="cm('m-prod')">Annuler</button><button class="btn P" onclick="saveProd()">Enregistrer</button></div>
+</div></div>
+
+<div class="mbg" id="m-reapro"><div class="modal">
+  <div class="mtitle"><span>Réapprovisionner</span><button class="mclose" onclick="cm('m-reapro')">×</button></div>
+  <div class="fg"><label>Produit *</label><select id="rp-p" onchange="rpUpd()"><option value="">— Sélectionner —</option></select></div>
+  <div class="fg"><label>Stock actuel</label><input id="rp-a" readonly style="opacity:.5"></div>
+  <div class="fg"><label>Quantité à ajouter *</label><input id="rp-q" type="number" min="1" value="10"></div>
+  <div class="fact"><button class="btn" onclick="cm('m-reapro')">Annuler</button><button class="btn P" onclick="saveReapro()">Mettre à jour</button></div>
+</div></div>
+
+<div class="mbg" id="m-cren"><div class="modal">
+  <div class="mtitle"><span>Ajouter un créneau</span><button class="mclose" onclick="cm('m-cren')">×</button></div>
+  <div class="fgrid g3" style="margin-bottom:11px">
+    <div class="fg"><label>Jour *</label><select id="mc-j"><option value="">—</option><option>Lundi</option><option>Mardi</option><option>Mercredi</option><option>Jeudi</option><option>Vendredi</option><option>Samedi</option></select></div>
+    <div class="fg"><label>Début *</label><select id="mc-d"><option>08:00</option><option>09:00</option><option selected>10:00</option><option>11:00</option><option>12:00</option><option>13:00</option><option>14:00</option><option>15:00</option><option>16:00</option><option>17:00</option><option>18:00</option></select></div>
+    <div class="fg"><label>Fin *</label><select id="mc-f"><option>09:00</option><option>10:00</option><option>11:00</option><option selected>12:00</option><option>13:00</option><option>14:00</option><option>15:00</option><option>16:00</option><option>17:00</option><option>18:00</option><option>19:00</option></select></div>
+  </div>
+  <div class="fg" style="margin-bottom:11px"><label>Récurrence</label><select id="mc-r"><option>Chaque semaine</option><option>Une seule fois</option><option>Toutes les 2 semaines</option></select></div>
+  <div class="fact"><button class="btn" onclick="cm('m-cren')">Annuler</button><button class="btn P" onclick="saveCren()">Ajouter</button></div>
+</div></div>
+
+<div class="mbg" id="m-rdv"><div class="modal L">
+  <div class="mtitle"><span>Nouveau rendez-vous</span><button class="mclose" onclick="cm('m-rdv')">×</button></div>
+  <div class="fgrid" style="margin-bottom:11px">
+    <div class="fg"><label>Nom client *</label><input id="mr-n" placeholder="Nom Prénom"></div>
+    <div class="fg"><label>Téléphone</label><input id="mr-t" placeholder="06..."></div>
+    <div class="fg"><label>Email</label><input id="mr-e" placeholder="email@..."></div>
+    <div class="fg"><label>Véhicule</label><input id="mr-v" placeholder="ex: Clio 3 2008"></div>
+    <div class="fg s2"><label>Service *</label><select id="mr-s"><option value="">— Choisir —</option><option>Montage pneus + équilibrage</option><option>Équilibrage seul</option><option>Diagnostic (valise)</option><option>Pose plaquettes avant</option><option>Pose plaquettes arrière</option><option>Changement disque avant</option><option>Changement disque arrière</option><option>Rénovation jante</option></select></div>
+    <div class="fg"><label>Date *</label><input type="date" id="mr-d"></div>
+    <div class="fg"><label>Heure *</label><input type="time" id="mr-h" step="1800"></div>
+    <div class="fg s2"><label>Notes</label><textarea id="mr-no"></textarea></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;padding:8px 11px;background:var(--s2);border-radius:4px;margin-bottom:11px">
+    <label class="tog"><input type="checkbox" id="mr-rap" checked><span class="tog-s"></span></label>
+    <span style="font-size:13px;color:var(--t2)">Rappel SMS activé 24h avant</span>
+  </div>
+  <div class="fact"><button class="btn" onclick="cm('m-rdv')">Annuler</button><button class="btn P" onclick="saveRDV()">Confirmer</button></div>
+</div></div>
+
+<div class="mbg" id="m-media"><div class="modal L">
+  <div class="mtitle"><span id="m-med-t">Modifier le média</span><button class="mclose" onclick="cm('m-media')">×</button></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:11px">
+    <div id="m-med-prev" style="background:var(--s2);border-radius:5px;min-height:140px;display:flex;align-items:center;justify-content:center;font-size:40px;overflow:hidden"></div>
+    <div>
+      <div class="fg"><label>Titre</label><input id="mm-n" placeholder="Titre du média"></div>
+      <div class="fg"><label>Description</label><textarea id="mm-d" placeholder="Description..." style="height:60px"></textarea></div>
+      <div class="fg"><label>Catégorie</label><select id="mm-c"><option value="">— Aucune —</option><option>Montage pneus</option><option>Rénovation jante</option><option>Freinage</option><option>Diagnostic</option><option>Avant / Après</option></select></div>
+      <div style="display:flex;align-items:center;gap:8px;padding:8px;background:var(--s2);border-radius:4px">
+        <label class="tog"><input type="checkbox" id="mm-v" checked><span class="tog-s"></span></label>
+        <span style="font-size:13px;color:var(--t2)">Visible sur le site client</span>
       </div>
     </div>
   </div>
-</div>
+  <div class="fact"><button class="btn D" onclick="delMediaCur()">Supprimer</button><button class="btn" onclick="cm('m-media')">Annuler</button><button class="btn P" onclick="saveMediaEdit()">Enregistrer</button></div>
+</div></div>
+
+<!-- LIGHTBOX -->
+<div id="lb"><button id="lb-x" onclick="closeLB()">×</button><div id="lb-c"></div><div id="lb-cap"></div></div>
+
+<div id="toast"></div>
+
 <script>
-// ══════════════════════════════════════════════
-//  DONNÉES
-// ══════════════════════════════════════════════
-let products = [
-  // JANTES
-  {id:1,nom:"Jante Sport RS",cat:"Jantes",prix:189,prixOld:240,taille:"17 pouces",badge:"-21%",desc:"Jante aluminium sport légère",tags:["Aluminium","5 trous","Sport"],promo:true},
-  {id:2,nom:"Jante Classic Silver",cat:"Jantes",prix:149,prixOld:null,taille:"16 pouces",badge:"Nouveau",desc:"Design classique intemporel",tags:["Aluminium","4 trous"],promo:false},
-  {id:3,nom:"Jante GT Black",cat:"Jantes",prix:229,prixOld:280,taille:"18 pouces",badge:"-18%",desc:"Look racing mat profond",tags:["Noir mat","5 trous","Racing"],promo:true},
-  {id:4,nom:"Jante Flow 19\"",cat:"Jantes",prix:299,prixOld:null,taille:"19 pouces",badge:"Premium",desc:"Jante à rayons coulants",tags:["Chromé","5 trous"],promo:false},
-  {id:5,nom:"Jante Evo Carbon",cat:"Jantes",prix:349,prixOld:420,taille:"20 pouces",badge:"-17%",desc:"Finition carbone ultra légère",tags:["Carbone","5 trous","Léger"],promo:true},
-  {id:6,nom:"Jante Classic Steel",cat:"Jantes",prix:89,prixOld:null,taille:"15 pouces",badge:null,desc:"Jante acier robuste et économique",tags:["Acier","4 trous"],promo:false},
-  // PNEUS
-  {id:7,nom:"Michelin Pilot Sport 4",cat:"Pneus",prix:129,prixOld:155,taille:"225/45 R17",badge:"-17%",desc:"Performance route et circuit",tags:["Été","Sport","A"],promo:true},
-  {id:8,nom:"Continental Premium",cat:"Pneus",prix:99,prixOld:null,taille:"205/55 R16",badge:"Bestseller",desc:"Confort et longévité au quotidien",tags:["Été","Comfort"],promo:false},
-  {id:9,nom:"Bridgestone Blizzak",cat:"Pneus",prix:119,prixOld:140,taille:"215/55 R17",badge:"-15%",desc:"Pneu hiver haute performance",tags:["Hiver","Grip","AAA"],promo:true},
-  {id:10,nom:"Goodyear All Season",cat:"Pneus",prix:109,prixOld:null,taille:"205/60 R16",badge:"4 Saisons",desc:"Polyvalent toute l'année",tags:["Toutes saisons"],promo:false},
-  // PACKS
-  {id:11,nom:"Pack Sport 17\"",cat:"Packs",prix:549,prixOld:720,taille:"4 jantes + 4 pneus",badge:"-24%",desc:"Jantes RS + Michelin Sport inclus",tags:["Complet","Sport","Montage inclus"],promo:true},
-  {id:12,nom:"Pack Hiver Complet",cat:"Packs",prix:479,prixOld:580,taille:"4 jantes + 4 pneus hiver",badge:"-17%",desc:"Prêt pour l'hiver, montage offert",tags:["Hiver","Montage offert"],promo:true},
-  {id:13,nom:"Pack Économique",cat:"Packs",prix:349,prixOld:null,taille:"4 jantes acier + pneus",badge:"Bon plan",desc:"Le meilleur rapport qualité-prix",tags:["Économique","Acier"],promo:false},
-  // ACCESSOIRES
-  {id:14,nom:"Kit Boulons Sport",cat:"Accessoires",prix:29,prixOld:40,taille:"20 pièces M14",badge:"-27%",desc:"Boulons acier traité anti-corrosion",tags:["Acier","M14"],promo:true},
-  {id:15,nom:"Valve TPMS",cat:"Accessoires",prix:49,prixOld:null,taille:"Lot de 4",badge:"Connecté",desc:"Capteurs pression pneus bluetooth",tags:["Bluetooth","TPMS"],promo:false},
-  {id:16,nom:"Écrous Antivol",cat:"Accessoires",prix:39,prixOld:55,taille:"4 écrous + clé",badge:"-29%",desc:"Protégez vos jantes du vol",tags:["Sécurité","Universel"],promo:true},
-  {id:17,nom:"Cache-moyeu Logo",cat:"Accessoires",prix:19,prixOld:null,taille:"Lot de 4 - 60mm",badge:null,desc:"Finition parfaite pour vos jantes",tags:["Déco"],promo:false},
+// ════ DATA ════
+let PIN='123456', curAP='dashboard', eProdIdx=-1, eMedIdx=-1;
+let selDate=null, calY, calM, dvLines=[], dvCtr=142, mTabCur='all';
+
+const MONTHS=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+const DS=['L','M','M','J','V','S','D'], DF=['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+
+let prods=[
+  {id:1,ref:'PRD-001',nom:'Pneu Été Standard',cat:'Pneus',prix:49,unite:'/unité',stock:12,seuil:5,statut:'Actif',desc:'185/65 R15, toutes marques',emoji:'🛞'},
+  {id:2,ref:'PRD-002',nom:'Pneu Hiver',cat:'Pneus',prix:65,unite:'/unité',stock:2,seuil:5,statut:'Actif',desc:'Adhérence renforcée',emoji:'🌨️'},
+  {id:3,ref:'PRD-003',nom:'Pneu 4 Saisons',cat:'Pneus',prix:70,unite:'/unité',stock:8,seuil:5,statut:'Actif',desc:'Polyvalent toute année',emoji:'☀️'},
+  {id:4,ref:'PRD-004',nom:'Pneu Run Flat',cat:'Pneus',prix:110,unite:'/unité',stock:5,seuil:3,statut:'Actif',desc:"Jusqu'à 80km après crevaison",emoji:'⚡'},
+  {id:5,ref:'PRD-005',nom:'Pneu Sport',cat:'Pneus',prix:120,unite:'/unité',stock:4,seuil:3,statut:'Actif',desc:'Haute performance',emoji:'🏎️'},
+  {id:6,ref:'PRD-006',nom:'Pneu SUV/4x4',cat:'Pneus',prix:90,unite:'/unité',stock:6,seuil:3,statut:'Actif',desc:'Renforcé véhicules lourds',emoji:'🚙'},
+  {id:7,ref:'PRD-007',nom:'Jante Aluminium',cat:'Jantes',prix:80,unite:'/unité',stock:10,seuil:4,statut:'Actif',desc:'Légère, toutes marques',emoji:'⭕'},
+  {id:8,ref:'PRD-008',nom:'Jante Acier',cat:'Jantes',prix:40,unite:'/unité',stock:15,seuil:4,statut:'Actif',desc:'Robuste, idéal hiver',emoji:'⬛'},
+  {id:9,ref:'PRD-009',nom:'Jante Diamantée',cat:'Jantes',prix:180,unite:'/unité',stock:3,seuil:2,statut:'Actif',desc:'Finition diamant haute gamme',emoji:'✨'},
+  {id:10,ref:'PRD-010',nom:'Rénovation Jante',cat:'Jantes',prix:50,unite:'/jante',stock:999,seuil:0,statut:'Actif',desc:'Remise à neuf',emoji:'🔧'},
+  {id:11,ref:'PRD-011',nom:'Personnalisation Jante',cat:'Jantes',prix:0,unite:'devis',stock:999,seuil:0,statut:'Actif',desc:'Peinture couleur sur mesure',emoji:'🎨'},
+  {id:12,ref:'PRD-012',nom:'Plaquettes Avant',cat:'Freinage',prix:30,unite:'M/O',stock:20,seuil:5,statut:'Actif',desc:"M/O pose AV",emoji:'🔴'},
+  {id:13,ref:'PRD-013',nom:'Plaquettes Arrière',cat:'Freinage',prix:40,unite:'M/O',stock:20,seuil:5,statut:'Actif',desc:"M/O pose AR",emoji:'🔶'},
+  {id:14,ref:'PRD-014',nom:'Disques Avant',cat:'Freinage',prix:50,unite:'M/O',stock:3,seuil:5,statut:'Actif',desc:'Changement disques AV',emoji:'⚙️'},
+  {id:15,ref:'PRD-015',nom:'Disques Arrière',cat:'Freinage',prix:60,unite:'M/O',stock:7,seuil:5,statut:'Actif',desc:'Changement disques AR',emoji:'🔩'},
+  {id:16,ref:'PRD-016',nom:'Kit Freinage Complet',cat:'Freinage',prix:160,unite:'M/O',stock:5,seuil:2,statut:'Actif',desc:'Disques + plaquettes',emoji:'🛑'},
+  {id:17,ref:'PRD-017',nom:'Diagnostic Auto',cat:'Services',prix:25,unite:'',stock:999,seuil:0,statut:'Actif',desc:'Valise électronique',emoji:'🔍'},
+  {id:18,ref:'PRD-018',nom:'Équilibrage',cat:'Services',prix:5,unite:'/roue',stock:999,seuil:0,statut:'Actif',desc:'Équilibrage précis',emoji:'⚖️'},
+  {id:19,ref:'PRD-019',nom:'Montage + Équilibrage',cat:'Services',prix:15,unite:'/roue',stock:999,seuil:0,statut:'Actif',desc:'Montage complet',emoji:'🔩'},
+  {id:20,ref:'PRD-020',nom:'Permutation Pneus',cat:'Services',prix:20,unite:'',stock:999,seuil:0,statut:'Actif',desc:'Rotation AV/AR',emoji:'🔄'},
+  {id:21,ref:'PRD-021',nom:'Contrôle Visuel',cat:'Services',prix:0,unite:'',stock:999,seuil:0,statut:'Actif',desc:'Inspection gratuite',emoji:'📋'},
+  {id:22,ref:'PRD-022',nom:'Bouchons de valve',cat:'Accessoires',prix:2,unite:'/set',stock:50,seuil:10,statut:'Actif',desc:'Anti-poussière',emoji:'🔐'},
+  {id:23,ref:'PRD-023',nom:'Kit Anti-crevaison',cat:'Accessoires',prix:15,unite:'',stock:8,seuil:5,statut:'Actif',desc:'Dépannage temporaire',emoji:'🧰'},
+  {id:24,ref:'PRD-024',nom:'Gonflage Azote',cat:'Accessoires',prix:5,unite:'/pneu',stock:999,seuil:0,statut:'Actif',desc:'Pression stable',emoji:'💨'},
 ];
-let rdvs = [
-  {id:1,prenom:"Alexandre",nom:"Martin",tel:"06 12 34 56 78",email:"a.martin@email.fr",vehicule:"BMW X5 2021",service:"Montage de jantes",date:"2025-07-28",heure:"09h00",message:"Jantes 19 pouces",statut:"Confirmé"},
-  {id:2,prenom:"Lucie",nom:"Bernard",tel:"07 23 45 67 89",email:"lucie.b@email.fr",vehicule:"Peugeot 308",service:"Géométrie 3D",date:"2025-07-29",heure:"14h00",message:"",statut:"En attente"},
-  {id:3,prenom:"Marc",nom:"Dubois",tel:"06 34 56 78 90",email:"",vehicule:"Renault Megane RS",service:"Équilibrage",date:"2025-07-30",heure:"11h00",message:"Vibrations à 120km/h",statut:"En attente"},
-  {id:4,prenom:"Emma",nom:"Petit",tel:"06 45 67 89 01",email:"emma@email.fr",vehicule:"Volkswagen Golf 8",service:"Pack complet",date:"2025-08-02",heure:"08h00",message:"Pack sport souhaité",statut:"Terminé"},
+
+let crens=[
+  {id:1,jour:'Lundi',deb:'10:00',fin:'12:00',rec:'Chaque semaine'},
+  {id:2,jour:'Mercredi',deb:'14:00',fin:'16:00',rec:'Chaque semaine'},
+  {id:3,jour:'Vendredi',deb:'10:00',fin:'12:00',rec:'Chaque semaine'},
+  {id:4,jour:'Samedi',deb:'10:00',fin:'13:00',rec:'Chaque semaine'},
 ];
-let nextProdId = 18;
-let nextRdvId = 5;
-let currentRdvId = null;
-let selectedSlot = null;
-const PIN = "123456";
-let pinEntry = "";
-// ══════════════════════════════════════════════
-//  NAVIGATION
-// ══════════════════════════════════════════════
-function showPage(name){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
-  if(name==='admin-gate'){
-    if(sessionStorage.getItem('drj_auth')==='1'){
-      document.getElementById('page-admin').classList.add('active');
-      refreshAdmin();
-    } else {
-      document.getElementById('page-admin-gate').classList.add('active');
-    }
-  } else {
-    const pg = document.getElementById('page-'+name);
-    if(pg) pg.classList.add('active');
-  }
-  const nav = document.getElementById('nav-'+name);
-  if(nav) nav.classList.add('active');
+
+let rdvs=[
+  {id:1,nom:'Lucas Martin',tel:'06 12 34 56 78',email:'',veh:'Renault Clio 3 2008',svc:'Montage pneus + équilibrage',date:'2026-04-01',heure:'10:00',note:'4 pneus été',rap:true,statut:'Confirmé'},
+  {id:2,nom:'Marie Dubois',tel:'06 98 76 54 32',email:'',veh:'Peugeot 308',svc:'Pose plaquettes avant',date:'2026-04-01',heure:'14:00',note:'',rap:true,statut:'Confirmé'},
+  {id:3,nom:'Paul Leclerc',tel:'07 11 22 33 44',email:'',veh:'VW Golf 7',svc:'Diagnostic (valise)',date:'2026-04-03',heure:'10:00',note:'',rap:false,statut:'Confirmé'},
+  {id:4,nom:'Sophie Garnier',tel:'06 55 66 77 88',email:'',veh:'Audi A3',svc:'Rénovation jante',date:'2026-04-04',heure:'11:00',note:'',rap:true,statut:'Confirmé'},
+];
+
+let dvis=[
+  {ref:'DRJ-0140',client:'Karim Ben Ali',veh:'Peugeot 206',date:'2026-03-30',montant:180,statut:'En attente'},
+  {ref:'DRJ-0141',client:'Marie Dubois',veh:'Peugeot 308',date:'2026-03-31',montant:70,statut:'Réalisé'},
+  {ref:'DRJ-0142',client:'Lucas Martin',veh:'Clio 3 2008',date:'2026-04-01',montant:256,statut:'Accepté'},
+];
+
+let hors=[
+  {j:'Lundi',o:'10:00',f:'19:00',on:true},{j:'Mardi',o:'10:00',f:'19:00',on:true},
+  {j:'Mercredi',o:'',f:'',on:false},{j:'Jeudi',o:'10:00',f:'19:00',on:true},
+  {j:'Vendredi',o:'10:00',f:'19:00',on:true},{j:'Samedi',o:'10:00',f:'19:00',on:true},
+  {j:'Dimanche',o:'',f:'',on:false},
+];
+
+let medias=[
+  {id:1,type:'photo',name:'Jante aluminium 5 branches',desc:'Jante alu légère, montage R17',cat:'Jantes',vis:true,url:'https://images.unsplash.com/photo-1611759386152-79e2f7f04b84?w=800&q=80',date:'2026-04-01'},
+  {id:2,type:'photo',name:'Montage pneus été',desc:'Montage 4 pneus été 205/55/16',cat:'Montage pneus',vis:true,url:'https://images.unsplash.com/photo-1625047509248-ec889cbff17f?w=800&q=80',date:'2026-04-02'},
+  {id:3,type:'photo',name:'Pneus neufs en stock',desc:'Large stock de pneus toutes dimensions',cat:'Montage pneus',vis:true,url:'https://images.unsplash.com/photo-1578844251758-2f71da64c96f?w=800&q=80',date:'2026-04-03'},
+  {id:4,type:'photo',name:'Disques et plaquettes',desc:'Kit freinage complet avant',cat:'Freinage',vis:true,url:'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=800&q=80',date:'2026-04-04'},
+  {id:5,type:'photo',name:'Jante diamantée R18',desc:'Finition diamant, rénovation haut de gamme',cat:'Jantes',vis:true,url:'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=800&q=80',date:'2026-04-05'},
+  {id:6,type:'photo',name:'Diagnostic électronique',desc:'Valise diagnostic toutes marques',cat:'Services',vis:true,url:'https://images.unsplash.com/photo-1615906655593-ad0386982a0f?w=800&q=80',date:'2026-04-06'},
+  {id:7,type:'photo',name:'Stock pneus utilitaires',desc:'Pneus série C, utilitaires toutes dimensions',cat:'Montage pneus',vis:true,url:'https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=800&q=80',date:'2026-04-07'},
+];
+let mIdN=6;
+
+// ════ SCREEN NAV — ultra simple ════
+function goLogin(){
+  document.getElementById('scr-client').classList.remove('ON');
+  document.getElementById('scr-admin').classList.remove('ON');
+  document.getElementById('scr-login').classList.add('ON');
+  [0,1,2,3,4,5].forEach(i=>document.getElementById('p'+i).value='');
+  setTimeout(()=>document.getElementById('p0').focus(),80);
+}
+function goClient(){
+  document.getElementById('scr-login').classList.remove('ON');
+  document.getElementById('scr-admin').classList.remove('ON');
+  document.getElementById('scr-client').classList.add('ON');
+  initClient();
+}
+function goAdmin(){
+  document.getElementById('scr-login').classList.remove('ON');
+  document.getElementById('scr-client').classList.remove('ON');
+  document.getElementById('scr-admin').classList.add('ON');
+  initAdmin();
+}
+
+// ════ LOGIN ════
+function pIn(i){const v=document.getElementById('p'+i).value;if(v&&i<5)document.getElementById('p'+(i+1)).focus();if(i===5&&v)checkPin();}
+function pKey(e,i){if(e.key==='Backspace'&&!document.getElementById('p'+i).value&&i>0)document.getElementById('p'+(i-1)).focus();if(e.key==='Enter')checkPin();}
+function checkPin(){
+  const pin=[0,1,2,3,4,5].map(i=>document.getElementById('p'+i).value).join('');
+  if(pin===PIN){[0,1,2,3,4,5].forEach(i=>document.getElementById('p'+i).value='');goAdmin();}
+  else{document.getElementById('perr').textContent='Code incorrect. Réessayez.';[0,1,2,3,4,5].forEach(i=>document.getElementById('p'+i).value='');document.getElementById('p0').focus();setTimeout(()=>document.getElementById('perr').textContent='',2500);}
+}
+
+// ════ CLIENT ════
+function initClient(){renderCCrens();renderCDvForm();renderGallery();document.getElementById('h-nprods').textContent=prods.filter(p=>p.statut==='Actif').length;initCatalogue();}
+function cPage(id,el){
+  document.querySelectorAll('.cpage').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.ctab').forEach(t=>t.classList.remove('on'));
+  const pg=document.getElementById('cp-'+id);if(pg)pg.classList.add('on');
+  if(el)el.classList.add('on');
+  if(id==='catalogue'){initCatalogue();}
+  if(id==='galerie')renderGallery();
   window.scrollTo(0,0);
-  if(name==='accueil') renderHomePromos();
-  if(name==='catalogue') renderCatalogue();
 }
-function toggleMenu(){
-  const nl = document.getElementById('navLinks');
-  nl.style.display = nl.style.display==='flex'?'none':'flex';
-  nl.style.flexDirection='column';
-  nl.style.position='absolute';
-  nl.style.top='70px';
-  nl.style.left='0';
-  nl.style.width='100%';
-  nl.style.background='rgba(10,10,10,.98)';
-  nl.style.padding='20px';
-  nl.style.gap='16px';
-  nl.style.borderBottom='1px solid #222';
-}
-// ══════════════════════════════════════════════
-//  SVG JANTE
-// ══════════════════════════════════════════════
-function janteSVG(size=110, color="#c9a84c"){
-  const r=size/2, cx=r, cy=r, outer=r-4, inner=r*0.38, hub=r*0.12;
-  const spokes=5;
-  let paths='';
-  for(let i=0;i<spokes;i++){
-    const a=(i/spokes)*Math.PI*2 - Math.PI/2;
-    const a1=a-0.18, a2=a+0.18;
-    const x1=cx+inner*Math.cos(a1), y1=cy+inner*Math.sin(a1);
-    const x2=cx+inner*Math.cos(a2), y2=cy+inner*Math.sin(a2);
-    const x3=cx+outer*Math.cos(a2), y3=cy+outer*Math.sin(a2);
-    const x4=cx+outer*Math.cos(a1), y4=cy+outer*Math.sin(a1);
-    paths+=`<path d="M${x1},${y1} L${x4},${y4} A${outer},${outer} 0 0,1 ${x3},${y3} L${x2},${y2} A${inner},${inner} 0 0,0 ${x1},${y1}Z" fill="${color}" opacity="0.9"/>`;
-  }
-  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="[w3.org](http://www.w3.org/2000/svg)">
-    <circle cx="${cx}" cy="${cy}" r="${outer}" fill="none" stroke="${color}" stroke-width="5"/>
-    <circle cx="${cx}" cy="${cy}" r="${r*0.28}" fill="${color}" opacity="0.15"/>
-    ${paths}
-    <circle cx="${cx}" cy="${cy}" r="${hub}" fill="${color}"/>
-    <circle cx="${cx}" cy="${cy}" r="${hub*0.5}" fill="#111"/>
-  </svg>`;
-}
-function productEmoji(cat){
-  if(cat==='Jantes') return `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%">${janteSVG(100)}</div>`;
-  if(cat==='Pneus') return '🛞';
-  if(cat==='Packs') return '📦';
-  return '🔩';
-}
-function bgClass(cat){
-  if(cat==='Jantes') return 'prod-jante';
-  if(cat==='Pneus') return 'prod-pneu';
-  if(cat==='Packs') return 'prod-pack';
-  return 'prod-acc';
-}
-// ══════════════════════════════════════════════
-//  RENDU PRODUIT CARD
-// ══════════════════════════════════════════════
-function renderProductCard(p){
-  const tags = p.tags.map(t=>`<span class="tag">${t}</span>`).join('');
-  const badgeHtml = p.badge ? `<span class="product-badge ${p.promo?'sale':''}">${p.badge}</span>` : '';
-  const oldPrice = p.prixOld ? `<span class="price-old">${p.prixOld}€</span>` : '';
-  const isJante = p.cat==='Jantes';
-  return `<div class="product-card">
-    <div class="product-img ${bgClass(p.cat)}">
-      ${isJante ? janteSVG(100) : `<span style="font-size:3.2rem">${productEmojiChar(p.cat)}</span>`}
-      ${badgeHtml}
-    </div>
-    <div class="product-info">
-      <h3>${p.nom}</h3>
-      <div class="product-meta">
-        <span class="product-size">${p.taille}</span>
-        <span class="product-price">${p.prix}€</span>
+// ════ CATALOGUE TABS ════
+
+
+
+
+// ════ PROMOS DATA ════
+const PROMOS=[
+  // ── R14 ──
+  {size:'14',price:'110',label:'les 2 pneus',brand:'',dims:['155/65/14','165/65/14','175/65/14']},
+  {size:'14',price:'120',label:'les 2 pneus',brand:'',dims:['165/70/14']},
+  // ── R15 ──
+  {size:'15',price:'120',label:'les 2 pneus',brand:'',dims:['185/55/15','185/60/15','185/65/15','195/50/15','195/55/15','195/65/15']},
+  // ── R16 ──
+  {size:'16',price:'130',label:'les 2 pneus',brand:'',dims:['195/55/16','205/55/16']},
+  {size:'16',price:'140',label:'les 2 pneus',brand:'Nexen',dims:['185/55/16','195/45/16','195/50/16','205/45/16','205/60/16','215/45/16','215/55/16','215/60/16']},
+  {size:'16',price:'150',label:'les 2 pneus',brand:'Nexen',dims:['205/55/16']},
+  {size:'16',price:'250',label:'les 4 pneus',brand:'',promo4:true,dims:['195/55/16','205/55/16']},
+  // ── R17 ──
+  {size:'17',price:'150',label:'les 2 pneus',brand:'',dims:['205/45/17','205/50/17','215/40/17','215/45/17','215/50/17','225/45/17','225/50/17']},
+  {size:'17',price:'160',label:'les 2 pneus',brand:'',dims:['205/55/17','215/55/17','215/60/17','225/55/17','235/55/17']},
+  // ── R18 ──
+  {size:'18',price:'180',label:'les 2 pneus',brand:'',dims:['215/40/18','215/55/18','225/40/18','225/45/18','225/50/18','225/55/18','235/45/18','235/50/18','235/55/18','245/40/18','245/45/18']},
+  {size:'18',price:'180',label:'les 2 pneus',brand:'Nexen',dims:['225/40/18']},
+  {size:'18',price:'160',label:'les 2 pneus',brand:'Nexen',dims:['225/40/18']},
+  // ── R19 ──
+  {size:'19',price:'190',label:'les 2 pneus',brand:'Nexen',dims:['205/55/19','225/40/19','225/45/19','235/35/19','235/50/19','235/55/19','245/35/19','255/50/19']},
+  {size:'19',price:'250',label:'les 2 pneus',brand:'Nexen',dims:['235/35/19','235/40/19','255/45/19']},
+  {size:'19',price:'260',label:'les 2 pneus',brand:'Nexen',dims:['225/55/19']},
+  {size:'19',price:'310',label:'les 2 pneus',brand:'Nexen',dims:['255/45/19']},
+  // ── Utilitaires ──
+  {size:'utilitaires',price:'180',label:'les 2 pneus',brand:'',dims:['215/70/15C','195/65/16C','195/75/16C','205/65/16C','215/65/16C','225/65/16C','235/65/16C']},
+  {size:'utilitaires',price:'190',label:'les 2 pneus',brand:'',dims:['195/65/16C']},
+  // ── Clim ──
+  {size:'clim',price:'50',label:'dès',brand:'',clim:true,dims:[]},
+];
+
+
+
+
+function promoCardHtml(p){
+  if(p.clim) return `
+    <div style="background:linear-gradient(135deg,#0a1a2a 0%,#0d0d14 100%);border:1px solid #1a3a5a;border-radius:10px;overflow:hidden;position:relative;transition:all .2s">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#1a6fa8,#7c4dbd)"></div>
+      <div style="padding:14px 16px;border-bottom:1px solid #1a3a5a">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:40px;font-weight:900;color:#60a8e0;line-height:1">dès 50€</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;color:#60a8e0;margin-top:4px">Recharge Climatisation</div>
+        <div style="font-size:11px;color:#60a8e0;margin-top:3px">✓ Gaz R134a — Véhicules jusqu'à 2017</div>
       </div>
-      ${oldPrice ? `<div style="margin-bottom:8px">${oldPrice}</div>` : ''}
-      <div class="product-tags">${tags}</div>
-      <button class="btn-devis" onclick="demanderDevis('${p.nom}')">Demander un devis</button>
-    </div>
-  </div>`;
-}
-function productEmojiChar(cat){
-  if(cat==='Pneus') return '🛞';
-  if(cat==='Packs') return '📦';
-  return '🔩';
-}
-// ══════════════════════════════════════════════
-//  PROMOS ACCUEIL
-// ══════════════════════════════════════════════
-function renderHomePromos(){
-  const promos = products.filter(p=>p.promo);
-  const grid = document.getElementById('home-promos');
-  if(!grid) return;
-  grid.innerHTML = promos.length === 0
-    ? '<p style="color:var(--text-muted);text-align:center;grid-column:1/-1">Aucune promotion en cours.</p>'
-    : promos.map(p=>{
-      const bgC = p.cat==='Jantes'?'jante-bg':p.cat==='Pneus'?'pneu-bg':p.cat==='Packs'?'pack-bg':'acc-bg';
-      const disc = p.prixOld ? Math.round((1-p.prix/p.prixOld)*100) : null;
-      const isJante = p.cat==='Jantes';
-      return `<div class="promo-card">
-        <div class="promo-img ${bgC}">
-          ${isJante ? janteSVG(100) : `<span style="font-size:3.2rem">${productEmojiChar(p.cat)}</span>`}
-          <span class="badge-promo">${p.badge||'PROMO'}</span>
+      <div style="padding:12px 16px">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-size:12px;color:var(--t2)">❄️ Gaz R134a</div>
+          <div style="font-size:12px;color:var(--t2)">⚡ Service rapide</div>
+          <div style="font-size:12px;color:var(--t2)">🔧 Travail professionnel</div>
+          <div style="font-size:12px;color:var(--g1)">✅ Sans rendez-vous</div>
         </div>
-        <div class="promo-info">
-          <h3>${p.nom}</h3>
-          <div class="price-row">
-            <span class="price-new">${p.prix}€</span>
-            ${p.prixOld?`<span class="price-old">${p.prixOld}€</span><span class="discount">-${disc}%</span>`:''}
-          </div>
-          <div class="promo-tags">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
-          <button class="btn-devis" onclick="demanderDevis('${p.nom}')">Voir l'offre</button>
-        </div>
-      </div>`;
-    }).join('');
+        <div style="margin-top:9px;padding:6px 9px;background:rgba(26,111,168,.12);border:1px solid rgba(26,111,168,.25);border-radius:4px;font-size:10px;color:#60a8e0">* À partir de 50€ pour R134a. Véhicules jusqu'à 2017. Voir conditions sur place.</div>
+      </div>
+      <div style="padding:0 16px 14px"><button class="promo-cta" style="background:linear-gradient(135deg,#1a6fa8,#0d4a7a)" onclick="cPage('rdv')">Prendre rendez-vous →</button></div>
+    </div>`;
+
+  const is4 = p.promo4||false;
+  const dimsHtml = p.dims.map(d=>'<span class="promo-dim">'+d+'</span>').join('');
+  const brandHtml = p.brand ? '<div style="display:flex;align-items:center;gap:6px;margin-top:9px;padding-top:8px;border-top:1px solid var(--b1)"><span style="font-size:16px">🏷️</span><span style="font-family:\'Barlow Condensed\',sans-serif;font-size:13px;font-weight:700;color:#fff;text-transform:uppercase">'+p.brand+'</span></div>' : '';
+  const topBanner = is4 ? '<div style="background:rgba(192,57,43,.12);padding:6px 16px;font-family:\'Barlow Condensed\',sans-serif;font-size:11px;font-weight:700;color:var(--r);text-transform:uppercase;letter-spacing:.5px">🔥 Offre 4 pneus</div>' : '';
+  const borderStyle = is4 ? 'border-color:rgba(192,57,43,.35)' : '';
+
+  return '<div class="promo-card" style="'+borderStyle+'">'+topBanner+
+    '<div class="promo-header">'+
+    '<div class="promo-price">'+p.price+'<span class="promo-price-unit"> '+p.label+'</span></div>'+
+    '<div class="promo-label">Neufs · Montés · Équilibrés'+(p.brand?' · '+p.brand:'')+'</div>'+
+    '<div class="promo-included">✓ Montage + Équilibrage inclus</div>'+
+    '</div>'+
+    '<div class="promo-body">'+
+    '<div class="promo-dims">'+dimsHtml+'</div>'+
+    brandHtml+
+    '</div>'+
+    '<div style="padding:0 16px 14px">'+
+    '<div style="display:inline-flex;align-items:center;gap:5px;background:rgba(29,185,84,.1);border:1px solid rgba(29,185,84,.25);border-radius:20px;padding:3px 9px;font-size:11px;color:var(--g1);font-weight:600;margin-top:8px">✓ Sans rendez-vous</div>'+
+    '<button class="promo-cta" onclick="cPage(\'rdv\')">Prendre rendez-vous →</button>'+
+    '</div>'+
+    '</div>';
 }
-// ══════════════════════════════════════════════
-//  CATALOGUE
-// ══════════════════════════════════════════════
-function renderCatalogue(){
-  ['Jantes','Pneus','Packs','Accessoires'].forEach(cat=>{
-    const key = cat.toLowerCase();
-    const grid = document.getElementById('grid-'+key);
-    if(!grid) return;
-    const items = products.filter(p=>p.cat===cat);
-    grid.innerHTML = items.length===0
-      ? '<p style="color:var(--text-muted);grid-column:1/-1">Aucun produit dans cette catégorie.</p>'
-      : items.map(p=>renderProductCard(p)).join('');
+
+function renderCCrens(){
+  const el=document.getElementById('c-crens');
+  if(el) el.innerHTML=crens.length?crens.map(c=>`<div class="crenrow"><div><b style="color:#fff">${c.jour}</b><span style="color:var(--mu);font-size:12px;margin-left:7px">${c.deb}–${c.fin}</span></div><span class="tag tg">Disponible</span></div>`).join(''):'<div style="color:var(--mu);font-size:13px;padding:7px 0">Aucun créneau disponible</div>';
+  // Horaires côté client
+  const elH = document.getElementById('c-horaires-rdv');
+  if(elH) elH.innerHTML = hors.map(h=>`
+    <div class="crenrow">
+      <div><b style="color:${h.on?'#fff':'var(--mu)'}">${h.j}</b>
+        ${h.on?`<span style="color:var(--mu);font-size:12px;margin-left:7px">${h.o} – ${h.f}</span>`:''}
+      </div>
+      <span class="tag ${h.on?'tg':'tr'}">${h.on?'Ouvert':'Fermé'}</span>
+    </div>`).join('');
+}
+function renderCDvForm(){
+  const el=document.getElementById('dv-prods');if(!el)return;
+  el.innerHTML=prods.filter(p=>p.statut==='Actif'&&p.prix>0).map(p=>`<div class="dv-row"><span class="ico">${p.emoji||'📦'}</span><span class="nm">${p.nom}</span><span class="pr">${p.prix}€ ${p.unite}</span><input type="number" min="0" value="0" onchange="updCDvTotal()"></div>`).join('');
+}
+function updCDvTotal(){
+  const ps=prods.filter(p=>p.statut==='Actif'&&p.prix>0);let t=0;
+  document.querySelectorAll('#dv-prods input[type=number]').forEach((inp,i)=>{t+=(ps[i]?.prix||0)*parseInt(inp.value||0);});
+  document.getElementById('dv-tbox').style.display=t>0?'flex':'none';
+  document.getElementById('dv-total').textContent=t+'€';
+}
+function submitRdv(){
+  const n=document.getElementById('cn').value.trim(),s=document.getElementById('cs').value,d=document.getElementById('cd').value,h=document.getElementById('ch').value;
+  if(!n||!s||!d||!h){toast('Champs obligatoires manquants','ta');return;}
+  rdvs.push({id:Date.now(),nom:n,tel:document.getElementById('ct').value,email:document.getElementById('ce').value,veh:document.getElementById('cv').value,svc:s,date:d,heure:h,note:document.getElementById('cno').value,rap:true,statut:'Confirmé'});
+  document.getElementById('rdv-ok-txt').textContent=`${n} — ${s} — ${d.split('-').reverse().join('/')} à ${h}`;
+  document.getElementById('rdv-ok').style.display='block';
+  ['cn','ct','ce','cv','cno'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  document.getElementById('cs').value='';toast('Rendez-vous confirmé !','tg');
+}
+function submitDevis(){
+  const n=document.getElementById('dvn').value.trim();if(!n){toast('Votre nom est requis','ta');return;}
+  const ps=prods.filter(p=>p.statut==='Actif'&&p.prix>0);let t=0;
+  document.querySelectorAll('#dv-prods input[type=number]').forEach((inp,i)=>{t+=(ps[i]?.prix||0)*parseInt(inp.value||0);});
+  if(!t){toast('Sélectionnez au moins une prestation','ta');return;}
+  dvCtr++;const now=new Date();
+  dvis.push({ref:`DRJ-0${dvCtr}`,client:n,veh:document.getElementById('dvv').value,date:`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`,montant:t,statut:'En attente'});
+  document.getElementById('dv-ok-txt').textContent=`Réf. DRJ-0${dvCtr} — Montant estimé : ${t}€. Nous vous contacterons.`;
+  document.getElementById('dv-ok').style.display='block';
+  document.querySelectorAll('#dv-prods input[type=number]').forEach(inp=>inp.value=0);
+  updCDvTotal();toast(`Devis DRJ-0${dvCtr} envoyé !`,'tg');
+}
+
+// ════ GALLERY ════
+// Default placeholder images per category
+const catImgs={
+  'Montage pneus':'https://images.unsplash.com/photo-1625047509248-ec889cbff17f?w=600&q=70',
+  'Jantes':'https://images.unsplash.com/photo-1611759386152-79e2f7f04b84?w=600&q=70',
+  'Rénovation jante':'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=600&q=70',
+  'Freinage':'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=600&q=70',
+  'Services':'https://images.unsplash.com/photo-1615906655593-ad0386982a0f?w=600&q=70',
+  'Avant / Après':'https://images.unsplash.com/photo-1578844251758-2f71da64c96f?w=600&q=70',
+};
+function gCard(m,idx){
+  let th='';
+  const fallbackImg = catImgs[m.cat]||'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=70';
+  if(m.type==='photo'&&m.url) th=`<img class="gthumb" src="${m.url}" alt="${m.name}" loading="lazy" onerror="this.src='${fallbackImg}'">`;
+  else if(m.type==='photo')   th=`<img class="gthumb" src="${fallbackImg}" alt="${m.name}" loading="lazy">`;
+  else if(m.type==='video'&&m.isYT) th=`<div class="gph"><span style="font-size:36px">▶</span><small>Vidéo</small></div>`;
+  else th=`<div class="gph"><span style="font-size:36px">${m.em||'📷'}</span><small>${m.cat||m.type}</small></div>`;
+  return `<div class="gcard" onclick="openLB(${idx})">${th}<div class="ginfo"><h4>${m.name}</h4><p>${m.desc||''}</p></div></div>`;
+}
+function renderGallery(tf){
+  const items=medias.filter(m=>m.vis&&(!tf||m.type===tf));
+  const el=document.getElementById('c-gallery'),emp=document.getElementById('g-empty');
+  if(!items.length){if(el)el.innerHTML='';if(emp)emp.style.display='block';return;}
+  if(emp)emp.style.display='none';
+  if(el)el.innerHTML=items.map((m,i)=>gCard(m,medias.indexOf(m))).join('');
+}
+function gFilter(t,el){document.querySelectorAll('#cp-galerie .cf').forEach(b=>b.classList.remove('on'));if(el)el.classList.add('on');renderGallery(t||undefined);}
+function openLB(idx){
+  const m=medias[idx];let c='';
+  if(m.type==='photo'&&m.url)c=`<img src="${m.url}" alt="${m.name}">`;
+  else if(m.type==='video'&&m.isYT)c=`<iframe width="780" height="440" src="${m.url}" frameborder="0" allowfullscreen style="border-radius:5px;max-width:90vw"></iframe>`;
+  else if(m.type==='video'&&m.url)c=`<video controls style="max-width:88vw;max-height:78vh;border-radius:5px"><source src="${m.url}"></video>`;
+  else c=`<div style="font-size:70px;text-align:center">${m.em||'📷'}</div>`;
+  document.getElementById('lb-c').innerHTML=c;
+  document.getElementById('lb-cap').textContent=m.name+(m.desc?' — '+m.desc:'');
+  document.getElementById('lb').classList.add('ON');
+}
+function closeLB(){document.getElementById('lb').classList.remove('ON');document.getElementById('lb-c').innerHTML='';}
+document.getElementById('lb').addEventListener('click',e=>{if(e.target===document.getElementById('lb'))closeLB();});
+
+// ════ ADMIN INIT ════
+function initAdmin(){
+  const now=new Date();calY=now.getFullYear();calM=now.getMonth();
+  const days=['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'],mons=['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.'];
+  document.getElementById('tbdate').textContent=days[now.getDay()]+' '+now.getDate()+' '+mons[now.getMonth()]+' '+now.getFullYear();
+  renderDash();renderProds('');renderStock();renderCrens();renderCal();renderRdvs();renderDvis();renderHors();renderMGrid();
+  popDvProd();popRProd();
+  // Synchroniser les valeurs des paramètres avec l'état actuel
+  const sNom=document.getElementById('s-nom');
+  if(sNom) sNom.value=document.title.split(' —')[0]||'DR JANTES';
+}
+const ATITLES={dashboard:'Tableau de bord',produits:'Produits',stock:'Stock',creneaux:'Créneaux',rdvs:'Rendez-vous',devisadmin:'Devis',settings:'Paramètres'};
+const ACTAS={dashboard:'+ Nouveau produit',produits:'+ Ajouter produit',stock:'+ Réapprovisionner',creneaux:'+ Ajouter créneau',rdvs:'+ Nouveau RDV',devisadmin:'+ Nouveau devis',settings:'Enregistrer'};
+function aPage(id,el){
+  document.querySelectorAll('.apage').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.sbi').forEach(i=>i.classList.remove('on'));
+  document.getElementById('ap-'+id).classList.add('on');if(el)el.classList.add('on');
+  curAP=id;document.getElementById('atitle').textContent=ATITLES[id]||id;document.getElementById('acta').textContent=ACTAS[id]||'+ Nouveau';
+  if(id==='rdvs'){renderCal();renderRdvs();}if(id==='dashboard')renderDash();if(id==='settings'){renderMGrid();renderHors();}
+}
+function adminCTA(){({dashboard:()=>openPModal(null),produits:()=>openPModal(null),stock:()=>openRModal(null),creneaux:()=>openCModal(),rdvs:()=>openRDVModal(),devisadmin:()=>clearDv(),settings:()=>toast('Enregistré !','tg')}[curAP]||function(){})();}
+function sstab(id,el){document.querySelectorAll('.ssec').forEach(s=>s.classList.remove('on'));document.querySelectorAll('.stab').forEach(t=>t.classList.remove('on'));document.getElementById('ss-'+id).classList.add('on');if(el)el.classList.add('on');if(id==='medias')renderMGrid();if(id==='tarifs')renderTarifs();if(id==='horaires')renderHors();if(id==='photos')renderSitePhotos();if(id==='catalogue')renderCatSettings();}
+
+// ════ HELPERS ════
+function stag(s){return s==='En cours'?'tg':s==='Confirmé'?'tb':s==='Annulé'?'tr':'tgr';}
+function dvtag(s){return s==='Accepté'?'tb':s==='Réalisé'?'tg':s==='En attente'?'ta':'tgr';}
+function sbarH(p){if(p.stock===999)return '<span class="tag tb">Service</span>';const mx=Math.max(p.seuil*3,p.stock,1),pct=Math.min(100,Math.round((p.stock/mx)*100));const cls=p.stock===0?'sfout':p.stock<=p.seuil?'sflow':'sfok';const col=p.stock===0?'#e87070':p.stock<=p.seuil?'#f0b040':'#2ecc71';return `<div class="sbar"><div class="sbar-t"><div class="sbar-f ${cls}" style="width:${pct}%"></div></div><span style="font-size:10px;color:${col}">${p.stock}</span></div>`;}
+
+// ════ DASHBOARD ════
+function renderDash(){
+  const today=new Date().toISOString().split('T')[0];
+  const tr=rdvs.filter(r=>r.date===today),al=prods.filter(p=>p.stock!==999&&p.stock<=p.seuil),sv=prods.filter(p=>p.stock!==999).reduce((a,p)=>a+p.stock*p.prix,0);
+  document.getElementById('d-stats').innerHTML=`<div class="sc R"><div class="sl">RDV aujourd'hui</div><div class="sv">${tr.length}</div><div class="ss">${rdvs.length} total</div></div><div class="sc G"><div class="sl">Produits actifs</div><div class="sv">${prods.filter(p=>p.statut==='Actif').length}</div><div class="ss">${[...new Set(prods.map(p=>p.cat))].length} catégories</div></div><div class="sc A"><div class="sl">Alertes stock</div><div class="sv">${al.length}</div><div class="ss">à réapprovisionner</div></div><div class="sc B"><div class="sl">Médias publiés</div><div class="sv">${medias.filter(m=>m.vis).length}</div><div class="ss">${medias.length} total</div></div>`;
+  document.getElementById('sb-nr').textContent=rdvs.length;document.getElementById('sb-na').textContent=al.length;document.getElementById('sb-np').textContent=prods.length;
+  document.getElementById('d-rdvtag').textContent=tr.length+' prévu'+(tr.length>1?'s':'');document.getElementById('d-rdvtag').className='tag '+(tr.length>0?'ta':'tgr');
+  document.getElementById('d-rdvlist').innerHTML=tr.length?tr.map(r=>`<div style="display:flex;align-items:center;padding:9px 14px;border-bottom:1px solid var(--b1);gap:10px"><div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:var(--r);min-width:44px">${r.heure}</div><div style="flex:1"><div style="font-weight:600;font-size:13px;color:#fff">${r.nom}</div><div style="font-size:11px;color:var(--mu)">${r.svc}</div></div><span class="tag ${stag(r.statut)}">${r.statut}</span></div>`).join(''):'<div class="empty"><div class="eico">📅</div><div>Aucun RDV aujourd\'hui</div></div>';
+  document.getElementById('d-stocktag').textContent=al.length;document.getElementById('d-stocktag').className='tag '+(al.length>0?'tr':'tg');
+  document.getElementById('d-stocklist').innerHTML=al.length?al.slice(0,4).map(p=>`<div style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:1px solid var(--b1)"><div style="width:6px;height:6px;border-radius:50%;background:${p.stock===0?'#e87070':'#f0b040'};flex-shrink:0"></div><div style="flex:1;font-size:12px;color:var(--t2)"><b>${p.nom}</b> — ${p.stock} u. (seuil:${p.seuil})</div><div style="font-size:11px;color:var(--mu);cursor:pointer" onclick="openRModal(${prods.indexOf(p)})">Réappro →</div></div>`).join(''):'<div class="empty" style="padding:20px"><div class="eico">✅</div><div>Stocks OK</div></div>';
+  const vals=[2,4,1,3,5,2,rdvs.length],mx=Math.max(...vals,1);
+  document.getElementById('d-chart').innerHTML=vals.map((v,i)=>`<div class="mcb${i===6?' today':''}" style="height:${Math.round((v/mx)*100)}%"><div class="mctip">${v} RDV</div></div>`).join('');
+  document.getElementById('d-clbls').innerHTML=['L','M','M','J','V','S','Auj.'].map(d=>`<div class="mclbl">${d}</div>`).join('');
+  document.getElementById('d-dvislist').innerHTML=[...dvis].reverse().slice(0,3).map(d=>`<div style="display:flex;align-items:center;padding:8px 14px;border-bottom:1px solid var(--b1);gap:9px"><div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;color:var(--mu);min-width:74px">${d.ref}</div><div style="flex:1;font-size:13px;color:#fff">${d.client}</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:var(--r)">${d.montant}€</div><span class="tag ${dvtag(d.statut)}">${d.statut}</span></div>`).join('');
+}
+
+// ════ PRODUITS ════
+function renderProds(cat){
+  const f=prods.filter(p=>!cat||p.cat===cat);
+  document.getElementById('p-lbl').textContent='('+f.length+' produit'+(f.length>1?'s':'')+')';
+  document.getElementById('sb-np').textContent=prods.length;
+  document.getElementById('p-tbody').innerHTML=f.map(p=>{const i=prods.indexOf(p);return `<tr><td style="font-size:10px;color:var(--mu)">${p.ref}</td><td><div style="display:flex;align-items:center;gap:7px"><div class="pico">${p.emoji||'📦'}</div><div><div style="font-weight:600;color:#fff;font-size:13px">${p.nom}</div><div style="font-size:10px;color:var(--mu)">${p.desc||''}</div></div></div></td><td><span class="tag tgr">${p.cat}</span></td><td><b style="color:var(--r)">${p.prix>0?p.prix+'€':'Gratuit'}</b><span style="font-size:10px;color:var(--mu)"> ${p.unite}</span></td><td>${sbarH(p)}</td><td>${p.statut==='Actif'?'<span class="tag tg">Actif</span>':'<span class="tag tgr">Inactif</span>'}</td><td><button class="btn SM" style="border-color:#1a3a5a;color:#60a8e0;margin-right:3px" onclick="openPModal(${i})">Éditer</button><button class="btn SM D" onclick="delProd(${i})">Suppr.</button></td></tr>`;}).join('')||'<tr><td colspan="7"><div class="empty"><div class="eico">📦</div><div>Aucun produit</div></div></td></tr>';
+}
+function openPModal(idx){
+  eProdIdx=idx===null?-1:idx;
+  document.getElementById('mp-t').textContent=idx===null?'Ajouter un produit':'Modifier : '+prods[idx].nom;
+  if(idx!==null){const p=prods[idx];document.getElementById('mp-nom').value=p.nom;document.getElementById('mp-cat').value=p.cat;document.getElementById('mp-p').value=p.prix;document.getElementById('mp-u').value=p.unite;document.getElementById('mp-s').value=p.stock===999?0:p.stock;document.getElementById('mp-sl').value=p.seuil;document.getElementById('mp-e').value=p.emoji||'';document.getElementById('mp-st').value=p.statut;document.getElementById('mp-d').value=p.desc||'';}
+  else{['mp-nom','mp-p','mp-u','mp-e','mp-d'].forEach(id=>document.getElementById(id).value='');document.getElementById('mp-s').value=10;document.getElementById('mp-sl').value=5;document.getElementById('mp-cat').value='';document.getElementById('mp-st').value='Actif';}
+  document.getElementById('m-prod').classList.add('ON');
+}
+function saveProd(){
+  const nom=document.getElementById('mp-nom').value.trim(),cat=document.getElementById('mp-cat').value;
+  if(!nom||!cat){toast('Nom et catégorie requis','ta');return;}
+  const p={id:eProdIdx>=0?prods[eProdIdx].id:Date.now(),ref:eProdIdx>=0?prods[eProdIdx].ref:'PRD-'+String(prods.length+1).padStart(3,'0'),nom,cat,prix:parseFloat(document.getElementById('mp-p').value)||0,unite:document.getElementById('mp-u').value,stock:parseInt(document.getElementById('mp-s').value)||0,seuil:parseInt(document.getElementById('mp-sl').value)||5,emoji:document.getElementById('mp-e').value||'📦',statut:document.getElementById('mp-st').value,desc:document.getElementById('mp-d').value};
+  if(eProdIdx>=0)prods[eProdIdx]=p;else prods.push(p);
+  cm('m-prod');renderProds(document.getElementById('p-filter').value);renderStock();renderDash();popDvProd();renderCDvForm();initCatalogue();initCatalogue();
+  toast(eProdIdx>=0?'Produit modifié !':'Produit ajouté !','tg');
+}
+function delProd(i){if(!confirm('Supprimer ce produit ?'))return;prods.splice(i,1);renderProds(document.getElementById('p-filter').value);renderStock();renderDash();toast('Produit supprimé','tr');}
+
+// ════ STOCK ════
+function renderStock(){
+  const items=prods.filter(p=>p.stock!==999);
+  const ok=items.filter(p=>p.stock>p.seuil).length,low=items.filter(p=>p.stock>0&&p.stock<=p.seuil).length,out=items.filter(p=>p.stock===0).length,val=items.reduce((a,p)=>a+p.stock*p.prix,0);
+  document.getElementById('s-stats').innerHTML=`<div class="sc G"><div class="sl">En stock</div><div class="sv">${ok}</div><div class="ss">produits OK</div></div><div class="sc A"><div class="sl">Stock faible</div><div class="sv">${low}</div><div class="ss">à surveiller</div></div><div class="sc R"><div class="sl">Rupture</div><div class="sv">${out}</div><div class="ss">en rupture</div></div><div class="sc P"><div class="sl">Valeur stock</div><div class="sv">${val.toLocaleString('fr-FR')}€</div><div class="ss">estimation</div></div>`;
+  document.getElementById('sb-na').textContent=low+out;
+  document.getElementById('s-tbody').innerHTML=items.map(p=>{const i=prods.indexOf(p),mx=Math.max(p.seuil*3,p.stock,1),pct=Math.min(100,Math.round((p.stock/mx)*100));const cls=p.stock===0?'sfout':p.stock<=p.seuil?'sflow':'sfok';const st=p.stock===0?'<span class="tag tr">Rupture</span>':p.stock<=p.seuil?'<span class="tag ta">Faible</span>':'<span class="tag tg">OK</span>';return `<tr><td><b style="color:#fff">${p.nom}</b></td><td><span class="tag tgr">${p.cat}</span></td><td><b style="color:${p.stock<=p.seuil?'#f0b040':'#fff'}">${p.stock}</b></td><td>${p.seuil}</td><td><div class="sbar"><div class="sbar-t"><div class="sbar-f ${cls}" style="width:${pct}%"></div></div><span style="font-size:10px;color:var(--mu)">${pct}%</span></div></td><td>${st}</td><td><button class="btn SM G" onclick="openRModal(${i})">+ Réappro</button></td></tr>`;}).join('');
+}
+function popRProd(){const sel=document.getElementById('rp-p');sel.innerHTML='<option value="">— Sélectionner —</option>'+prods.filter(p=>p.stock!==999).map(p=>`<option value="${prods.indexOf(p)}">${p.nom} (${p.stock})</option>`).join('');}
+function openRModal(idx){popRProd();if(idx!=null){document.getElementById('rp-p').value=idx;document.getElementById('rp-a').value=prods[idx].stock;}else{document.getElementById('rp-p').value='';document.getElementById('rp-a').value='';}document.getElementById('rp-q').value=10;document.getElementById('m-reapro').classList.add('ON');}
+function rpUpd(){const idx=document.getElementById('rp-p').value;if(idx!=='')document.getElementById('rp-a').value=prods[idx].stock;}
+function saveReapro(){const idx=document.getElementById('rp-p').value;if(idx===''){toast('Sélectionnez un produit','ta');return;}const q=parseInt(document.getElementById('rp-q').value)||0;if(q<=0){toast('Quantité invalide','ta');return;}prods[idx].stock+=q;cm('m-reapro');renderStock();renderProds(document.getElementById('p-filter').value);renderDash();toast(`+${q} unités ajoutées !`,'tg');}
+
+// ════ CRÉNEAUX ════
+function renderCrens(){
+  document.getElementById('wk-grid').innerHTML=DF.map(d=>{const dc=crens.filter(c=>c.jour===d);return `<div class="wkday"><div class="wkdh">${d.slice(0,3)}</div><div class="wkdb">${dc.length?dc.map(c=>`<div class="cchip">${c.deb}–${c.fin}</div>`).join(''):'<div style="font-size:9px;color:var(--mu2);text-align:center;padding:6px 0">—</div>'}</div></div>`;}).join('');
+  document.getElementById('cr-tbody').innerHTML=crens.map(c=>`<tr><td><b style="color:#fff">${c.jour}</b></td><td>${c.deb}</td><td>${c.fin}</td><td style="color:var(--mu)">${cdur(c.deb,c.fin)}</td><td style="color:var(--mu2)">${c.rec}</td><td><span class="tag tg">Libre</span></td><td><button class="btn SM D" onclick="delCren(${c.id})">Suppr.</button></td></tr>`).join('')||'<tr><td colspan="7"><div class="empty"><div class="eico">📅</div><div>Aucun créneau</div></div></td></tr>';
+  renderCCrens();
+}
+function cdur(d,f){const[dh,dm]=d.split(':').map(Number),[fh,fm]=f.split(':').map(Number),m=(fh*60+fm)-(dh*60+dm);return m>=60?`${Math.floor(m/60)}h${m%60?String(m%60).padStart(2,'0'):''}`:m+'min';}
+function openCModal(){document.getElementById('m-cren').classList.add('ON');}
+function saveCren(){const j=document.getElementById('mc-j').value,d=document.getElementById('mc-d').value,f=document.getElementById('mc-f').value;if(!j){toast('Sélectionnez un jour','ta');return;}crens.push({id:Date.now(),jour:j,deb:d,fin:f,rec:document.getElementById('mc-r').value});cm('m-cren');renderCrens();toast(`Créneau ${j} ${d}–${f} ajouté !`,'tg');}
+function delCren(id){if(!confirm('Supprimer ?'))return;crens=crens.filter(c=>c.id!==id);renderCrens();toast('Créneau supprimé','tr');}
+
+// ════ RDV ════
+function renderRdvs(){
+  const s=[...rdvs].sort((a,b)=>(a.date+a.heure).localeCompare(b.date+b.heure));
+  const f=selDate?s.filter(r=>r.date===selDate):s;
+  document.getElementById('rdv-flbl').textContent=selDate?`— ${selDate.split('-').reverse().join('/')}`:''
+  document.getElementById('rdv-list').innerHTML=f.length?f.map(r=>`<div class="rdv-item" style="border-left-color:${r.rap?'#1d9954':'var(--r)'}"><div><div class="rdvt" style="color:${r.rap?'#1d9954':'var(--r)'}">${r.heure}</div><div class="rdvd">${r.date.split('-').reverse().join('/')}</div></div><div style="flex:1;min-width:0"><div style="font-weight:600;font-size:13px;color:#fff">${r.nom}</div><div style="font-size:11px;color:var(--mu);margin-top:2px">${r.svc}</div><div style="font-size:10px;color:var(--mu2);margin-top:1px">${r.veh||''}${r.tel?' · '+r.tel:''}</div></div><div style="display:flex;gap:5px;align-items:center;flex-shrink:0"><span class="tag ${stag(r.statut)}">${r.statut}</span><span style="font-size:14px">${r.rap?'🔔':'🔕'}</span><button class="btn SM D" onclick="delRdv(${r.id})">✕</button></div></div>`).join(''):'<div class="empty"><div class="eico">📅</div><div>Aucun rendez-vous</div></div>';
+}
+function openRDVModal(){['mr-n','mr-t','mr-e','mr-v','mr-no'].forEach(id=>document.getElementById(id).value='');document.getElementById('mr-s').value='';document.getElementById('mr-d').value='';document.getElementById('mr-h').value='';document.getElementById('mr-rap').checked=true;document.getElementById('m-rdv').classList.add('ON');}
+function saveRDV(){const n=document.getElementById('mr-n').value.trim(),s=document.getElementById('mr-s').value,d=document.getElementById('mr-d').value,h=document.getElementById('mr-h').value;if(!n||!s||!d||!h){toast('Champs obligatoires manquants','ta');return;}rdvs.push({id:Date.now(),nom:n,tel:document.getElementById('mr-t').value,email:document.getElementById('mr-e').value,veh:document.getElementById('mr-v').value,svc:s,date:d,heure:h,note:document.getElementById('mr-no').value,rap:document.getElementById('mr-rap').checked,statut:'Confirmé'});cm('m-rdv');renderRdvs();renderCal();renderDash();toast('Rendez-vous confirmé !','tg');}
+function delRdv(id){rdvs=rdvs.filter(r=>r.id!==id);renderRdvs();renderCal();renderDash();toast('RDV supprimé','tr');}
+
+// ════ CALENDAR ════
+function renderCal(){
+  document.getElementById('cal-title').textContent=MONTHS[calM]+' '+calY;
+  const today=new Date();let h=DS.map(d=>`<div class="caldn">${d}</div>`).join('');
+  const first=new Date(calY,calM,1);let sd=first.getDay()===0?6:first.getDay()-1;
+  const days=new Date(calY,calM+1,0).getDate();
+  for(let i=0;i<sd;i++)h+=`<div class="calcell empty"></div>`;
+  for(let d=1;d<=days;d++){const ds=`${calY}-${String(calM+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`,isT=d===today.getDate()&&calM===today.getMonth()&&calY===today.getFullYear(),isSel=ds===selDate,hasR=rdvs.some(r=>r.date===ds);h+=`<div class="calcell${isT&&!isSel?' today':''}${isSel?' sel':''}${hasR?' hasrdv':''}" onclick="selDate='${ds}';renderCal();renderRdvs()">${d}</div>`;}
+  document.getElementById('cal-grid').innerHTML=h;
+}
+function chM(d){calM+=d;if(calM<0){calM=11;calY--;}if(calM>11){calM=0;calY++;}renderCal();}
+
+// ════ DEVIS ADMIN ════
+function popDvProd(){document.getElementById('adv-p').innerHTML='<option value="">— Sélectionner —</option>'+prods.filter(p=>p.statut==='Actif').map(p=>`<option value="${prods.indexOf(p)}">${p.emoji||'📦'} ${p.nom} — ${p.prix>0?p.prix+'€':'Gratuit'} ${p.unite}</option>`).join('');}
+function addDvLine(){const idx=document.getElementById('adv-p').value,q=parseInt(document.getElementById('adv-q').value)||1;if(idx===''){toast('Sélectionnez un produit','ta');return;}dvLines.push({prod:prods[idx],qty:q});renderDvLines();}
+function renderDvLines(){const c=document.getElementById('dv-lines');const tb=document.getElementById('dv-tbox2');if(!dvLines.length){c.innerHTML='';tb.style.display='none';return;}let t=0;c.innerHTML='<div style="background:var(--s2);border:1px solid var(--b1);border-radius:4px;overflow:hidden">'+dvLines.map((l,i)=>{const s=l.prod.prix*l.qty;t+=s;return `<div style="display:flex;align-items:center;padding:8px 11px;border-bottom:1px solid var(--b1)"><span style="flex:1;font-size:13px;color:var(--t2)">${l.prod.emoji||'📦'} ${l.prod.nom} × ${l.qty}</span><span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--r)">${s}€</span><button class="btn SM D" style="margin-left:7px" onclick="dvLines.splice(${i},1);renderDvLines()">✕</button></div>`;}).join('')+'</div>';tb.style.display='flex';document.getElementById('dv-total2').textContent=t+'€';}
+function clearDv(){dvLines=[];renderDvLines();document.getElementById('adv-c').value='';document.getElementById('adv-v').value='';}
+function saveDv(){const c=document.getElementById('adv-c').value.trim();if(!c){toast('Nom requis','ta');return;}if(!dvLines.length){toast('Ajoutez une prestation','ta');return;}const t=dvLines.reduce((a,l)=>a+l.prod.prix*l.qty,0);dvCtr++;const now=new Date();dvis.push({ref:`DRJ-0${dvCtr}`,client:c,veh:document.getElementById('adv-v').value,date:`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`,montant:t,statut:'En attente'});clearDv();renderDvis();renderDash();toast(`Devis DRJ-0${dvCtr} enregistré !`,'tg');}
+function renderDvis(){document.getElementById('dv-tbody').innerHTML=[...dvis].reverse().map(d=>`<tr><td style="font-size:10px;color:var(--mu)">${d.ref}</td><td><b style="color:#fff">${d.client}</b>${d.veh?`<div style="font-size:10px;color:var(--mu)">${d.veh}</div>`:''}</td><td style="color:var(--mu2)">${d.date.split('-').reverse().join('/')}</td><td><b style="color:var(--r);font-family:'Barlow Condensed',sans-serif;font-size:14px">${d.montant}€</b></td><td><span class="tag ${dvtag(d.statut)}">${d.statut}</span></td><td><select class="btn SM" style="padding:3px 7px" onchange="changeDvSt('${d.ref}',this.value)"><option value="">Statut...</option><option>En attente</option><option>Accepté</option><option>Réalisé</option><option>Annulé</option></select></td></tr>`).join('')||'<tr><td colspan="6"><div class="empty"><div class="eico">📄</div><div>Aucun devis</div></div></td></tr>';}
+function changeDvSt(ref,s){if(!s)return;const d=dvis.find(d=>d.ref===ref);if(d){d.statut=s;renderDvis();renderDash();toast('Statut mis à jour','tg');}}
+
+// ════ HORAIRES ════
+function renderHors(){document.getElementById('hor-list').innerHTML=hors.map((h,i)=>`<div style="display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid var(--b1)"><div style="font-size:12px;color:var(--t2);width:86px;flex-shrink:0">${h.j}</div><div style="display:flex;align-items:center;gap:6px;flex:1"><input style="background:var(--s2);border:1px solid var(--b2);border-radius:3px;color:var(--t1);font-size:11px;padding:4px 6px;width:72px;outline:none" type="time" id="ho-${i}" value="${h.o}" ${!h.on?'disabled style="opacity:.3"':''}><span style="font-size:10px;color:var(--mu)">–</span><input style="background:var(--s2);border:1px solid var(--b2);border-radius:3px;color:var(--t1);font-size:11px;padding:4px 6px;width:72px;outline:none" type="time" id="hf-${i}" value="${h.f}" ${!h.on?'disabled style="opacity:.3"':''}></div><label class="tog"><input type="checkbox" id="hop-${i}" ${h.on?'checked':''} onchange="hors[${i}].on=this.checked;renderHors()"><span class="tog-s"></span></label><span class="tag ${h.on?'tg':'tr'}" style="min-width:46px;text-align:center">${h.on?'Ouvert':'Fermé'}</span></div>`).join('');}
+function saveHoraires(){hors.forEach((h,i)=>{h.o=document.getElementById('ho-'+i)?.value||'';h.f=document.getElementById('hf-'+i)?.value||'';});renderCCrens();toast('✓ Horaires enregistrés et mis à jour !','tg');}
+
+// ════ TARIFS ════
+function renderTarifs(){const tb=document.getElementById('tarifs-tbody');if(!tb)return;tb.innerHTML=prods.map((p,i)=>`<tr><td style="font-size:10px;color:var(--mu)">${p.ref}</td><td><div style="display:flex;align-items:center;gap:7px"><span style="font-size:14px">${p.emoji||'📦'}</span><div><div style="color:#fff;font-size:12px;font-weight:500">${p.nom}</div><div style="font-size:10px;color:var(--mu)">${p.desc||''}</div></div></div></td><td><span class="tag tgr">${p.cat}</span></td><td><input class="tarif-inp" type="number" min="0" value="${p.prix}" id="tp-${i}"></td><td style="color:var(--mu)">${p.unite}</td></tr>`).join('');}
+function saveTarifs(){let n=0;prods.forEach((p,i)=>{const el=document.getElementById('tp-'+i);if(el){const v=parseFloat(el.value)||0;if(v!==p.prix){p.prix=v;n++;}}});popDvProd();renderCDvForm();renderDash();toast(n>0?`${n} tarif(s) mis à jour !`:'Aucune modification','tg');
+  if(n>0) initCatalogue();}
+
+// ════ PIN ════
+function savePin(){const p1=document.getElementById('np1').value,p2=document.getElementById('np2').value;if(!p1||p1.length!==6||!/^\d{6}$/.test(p1)){toast('Code doit être 6 chiffres','ta');return;}if(p1!==p2){toast('Les codes ne correspondent pas','tr');return;}PIN=p1;document.getElementById('np1').value='';document.getElementById('np2').value='';toast('Code secret mis à jour !','tg');}
+
+// ════ APPARENCE ════
+function setColor(hex,el){document.querySelectorAll('.csw').forEach(s=>s.classList.remove('on'));if(el)el.classList.add('on');document.documentElement.style.setProperty('--r',hex);document.documentElement.style.setProperty('--r2',shade(hex,-18));document.documentElement.style.setProperty('--r3',shade(hex,-36));const dotEls=document.querySelectorAll('#a-dot,[style*="color:var(--r)"]');dotEls.forEach(e=>{if(e.id==='a-dot')e.style.color=hex;});const ci=document.getElementById('cc-inp');if(ci)ci.value=hex;toast('✓ Couleur appliquée sur tout le site !','tg');}
+function shade(c,a){let r=parseInt(c.slice(1,3),16),g=parseInt(c.slice(3,5),16),b=parseInt(c.slice(5,7),16);r=Math.max(0,Math.min(255,r+a));g=Math.max(0,Math.min(255,g+a));b=Math.max(0,Math.min(255,b+a));return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');}
+function previewA(){const l=document.getElementById('a-logo')?.value||'DR JANTES';const s=document.getElementById('a-slogan')?.value||'';const p=document.getElementById('a-prev');const sp=document.getElementById('a-sl-prev');if(p)p.innerHTML=l+'<span id="a-dot" style="color:var(--r)">.</span>';if(sp)sp.textContent=s;}
+function applyA(){
+  const l=document.getElementById('a-logo')?.value||'DR JANTES';
+  const s=document.getElementById('a-slogan')?.value||'Spécialiste Pneus & Jantes';
+  const sl=document.getElementById('site-slogan');
+  if(sl) sl.innerHTML=s.replace(' & ','<br>').replace('&amp;','<br>');
+  document.querySelectorAll('.clogo,.sblt,.llogo').forEach(el=>{
+    el.innerHTML=l.includes('.')?l.replace('.','<span style="color:var(--r)">.</span>'):l+'<span style="color:var(--r)">.</span>';
   });
-  // Promos
-  const promos = products.filter(p=>p.promo);
-  const g = document.getElementById('grid-promos-cat');
-  if(g) g.innerHTML = promos.length===0
-    ? '<p style="color:var(--text-muted);grid-column:1/-1">Aucune promotion en cours.</p>'
-    : promos.map(p=>renderProductCard(p)).join('');
-  const badge = document.getElementById('promo-count-badge');
-  if(badge) badge.textContent = promos.length+' offre'+(promos.length>1?'s':'');
+  document.title = l + ' — Pneus & Jantes Orvault';
+  toast('✓ Apparence mise à jour sur le site !','tg');
 }
-function switchCat(name,btn){
-  document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.cat-section').forEach(s=>s.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('cat-'+name).classList.add('active');
+
+// ════ EXPORT / IMPORT ════
+function exportD(type){
+  let data,fn,mime='text/csv;charset=utf-8;';const bom='\uFEFF';
+  if(type==='rdv'){const h='Date,Heure,Nom,Téléphone,Email,Véhicule,Service,Notes,Rappel,Statut';const rows=rdvs.map(r=>[r.date,r.heure,r.nom,r.tel||'',r.email||'',r.veh||'',r.svc,r.note||'',r.rap?'Oui':'Non',r.statut].map(v=>`"${v}"`).join(','));data=bom+[h,...rows].join('\n');fn='rdv-drjantes.csv';}
+  else if(type==='devis'){const h='Réf.,Client,Véhicule,Date,Montant,Statut';const rows=dvis.map(d=>[d.ref,d.client,d.veh||'',d.date,d.montant,d.statut].map(v=>`"${v}"`).join(','));data=bom+[h,...rows].join('\n');fn='devis-drjantes.csv';}
+  else if(type==='produits'){const h='Réf.,Nom,Catégorie,Prix,Unité,Stock,Seuil,Statut,Description';const rows=prods.map(p=>[p.ref,p.nom,p.cat,p.prix,p.unite,p.stock===999?'Service':p.stock,p.seuil,p.statut,p.desc||''].map(v=>`"${v}"`).join(','));data=bom+[h,...rows].join('\n');fn='catalogue-drjantes.csv';}
+  else if(type==='clients'){const cls={};rdvs.forEach(r=>{if(r.nom&&!cls[r.nom])cls[r.nom]={nom:r.nom,tel:r.tel||'',email:r.email||'',veh:r.veh||'',n:0};if(cls[r.nom])cls[r.nom].n++;});dvis.forEach(d=>{if(d.client&&!cls[d.client])cls[d.client]={nom:d.client,tel:'',email:'',veh:d.veh||'',n:0};});const h='Nom,Téléphone,Email,Véhicule,Nb RDV';const rows=Object.values(cls).map(c=>[c.nom,c.tel,c.email,c.veh,c.n].map(v=>`"${v}"`).join(','));data=bom+[h,...rows].join('\n');fn='clients-drjantes.csv';}
+  else if(type==='complet'){const save={v:'1.0',date:new Date().toISOString(),prods,crens,rdvs,dvis,hors,medias};data=JSON.stringify(save,null,2);fn='sauvegarde-drjantes.json';mime='application/json;charset=utf-8;';}
+  const blob=new Blob([data],{type:mime});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=fn;a.click();URL.revokeObjectURL(url);toast(`"${fn}" téléchargé !`,'tg');
 }
-// ══════════════════════════════════════════════
-//  RDV FORM
-// ══════════════════════════════════════════════
-function selectSlot(el){
-  document.querySelectorAll('.slot').forEach(s=>s.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedSlot = el.textContent;
+function importD(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=ev=>{try{if(!file.name.endsWith('.json')){toast('Format JSON requis','ta');return;}const d=JSON.parse(ev.target.result);if(d.prods)prods=d.prods;if(d.rdvs)rdvs=d.rdvs;if(d.dvis)dvis=d.dvis;if(d.crens)crens=d.crens;if(d.hors)hors=d.hors;if(d.medias)medias=d.medias;const res=document.getElementById('imp-res');if(res){res.style.display='block';res.textContent=`✓ Import réussi — ${d.prods?.length||0} produits, ${d.rdvs?.length||0} RDV, ${d.dvis?.length||0} devis.`;}renderDash();renderProds('');renderStock();renderCrens();renderRdvs();renderDvis();renderHors();renderMGrid();toast('Import réussi !','tg');}catch(err){toast('Fichier invalide','tr');}};reader.readAsText(file);e.target.value='';}
+function resetSec(t){const lbl={rdv:'tous les RDV',devis:'tous les devis',medias:'tous les médias'};if(!confirm(`Supprimer ${lbl[t]} ? Action irréversible.`))return;if(t==='rdv'){rdvs=[];renderRdvs();renderCal();renderDash();}else if(t==='devis'){dvis=[];renderDvis();renderDash();}else if(t==='medias'){medias=[];renderMGrid();renderGallery();renderDash();}toast('Données effacées','tr');}
+
+// ════ MEDIA MANAGER ════
+function mTab(t,el){mTabCur=t;document.querySelectorAll('.mtab').forEach(tb=>tb.classList.remove('on'));if(el)el.classList.add('on');document.getElementById('uz-photo').style.display=t==='video'?'none':'block';document.getElementById('uz-video').style.display=t==='photo'?'none':'block';renderMGrid();}
+function uzDrag(e){e.preventDefault();e.currentTarget.classList.add('drag');}
+function uzLeave(e){e.currentTarget.classList.remove('drag');}
+function uzDrop(e,t){e.preventDefault();e.currentTarget.classList.remove('drag');if(e.dataTransfer.files.length)processFiles(e.dataTransfer.files,t);}
+function handleFiles(e,t){processFiles(e.target.files,t);e.target.value='';}
+function processFiles(files,t){let n=0,tot=files.length;Array.from(files).forEach(file=>{const r=new FileReader();r.onload=ev=>{medias.push({id:mIdN++,type:t,name:file.name.replace(/\.[^.]+$/,''),desc:'',cat:'',vis:true,url:ev.target.result,isFile:true,date:new Date().toISOString().split('T')[0]});n++;if(n===tot){renderMGrid();renderGallery();renderDash();toast(`${n} ${t==='photo'?'photo':'vidéo'}${n>1?'s':''} ajoutée${n>1?'s':''}!`,'tg');}};r.readAsDataURL(file);});}
+function addYT(){const url=document.getElementById('yt-url').value.trim(),tit=document.getElementById('yt-tit').value.trim()||'Vidéo YouTube';if(!url){toast('Entrez une URL YouTube','ta');return;}let em=url;const m1=url.match(/[?&]v=([^&]+)/),m2=url.match(/youtu\.be\/([^?]+)/);if(m1)em=`https://www.youtube.com/embed/${m1[1]}`;else if(m2)em=`https://www.youtube.com/embed/${m2[1]}`;medias.push({id:mIdN++,type:'video',name:tit,desc:'',cat:'',vis:true,url:em,isYT:true,date:new Date().toISOString().split('T')[0]});document.getElementById('yt-url').value='';document.getElementById('yt-tit').value='';renderMGrid();renderGallery();renderDash();toast('Vidéo YouTube ajoutée !','tg');}
+function renderMGrid(){
+  const all=mTabCur==='all'?medias:medias.filter(m=>m.type===mTabCur);
+  const ph=medias.filter(m=>m.type==='photo').length,vi=medias.filter(m=>m.type==='video').length;
+  document.getElementById('m-lbl').textContent=`(${ph} photo${ph>1?'s':''} · ${vi} vidéo${vi>1?'s':''})`;
+  document.getElementById('m-glbl').textContent=mTabCur==='all'?'Tous les médias':mTabCur==='photo'?'Photos':'Vidéos';
+  const grid=document.getElementById('m-grid'),emp=document.getElementById('m-empty');
+  if(!all.length){grid.innerHTML='';emp.style.display='block';return;}
+  emp.style.display='none';
+  grid.innerHTML=all.map((m,i)=>{const idx=medias.indexOf(m);let th='';if(m.type==='photo'&&m.url)th=`<img class="mthumb" src="${m.url}" alt="${m.name}">`;else if(m.type==='video'&&m.isYT)th=`<div class="mph"><span style="font-size:26px">▶</span><small>YouTube</small></div>`;else th=`<div class="mph"><span style="font-size:26px">${m.em||'📷'}</span><small>${m.cat||m.type}</small></div>`;return `<div class="mcard">${th}<div class="mbadge mbd ${m.type==='photo'?'ph':'vi'}">${m.type==='photo'?'Photo':'Vidéo'}</div><div class="mvis" style="background:${m.vis?'#2ecc71':'var(--b2)'}"></div><div class="movl"><button class="moa" onclick="openMEdit(${idx})">Modifier</button><button class="moa" onclick="openLB(${idx})">Voir</button><button class="moa" onclick="delMedia(${idx})">Suppr.</button></div><div class="minfo"><div class="mname">${m.name}</div><div class="mmeta"><span>${m.cat||'—'}</span><span style="color:${m.vis?'var(--g1)':'var(--mu)'}">${m.vis?'✓ Visible':'Masqué'}</span></div></div></div>`;}).join('');
 }
-function submitRdv(e){
-  e.preventDefault();
-  const rdv = {
-    id: nextRdvId++,
-    prenom: document.getElementById('rdv-prenom').value,
-    nom: document.getElementById('rdv-nom').value,
-    tel: document.getElementById('rdv-tel').value,
-    email: document.getElementById('rdv-email').value,
-    vehicule: document.getElementById('rdv-vehicule').value,
-    service: document.getElementById('rdv-service').value,
-    date: document.getElementById('rdv-date').value,
-    heure: selectedSlot || document.getElementById('rdv-periode').value,
-    message: document.getElementById('rdv-message').value,
-    statut: 'En attente'
+function openMEdit(idx){eMedIdx=idx;const m=medias[idx];document.getElementById('m-med-t').textContent='Modifier : '+m.name;document.getElementById('mm-n').value=m.name;document.getElementById('mm-d').value=m.desc||'';document.getElementById('mm-c').value=m.cat||'';document.getElementById('mm-v').checked=m.vis;const prev=document.getElementById('m-med-prev');if(m.type==='photo'&&m.url)prev.innerHTML=`<img src="${m.url}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:5px">`;else if(m.type==='video'&&m.isYT)prev.innerHTML=`<iframe style="width:100%;height:140px;border-radius:5px" src="${m.url}" frameborder="0" allowfullscreen></iframe>`;else prev.innerHTML=`<div style="font-size:40px;text-align:center">${m.em||'📷'}</div>`;document.getElementById('m-media').classList.add('ON');}
+function saveMediaEdit(){const m=medias[eMedIdx];m.name=document.getElementById('mm-n').value;m.desc=document.getElementById('mm-d').value;m.cat=document.getElementById('mm-c').value;m.vis=document.getElementById('mm-v').checked;cm('m-media');renderMGrid();renderGallery();renderDash();toast('Média mis à jour !','tg');}
+function delMedia(idx){if(!confirm('Supprimer ce média ?'))return;medias.splice(idx,1);renderMGrid();renderGallery();renderDash();toast('Média supprimé','tr');}
+function delMediaCur(){if(eMedIdx<0)return;delMedia(eMedIdx);cm('m-media');}
+
+// ════ MODAL ════
+function cm(id){document.getElementById(id).classList.remove('ON');eProdIdx=-1;eMedIdx=-1;}
+document.querySelectorAll('.mbg').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('ON');}));
+
+// ════ TOAST ════
+function toast(msg,type='tg'){const t=document.getElementById('toast');t.textContent=msg;t.className='on '+type;clearTimeout(t._t);t._t=setTimeout(()=>{t.className='';},3000);}
+
+// ════ LOGOUT ════
+function confirmLogout(){
+  if(confirm('Se déconnecter de l\'espace admin ?')){
+    goLogin();
+    toast('Déconnecté avec succès','tg');
+  }
+}
+
+
+// ════ SITE PHOTO EDITOR ════
+const SITE_PHOTOS = [
+  {
+    id: 'hero-main',
+    label: 'Bande hero — Photo principale',
+    desc: 'Grande photo à gauche en haut de la page',
+    current: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&q=80',
+    altTarget: 'Atelier DR Jantes'
+  },
+  {
+    id: 'hero-col2',
+    label: 'Bande hero — Photo centre',
+    desc: 'Photo au milieu de la bande (jantes)',
+    current: 'https://images.unsplash.com/photo-1600712242805-5f78671b24da?w=400&q=80',
+    altTarget: 'Jantes'
+  },
+  {
+    id: 'hero-col3',
+    label: 'Bande hero — Photo droite',
+    desc: 'Photo à droite de la bande (atelier)',
+    current: 'https://images.unsplash.com/photo-1625047509248-ec889cbff17f?w=400&q=80',
+    altTarget: 'Atelier'
+  },
+  {
+    id: 'svc-pneus',
+    label: 'Card service — Pneus',
+    desc: 'Photo de la carte Pneus',
+    current: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=600&q=80',
+    altTarget: 'Pneus'
+  },
+  {
+    id: 'svc-jantes',
+    label: 'Card service — Jantes',
+    desc: 'Photo de la carte Jantes',
+    current: 'https://images.unsplash.com/photo-1600712242805-5f78671b24da?w=600&q=80',
+    altTarget: 'Jantes'
+  },
+  {
+    id: 'svc-freinage',
+    label: 'Card service — Freinage',
+    desc: 'Photo de la carte Freinage',
+    current: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=600&q=80',
+    altTarget: 'Freinage'
+  },
+  {
+    id: 'svc-services',
+    label: 'Card service — Services',
+    desc: 'Photo de la carte Services',
+    current: 'https://images.unsplash.com/photo-1615906655593-ad0386982a0f?w=600&q=80',
+    altTarget: 'Services'
+  },
+  {
+    id: 'why-us',
+    label: 'Section "Pourquoi nous"',
+    desc: 'Grande photo à gauche de la section arguments',
+    current: 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=800&q=80',
+    altTarget: 'Atelier montage pneus'
+  },
+];
+
+function renderSitePhotos(){
+  const el = document.getElementById('site-photos-list');
+  if(!el) return;
+  el.innerHTML = SITE_PHOTOS.map(p => {
+    const imgHtml = p.current
+      ? `<img id="prev-${p.id}" class="photo-preview" src="${p.current}" alt="${p.label}" onerror="this.style.display='none';document.getElementById('prevph-${p.id}').style.display='flex'" onload="this.style.display='block';document.getElementById('prevph-${p.id}').style.display='none'">`
+      : '';
+    return `<div class="photo-row">
+      <div>
+        ${imgHtml}
+        <div id="prevph-${p.id}" class="photo-preview-ph" style="${p.current?'display:none':'display:flex'}">🖼️</div>
+      </div>
+      <div style="flex:1;min-width:0">
+        <div class="photo-label">${p.label}</div>
+        <div class="photo-desc">${p.desc}</div>
+        <label class="photo-zone" style="display:flex;align-items:center;gap:8px;cursor:pointer">
+          <input type="file" accept="image/*" style="display:none" onchange="photoUpload(event,'${p.id}')">
+          <span style="font-size:15px">📁</span>
+          <span class="photo-zone-txt">Uploader depuis mon PC (cliquez ici)</span>
+        </label>
+        <div class="photo-url-row">
+          <input class="photo-url-inp" id="url-${p.id}" type="url" placeholder="https://..." value="${p.current||''}">
+          <button class="photo-apply" onclick="applyPhotoUrl('${p.id}')">Appliquer</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function photoUpload(e, photoId){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const url = ev.target.result;
+    applyPhoto(photoId, url);
+    const urlInp = document.getElementById('url-'+photoId);
+    if(urlInp) urlInp.value = '(image uploadée)';
+    // Rafraîchir preview
+    const prev = document.getElementById('prev-'+photoId);
+    if(prev){ prev.src=url; prev.style.display='block'; }
+    const ph = document.getElementById('prevph-'+photoId);
+    if(ph) ph.style.display='none';
+    toast('✓ Photo "'+file.name+'" appliquée !', 'tg');
   };
-  rdvs.unshift(rdv);
-  e.target.reset();
-  document.querySelectorAll('.slot').forEach(s=>s.classList.remove('selected'));
-  selectedSlot = null;
-  showToast('✅ <strong>Rendez-vous confirmé !</strong><br>Nous vous contacterons rapidement.');
+  reader.readAsDataURL(file);
+  e.target.value = '';
 }
-function submitContact(e){
-  e.preventDefault();
-  e.target.reset();
-  showToast('📨 <strong>Message envoyé !</strong><br>Nous vous répondrons dans les 24h.');
-}
-function demanderDevis(nom){
-  showPage('rdv');
-  setTimeout(()=>{
-    const s = document.getElementById('rdv-service');
-    s.value = 'Pack complet';
-    const m = document.getElementById('rdv-message');
-    m.value = 'Intéressé par : '+nom;
-    showToast('💬 <strong>Produit sélectionné</strong><br>Complétez le formulaire pour votre devis.');
-  },400);
-}
-// ══════════════════════════════════════════════
-//  PIN LOGIN
-// ══════════════════════════════════════════════
-function pinPress(d){
-  if(pinEntry.length>=6) return;
-  pinEntry += d;
-  updateDots();
-  if(pinEntry.length===6){
-    setTimeout(()=>{
-      if(pinEntry===PIN){
-        sessionStorage.setItem('drj_auth','1');
-        pinEntry='';
-        updateDots();
-        document.getElementById('page-admin-gate').classList.remove('active');
-        document.getElementById('page-admin').classList.add('active');
-        refreshAdmin();
-      } else {
-        document.getElementById('pinError').textContent='❌ Code incorrect, réessayez.';
-        pinEntry='';
-        updateDots();
-        setTimeout(()=>document.getElementById('pinError').textContent='',2000);
-      }
-    },150);
+
+function applyPhotoUrl(photoId){
+  const inp = document.getElementById('url-'+photoId);
+  if(!inp) return;
+  const url = inp.value.trim();
+  if(!url || !url.startsWith('http')){
+    toast('URL invalide — doit commencer par https://', 'ta');
+    return;
   }
+  applyPhoto(photoId, url);
+  toast('Photo mise à jour !', 'tg');
 }
-function pinDel(){
-  pinEntry = pinEntry.slice(0,-1);
-  updateDots();
-  document.getElementById('pinError').textContent='';
-}
-function updateDots(){
-  for(let i=0;i<6;i++){
-    const d=document.getElementById('dot'+i);
-    if(d) d.classList.toggle('filled',i<pinEntry.length);
-  }
-}
-// ══════════════════════════════════════════════
-//  ADMIN
-// ══════════════════════════════════════════════
-function showAdminPage(name,el){
-  document.querySelectorAll('.admin-page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.admin-nav-item').forEach(n=>n.classList.remove('active'));
-  const pg = document.getElementById('admin-'+name);
-  if(pg) pg.classList.add('active');
-  if(el) el.classList.add('active');
-  refreshAdmin();
-}
-function adminLogout(){
-  sessionStorage.removeItem('drj_auth');
-  pinEntry='';
-  updateDots();
-  showPage('accueil');
-  showToast('👋 <strong>Déconnecté</strong> avec succès.');
-}
-function refreshAdmin(){
-  // Stats
-  const pending = rdvs.filter(r=>r.statut==='En attente').length;
-  const promoCount = products.filter(p=>p.promo).length;
-  const sv=document.getElementById('stat-rdv'); if(sv) sv.textContent=rdvs.length;
-  const sp=document.getElementById('stat-pending'); if(sp) sp.textContent=pending;
-  const spd=document.getElementById('stat-prod'); if(spd) spd.textContent=products.length;
-  const spr=document.getElementById('stat-promo'); if(spr) spr.textContent=promoCount;
-  // Dash RDV
-  const dt=document.getElementById('dash-rdv-tbody');
-  if(dt) dt.innerHTML=rdvs.slice(0,5).map(r=>rdvRow(r,true)).join('');
-  // Full RDV
-  const rt=document.getElementById('rdv-tbody');
-  if(rt) rt.innerHTML=rdvs.map(r=>rdvRow(r,false)).join('');
-  // All products
-  const ap=document.getElementById('admin-all-prod');
-  if(ap) ap.innerHTML=products.map(p=>adminProdCard(p)).join('');
-  // By cat
-  ['Jantes','Pneus','Packs','Accessoires'].forEach(cat=>{
-    const g=document.getElementById('admin-grid-'+cat.toLowerCase());
-    if(g) g.innerHTML=products.filter(p=>p.cat===cat).map(p=>adminProdCard(p)).join('');
-  });
-  // Promos panel
-  const pg=document.getElementById('admin-promo-grid');
-  if(pg) pg.innerHTML=products.map(p=>adminPromoCard(p)).join('');
-}
-function rdvRow(r,short){
-  const sc={'En attente':'s-pending','Confirmé':'s-confirmed','Terminé':'s-done','Annulé':'s-cancelled'};
-  const fmt=r.date?new Date(r.date).toLocaleDateString('fr-FR'):'—';
-  if(short){
-    return `<tr>
-      <td><strong>${r.prenom} ${r.nom}</strong></td>
-      <td>${r.service}</td>
-      <td>${fmt}</td>
-      <td><span class="status-badge ${sc[r.statut]||'s-pending'}">${r.statut}</span></td>
-      <td><div class="action-btns">
-        <button class="action-btn" onclick="openRdvDetail(${r.id})">👁 Voir</button>
-      </div></td>
-    </tr>`;
-  }
-  return `<tr>
-    <td><strong>${r.prenom} ${r.nom}</strong></td>
-    <td>${r.tel}</td>
-    <td>${r.service}</td>
-    <td>${fmt}</td>
-    <td>${r.heure||'—'}</td>
-    <td>${r.vehicule}</td>
-    <td><span class="status-badge ${sc[r.statut]||'s-pending'}">${r.statut}</span></td>
-    <td><div class="action-btns">
-      <button class="action-btn" onclick="openRdvDetail(${r.id})">👁</button>
-      <button class="action-btn del" onclick="deleteRdv(${r.id})">🗑</button>
-    </div></td>
-  </tr>`;
-}
-function openRdvDetail(id){
-  currentRdvId = id;
-  const r = rdvs.find(x=>x.id===id);
-  if(!r) return;
-  const fmt = r.date?new Date(r.date).toLocaleDateString('fr-FR'):'—';
-  document.getElementById('rdv-detail-content').innerHTML=`
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
-      <div><span style="font-size:.75rem;color:var(--text-muted);text-transform:uppercase">Client</span><p style="font-weight:700;margin-top:3px">${r.prenom} ${r.nom}</p></div>
-      <div><span style="font-size:.75rem;color:var(--text-muted);text-transform:uppercase">Téléphone</span><p style="font-weight:700;margin-top:3px">${r.tel}</p></div>
-      <div><span style="font-size:.75rem;color:var(--text-muted);text-transform:uppercase">Service</span><p style="margin-top:3px">${r.service}</p></div>
-      <div><span style="font-size:.75rem;color:var(--text-muted);text-transform:uppercase">Véhicule</span><p style="margin-top:3px">${r.vehicule}</p></div>
-      <div><span style="font-size:.75rem;color:var(--text-muted);text-transform:uppercase">Date</span><p style="margin-top:3px">${fmt}</p></div>
-      <div><span style="font-size:.75rem;color:var(--text-muted);text-transform:uppercase">Heure</span><p style="margin-top:3px">${r.heure||'—'}</p></div>
-    </div>
-    ${r.message?`<div style="background:var(--dark4);border-radius:8px;padding:12px;font-size:.87rem;color:var(--text-muted)">💬 ${r.message}</div>`:''}
-  `;
-  document.getElementById('modalRdv').classList.add('open');
-}
-function changeStatus(s){
-  const r=rdvs.find(x=>x.id===currentRdvId);
-  if(r){ r.statut=s; refreshAdmin(); showToast(`✅ Statut mis à jour : <strong>${s}</strong>`); }
-  closeModal('modalRdv');
-}
-function deleteRdv(id){
-  if(!confirm('Supprimer ce rendez-vous ?')) return;
-  rdvs = rdvs.filter(r=>r.id!==id);
-  refreshAdmin();
-  showToast('🗑 Rendez-vous supprimé.');
-}
-function filterRdv(q){
-  const rows = document.querySelectorAll('#rdv-tbody tr');
-  rows.forEach(r=>{
-    r.style.display = r.textContent.toLowerCase().includes(q.toLowerCase())?'':'none';
-  });
-}
-// ══════════════════════════════════════════════
-//  ADMIN PRODUIT CARDS
-// ══════════════════════════════════════════════
-function adminProdCard(p){
-  const isJante=p.cat==='Jantes';
-  const imgContent = isJante
-    ? `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%">${janteSVG(80)}</div>`
-    : `<span style="font-size:2.6rem">${productEmojiChar(p.cat)}</span>`;
-  return `<div class="admin-prod-card">
-    <div class="admin-prod-img ${bgClass(p.cat)}">${imgContent}
-      ${p.promo?'<span class="badge-promo" style="position:absolute;top:8px;left:8px">PROMO</span>':''}
-    </div>
-    <div class="admin-prod-info">
-      <h4>${p.nom}</h4>
-      <div class="cat-tag">${p.cat} · ${p.taille}</div>
-      <div class="price">${p.prix}€${p.prixOld?` <span style="color:var(--text-muted);font-size:.82rem;text-decoration:line-through">${p.prixOld}€</span>`:''}</div>
-      <div class="admin-prod-actions">
-        <button class="btn-edit" onclick="openEditProduct(${p.id})">✏️ Modifier</button>
-        <button class="btn-del" onclick="deleteProduct(${p.id})">🗑</button>
-      </div>
-    </div>
-  </div>`;
-}
-function adminPromoCard(p){
-  const isJante=p.cat==='Jantes';
-  const imgContent = isJante
-    ? `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%">${janteSVG(70)}</div>`
-    : `<span style="font-size:2.4rem">${productEmojiChar(p.cat)}</span>`;
-  return `<div class="admin-prod-card" style="border-color:${p.promo?'rgba(201,168,76,.4)':'#2a2a2a'}">
-    <div class="admin-prod-img ${bgClass(p.cat)}">${imgContent}</div>
-    <div class="admin-prod-info">
-      <h4>${p.nom}</h4>
-      <div class="cat-tag">${p.cat} · ${p.taille}</div>
-      <div class="price">${p.prix}€</div>
-      <label class="toggle-promo" onclick="togglePromo(${p.id})">
-        <div class="toggle-switch ${p.promo?'on':''}"></div>
-        <span>${p.promo?'En promotion':'Hors promotion'}</span>
-      </label>
-    </div>
-  </div>`;
-}
-function togglePromo(id){
-  const p=products.find(x=>x.id===id);
-  if(p){
-    p.promo=!p.promo;
-    refreshAdmin();
-    showToast(p.promo?`🔥 <strong>${p.nom}</strong> mis en promotion.`:`✅ <strong>${p.nom}</strong> retiré des promos.`);
-  }
-}
-// ══════════════════════════════════════════════
-//  MODAL PRODUIT
-// ══════════════════════════════════════════════
-function openAddProduct(cat){
-  document.getElementById('modal-prod-title').textContent='Ajouter un produit';
-  document.getElementById('prod-id').value='';
-  document.getElementById('prod-nom').value='';
-  document.getElementById('prod-cat').value=cat||'Jantes';
-  document.getElementById('prod-prix').value='';
-  document.getElementById('prod-prix-old').value='';
-  document.getElementById('prod-taille').value='';
-  document.getElementById('prod-badge').value='';
-  document.getElementById('prod-desc').value='';
-  document.getElementById('prod-tags').value='';
-  document.getElementById('prod-promo-toggle').classList.remove('on');
-  document.getElementById('modalProduct').classList.add('open');
-}
-function openEditProduct(id){
-  const p=products.find(x=>x.id===id);
+
+function applyPhoto(photoId, url){
+  // Met à jour la preview dans l'admin
+  const prev = document.getElementById('prev-'+photoId);
+  if(prev){ prev.src=url; prev.style.display='block'; }
+
+  // Trouve la config de ce photo
+  const p = SITE_PHOTOS.find(p=>p.id===photoId);
   if(!p) return;
-  document.getElementById('modal-prod-title').textContent='Modifier le produit';
-  document.getElementById('prod-id').value=p.id;
-  document.getElementById('prod-nom').value=p.nom;
-  document.getElementById('prod-cat').value=p.cat;
-  document.getElementById('prod-prix').value=p.prix;
-  document.getElementById('prod-prix-old').value=p.prixOld||'';
-  document.getElementById('prod-taille').value=p.taille;
-  document.getElementById('prod-badge').value=p.badge||'';
-  document.getElementById('prod-desc').value=p.desc||'';
-  document.getElementById('prod-tags').value=p.tags.join(', ');
-  const tog=document.getElementById('prod-promo-toggle');
-  p.promo?tog.classList.add('on'):tog.classList.remove('on');
-  document.getElementById('modalProduct').classList.add('open');
-}
-function saveProduct(e){
-  e.preventDefault();
-  const id=document.getElementById('prod-id').value;
-  const isPromo=document.getElementById('prod-promo-toggle').classList.contains('on');
-  const data={
-    nom:document.getElementById('prod-nom').value,
-    cat:document.getElementById('prod-cat').value,
-    prix:parseFloat(document.getElementById('prod-prix').value),
-    prixOld:document.getElementById('prod-prix-old').value?parseFloat(document.getElementById('prod-prix-old').value):null,
-    taille:document.getElementById('prod-taille').value,
-    badge:document.getElementById('prod-badge').value||null,
-    desc:document.getElementById('prod-desc').value,
-    tags:document.getElementById('prod-tags').value.split(',').map(t=>t.trim()).filter(t=>t),
-    promo:isPromo
-  };
-  if(id){
-    const idx=products.findIndex(x=>x.id===parseInt(id));
-    if(idx>=0) products[idx]={...products[idx],...data};
-    showToast('✅ Produit <strong>modifié</strong> avec succès.');
-  } else {
-    products.push({id:nextProdId++,...data});
-    showToast('✅ Produit <strong>ajouté</strong> avec succès.');
+
+  // Met à jour toutes les images avec le bon alt sur la page
+  document.querySelectorAll('img[alt="'+p.altTarget+'"]').forEach(img=>{
+    img.src = url;
+  });
+
+  // Pour hero-main: aussi mettre à jour le fond du hero
+  if(photoId==='hero-main'){
+    const heroDiv = document.querySelector('.hero');
+    if(heroDiv){
+      const bgDiv = heroDiv.querySelector('div[style*="background-image"]');
+      if(bgDiv) bgDiv.style.backgroundImage = "url('"+url+"')";
+    }
   }
-  closeModal('modalProduct');
-  refreshAdmin();
+
+  // Mettre à jour CL_PHOTOS si c'est une card catalogue
+  const catMap = {'svc-pneus':'Pneus','svc-jantes':'Jantes','svc-freinage':'Freinage','svc-services':'Services'};
+  if(catMap[photoId]){ CL_PHOTOS[catMap[photoId]] = url; clRender(); }
+
+  // Stocker dans SITE_PHOTOS
+  if(p) p.current = url;
 }
-function deleteProduct(id){
-  if(!confirm('Supprimer ce produit ?')) return;
-  products=products.filter(p=>p.id!==id);
-  refreshAdmin();
-  showToast('🗑 Produit supprimé.');
+
+
+// ════ JANTES + PROMOS ════
+
+
+
+
+// ── Navigation vers section de la page accueil ──
+function goSection(sectionId){
+  // S'assurer qu'on est sur la page accueil
+  document.querySelectorAll('.cpage').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.ctab').forEach(t=>t.classList.remove('on'));
+  const pg = document.getElementById('cp-accueil');
+  if(pg) pg.classList.add('on');
+  // Highlight le bon onglet nav
+  if(sectionId==='sec-catalogue'){
+    const nb=document.getElementById('nav-catalogue');
+    if(nb) nb.classList.add('on');
+  } else if(sectionId==='sec-galerie'){
+    const nb=document.getElementById('nav-galerie');
+    if(nb) nb.classList.add('on');
+    renderGallery();
+  }
+  // Scroll vers la section
+  setTimeout(()=>{
+    const el=document.getElementById(sectionId);
+    if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+  }, 80);
 }
-function closeModal(id){
-  document.getElementById(id).classList.remove('open');
+
+// ════ PNEUS PROMOS ════
+
+
+
+
+
+// ════ CATALOGUE v2 ════
+let catView = 'grid';
+let catTab  = 'pneus';
+let catPrixMin = 0, catPrixMax = 500;
+let catSearchQ = '';
+
+const CAT_BG = {
+  'Pneus':      'https://images.unsplash.com/photo-1578844251758-2f71da64c96f?w=400&q=60',
+  'Jantes':     'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&q=60',
+  'Freinage':   'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=400&q=60',
+  'Services':   'https://images.unsplash.com/photo-1615906655593-ad0386982a0f?w=400&q=60',
+  'Accessoires':'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=60',
+};
+
+function stockClass(p){
+  if(p.stock===999) return 'stock-svc';
+  if(p.stock===0)   return 'stock-out';
+  if(p.stock<=p.seuil) return 'stock-low';
+  return 'stock-ok';
 }
-// ══════════════════════════════════════════════
-//  TOAST
-// ══════════════════════════════════════════════
-function showToast(msg){
-  const t=document.getElementById('toast');
-  t.innerHTML=msg;
-  t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),3500);
+function stockLabel(p){
+  if(p.stock===999) return 'Service';
+  if(p.stock===0)   return 'Rupture';
+  if(p.stock<=p.seuil) return 'Faible';
+  return p.stock+' en stock';
 }
-// ══════════════════════════════════════════════
-//  INIT
-// ══════════════════════════════════════════════
-document.addEventListener('DOMContentLoaded',()=>{
-  // Date min = aujourd'hui
-  const dateInput=document.getElementById('rdv-date');
-  if(dateInput) dateInput.min=new Date().toISOString().split('T')[0];
-  renderHomePromos();
-  renderCatalogue();
-});
+
+
+
+
+
+
+
+
+
+
+// ── PROMOS ──
+
+// ── MODAL PRODUIT ──
+
+// ── DEVIS RAPIDE ──
+
+// ── INIT CATALOGUE ──
+
+
+// ════ PARAMETRES CATALOGUE ════
+let CAT_SETTINGS = {
+  view:'grid', cols:'200', imgH:'100',
+  showImg:true, showDesc:true, showPrix:true, showStock:true,
+  search:true, fPrix:true, fStock:true, fTri:true, viewSwitch:true, devisBt:true,
+  tabs:{pneus:true,jantes:true,freinage:true,services:true,accessoires:true,promos:true},
+  prixMax:500, prixColor:'#c0392b'
+};
+
+
+
+
+
+// ════════════════════════════════════
+// CATALOGUE PREMIUM — État
+// ════════════════════════════════════
+let _clView = 'grid';
+let _clTab  = 'pneus';
+let _clPmin = 0, _clPmax = 500;
+let _clModal_idx = -1;
+
+const CL_PHOTOS = {
+  'Pneus':       'https://images.unsplash.com/photo-1578844251758-2f71da64c96f?w=500&q=75',
+  'Jantes':      'https://images.unsplash.com/photo-1611759386152-79e2f7f04b84?w=500&q=75',
+  'Freinage':    'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=500&q=75',
+  'Services':    'https://images.unsplash.com/photo-1615906655593-ad0386982a0f?w=500&q=75',
+  'Accessoires': 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&q=75',
+};
+
+// ── Helpers stock ──
+function clStk(p){
+  if(p.stock===999) return {cls:'svc', lbl:'Service'};
+  if(p.stock===0)   return {cls:'out', lbl:'Rupture'};
+  if(p.stock<=p.seuil) return {cls:'low', lbl:'Stock faible'};
+  return {cls:'ok', lbl:p.stock+' unité'+(p.stock>1?'s':'')};
+}
+
+// ── Construire une card ──
+function clBuildCard(p, isList){
+  const idx  = prods.indexOf(p);
+  const bg   = CL_PHOTOS[p.cat]||'';
+  const stk  = clStk(p);
+  const imgH = isList ? 'height:72px;width:90px;flex-shrink:0' : 'height:110px';
+  const imgContent = bg
+    ? `<img src="${bg}" alt="${p.nom}" loading="lazy" style="width:100%;height:100%;object-fit:cover;transition:transform .4s"><div class="cl-card-emoji">${p.emoji||'📦'}</div><div class="cl-card-img-overlay"></div>`
+    : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:44px;background:var(--md)">${p.emoji||'📦'}</div>`;
+  const price = p.prix > 0
+    ? `<div class="cl-card-price">${p.prix}€<span class="cl-card-unit"> ${p.unite}</span></div>`
+    : `<div class="cl-card-price" style="font-size:14px;color:var(--g1)">Gratuit</div>`;
+  const listCls = isList ? ' list' : '';
+  return `<div class="cl-card${listCls}" onclick="clOpenModal(${idx})">
+    <div class="cl-card-img" style="${imgH}">${imgContent}</div>
+    <div class="cl-card-body">
+      <div class="cl-card-cat">${p.cat}</div>
+      <div class="cl-card-name">${p.nom}</div>
+      <div class="cl-card-desc">${p.desc||''}</div>
+      <div class="cl-card-footer">
+        ${price}
+        <span class="cl-card-stk ${stk.cls}">${stk.lbl}</span>
+      </div>
+    </div>
+    <button class="cl-card-dv" onclick="event.stopPropagation();clQuickDevis(${idx})">Devis →</button>
+  </div>`;
+}
+
+// ── Filtrer et trier les produits ──
+function clGetFiltered(cat){
+  let data = prods.filter(p => p.statut==='Actif' && p.cat===cat);
+  // Prix
+  data = data.filter(p => p.prix===0 || (p.prix>=_clPmin && p.prix<=_clPmax));
+  // Stock
+  const st = document.getElementById('cl-st')?.value||'';
+  if(st==='ok')  data = data.filter(p=>p.stock===999||p.stock>p.seuil);
+  if(st==='low') data = data.filter(p=>p.stock!==999&&p.stock<=p.seuil&&p.stock>0);
+  if(st==='out') data = data.filter(p=>p.stock!==999&&p.stock===0);
+  // Tri
+  const tri = document.getElementById('cl-tri')?.value||'';
+  if(tri==='pa') data.sort((a,b)=>a.prix-b.prix);
+  if(tri==='pd') data.sort((a,b)=>b.prix-a.prix);
+  if(tri==='az') data.sort((a,b)=>a.nom.localeCompare(b.nom));
+  if(tri==='za') data.sort((a,b)=>b.nom.localeCompare(a.nom));
+  if(tri==='sk') data.sort((a,b)=>b.stock-a.stock);
+  return data;
+}
+
+// ── Rendre une section ──
+function clRenderSection(cat, elId){
+  const el = document.getElementById(elId);
+  if(!el) return;
+  const isList = _clView==='list';
+  el.className = 'cl-grid'+(isList?' list':'');
+  const data = clGetFiltered(cat);
+  el.innerHTML = data.length
+    ? data.map(p=>clBuildCard(p,isList)).join('')
+    : `<div class="cl-empty" style="grid-column:1/-1"><div style="font-size:36px;margin-bottom:10px;opacity:.25">📦</div><div style="font-size:14px;font-weight:600;color:var(--t2)">Aucun produit</div></div>`;
+  return data.length;
+}
+
+// ── Rendre l'onglet actif ──
+function clRender(){
+  const catMap = {pneus:'Pneus',jantes:'Jantes',freinage:'Freinage',services:'Services',access:'Accessoires'};
+  const cat = catMap[_clTab];
+  if(cat) {
+    const n = clRenderSection(cat, 'clg-'+_clTab);
+    const el = document.getElementById('cl-count');
+    if(el) el.textContent = (n||0)+' produit'+(n>1?'s':'');
+  }
+  if(_clTab==='promos') clRenderPromos('all', '');
+  if(_clTab==='pneus')  clRenderPromos('pneus', '');
+}
+
+// ── Changer d'onglet ──
+function clTab(id, el){
+  _clTab = id;
+  document.querySelectorAll('.cl-tab').forEach(t=>t.classList.remove('on'));
+  if(el) el.classList.add('on');
+  document.querySelectorAll('.cl-section').forEach(s=>s.classList.remove('on'));
+  const sec = document.getElementById('cls-'+id);
+  if(sec) sec.classList.add('on');
+  const res=document.getElementById('cl-results');
+  if(res) res.style.display='none';
+  const ct=document.getElementById('cl-content');
+  if(ct) ct.style.display='';
+  const q=document.getElementById('cl-q');
+  if(q) q.value='';
+  const clr=document.getElementById('cl-q-clear');
+  if(clr) clr.style.display='none';
+  if(id==='promos'){ pmRender('all',''); return; }
+  if(id==='pneus'){ clRender(); pmRender('pneus',''); return; }
+  clRender();
+}
+
+// ── Changer de vue ──
+function clSetView(v, el){
+  _clView = v;
+  document.querySelectorAll('.cl-view-btn').forEach(b=>b.classList.remove('on'));
+  if(el) el.classList.add('on');
+  clRender();
+}
+
+// ── Mise à jour prix ──
+function clUpdatePrice(){
+  _clPmin = parseInt(document.getElementById('cl-pmin')?.value)||0;
+  _clPmax = parseInt(document.getElementById('cl-pmax')?.value)||500;
+  if(_clPmin>_clPmax){const t=_clPmin;_clPmin=_clPmax;_clPmax=t;}
+  const lmin=document.getElementById('cl-pmin-lbl');
+  const lmax=document.getElementById('cl-pmax-lbl');
+  if(lmin) lmin.textContent=_clPmin+'€';
+  if(lmax) lmax.textContent=_clPmax>=500?'500€+':_clPmax+'€';
+  clRender();
+}
+
+// ── Reset filtres ──
+function clReset(){
+  const pmin=document.getElementById('cl-pmin');
+  const pmax=document.getElementById('cl-pmax');
+  const tri=document.getElementById('cl-tri');
+  const st=document.getElementById('cl-st');
+  if(pmin) pmin.value=0;
+  if(pmax) pmax.value=500;
+  if(tri)  tri.value='';
+  if(st)   st.value='';
+  _clPmin=0; _clPmax=500;
+  const lmin=document.getElementById('cl-pmin-lbl');
+  const lmax=document.getElementById('cl-pmax-lbl');
+  if(lmin) lmin.textContent='0€';
+  if(lmax) lmax.textContent='500€+';
+  clRender();
+  toast('Filtres réinitialisés','tg');
+}
+
+// ── Recherche ──
+function clSearch(q){
+  const trimmed = q.trim().toLowerCase();
+  const clr = document.getElementById('cl-q-clear');
+  if(clr) clr.style.display = trimmed ? 'block' : 'none';
+  if(!trimmed){
+    document.getElementById('cl-results').style.display='none';
+    document.getElementById('cl-content').style.display='';
+    return;
+  }
+  document.getElementById('cl-content').style.display='none';
+  document.getElementById('cl-results').style.display='block';
+  const isList = _clView==='list';
+  const res = prods.filter(p=>p.statut==='Actif'&&(
+    p.nom.toLowerCase().includes(trimmed)||
+    (p.desc||'').toLowerCase().includes(trimmed)||
+    p.cat.toLowerCase().includes(trimmed)||
+    p.ref.toLowerCase().includes(trimmed)||
+    (p.unite||'').toLowerCase().includes(trimmed)
+  ));
+  const lbl = document.getElementById('cl-results-lbl');
+  const grid = document.getElementById('cl-results-grid');
+  const empty = document.getElementById('cl-results-empty');
+  if(lbl) lbl.textContent = res.length+' résultat'+(res.length>1?'s':'')+' pour "'+q+'"';
+  if(grid){
+    grid.innerHTML = res.map(p=>clBuildCard(p,isList)).join('');
+    grid.className = 'cl-grid'+(isList?' list':'');
+    grid.style.display = res.length?'':'none';
+  }
+  if(empty) empty.style.display = res.length?'none':'block';
+}
+
+function clClear(){
+  const q=document.getElementById('cl-q');
+  if(q) q.value='';
+  clSearch('');
+}
+
+// ── Promos ──
+
+
+// ── Modal détail ──
+function clOpenModal(idx){
+  const p = prods[idx];
+  if(!p) return;
+  _clModal_idx = idx;
+  const bg = CL_PHOTOS[p.cat]||'';
+  const stk = clStk(p);
+  const img = document.getElementById('clm-img');
+  const ico = document.getElementById('clm-ico');
+  if(bg){ img.src=bg; img.style.display='block'; ico.style.display='none'; }
+  else { img.style.display='none'; ico.style.display='block'; ico.textContent=p.emoji||'📦'; }
+  document.getElementById('clm-cat').textContent   = p.cat;
+  document.getElementById('clm-ref').textContent   = p.ref;
+  document.getElementById('clm-name').textContent  = p.nom;
+  document.getElementById('clm-desc').textContent  = p.desc||'Aucune description disponible.';
+  document.getElementById('clm-price').textContent = p.prix>0?p.prix+'€':'Gratuit';
+  document.getElementById('clm-unite').textContent = p.unite||'';
+  const stkEl = document.getElementById('clm-stock');
+  stkEl.textContent = stk.lbl;
+  stkEl.className = 'tag '+(stk.cls==='ok'?'tg':stk.cls==='low'?'ta':stk.cls==='out'?'tr':'tb');
+  document.getElementById('cl-modal').classList.add('on');
+}
+
+function clCloseModal(){
+  document.getElementById('cl-modal').classList.remove('on');
+  _clModal_idx = -1;
+}
+
+function clQuickDevis(idx){
+  const p = prods[idx];
+  if(!p) return;
+  dvLines = [{prod:p, qty:1}];
+  renderDvLines();
+  goAdmin();
+  aPage('devisadmin', document.querySelector('.sbi[onclick*=devisadmin]'));
+  toast(p.nom+' ajouté au devis !','tg');
+}
+
+function clDevisRapide(){
+  if(_clModal_idx>=0) clQuickDevis(_clModal_idx);
+  clCloseModal();
+}
+
+// ── Init catalogue ──
+function initCatalogue(){
+  _clTab='pneus';
+  _clView='grid';
+  document.querySelectorAll('.cl-tab').forEach((t,i)=>t.classList.toggle('on',i===0));
+  document.querySelectorAll('.cl-section').forEach((s,i)=>s.classList.toggle('on',i===0));
+  const res=document.getElementById('cl-results');
+  if(res) res.style.display='none';
+  const ct=document.getElementById('cl-content');
+  if(ct) ct.style.display='';
+  const q=document.getElementById('cl-q');
+  if(q) q.value='';
+  const clr=document.getElementById('cl-q-clear');
+  if(clr) clr.style.display='none';
+  clRenderSection('Pneus','clg-pneus');
+  pmRender('pneus','');
+}
+
+
+// ════ PROMOS PREMIUM ════
+const PM_SIZE_LABELS = {
+  '14':'Jante 14','15':'Jante 15','16':'Jante 16',
+  '17':'Jante 17','18':'Jante 18','19':'Jante 19',
+  'utilitaires':'Utilitaires (Série C)','clim':'Climatisation Auto'
+};
+const PM_SIZE_FROM = {
+  '14':'110€','15':'120€','16':'130€','17':'150€',
+  '18':'160€','19':'190€','utilitaires':'180€','clim':'50€'
+};
+
+function pmFilter(scope, size, el){
+  const navId = scope==='pneus' ? 'pm-nav-pneus' : 'pm-nav-all';
+  document.querySelectorAll('#'+navId+' .pm-nav-btn').forEach(b=>b.classList.remove('on'));
+  if(el) el.classList.add('on');
+  pmRender(scope, size);
+}
+
+function pmBuildCard(p){
+  const is4 = p.promo4||false;
+  const isCl = p.clim||false;
+  const dims = p.dims.map(d=>`<span class="pm-dim">${d}</span>`).join('');
+  const brand = p.brand ? `<div class="pm-brand-row"><span style="font-size:18px">🏷️</span><span class="pm-brand-name">${p.brand}</span></div>` : '';
+
+  if(isCl) return `
+    <div class="pm-card" style="border-color:#1a3a5a">
+      <div style="height:3px;background:linear-gradient(90deg,#1a6fa8,#7c4dbd)"></div>
+      <div class="pm-card-header" style="border-bottom-color:#1a3a5a">
+        <div class="pm-price-row">
+          <div class="pm-price" style="color:#60a8e0">50€</div>
+          <div class="pm-price-suffix" style="color:#60a8e0">dès · Recharge Clim</div>
+        </div>
+        <div class="pm-subtitle" style="color:#60a8e0">Gaz R134a — Véhicules jusqu'à 2017</div>
+        <div class="pm-included" style="color:#60a8e0">✓ Service rapide · Sans rendez-vous</div>
+      </div>
+      <div class="pm-card-body">
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--t2)">
+          <div>❄️ Gaz R134a uniquement</div>
+          <div>⚡ Service rapide, sans attente</div>
+          <div>🔧 Travail professionnel garanti</div>
+        </div>
+      </div>
+      <div class="pm-card-footer"><button class="pm-rdv-btn blue" onclick="cPage('rdv')">Prendre rendez-vous →</button></div>
+    </div>`;
+
+  return `
+    <div class="pm-card${is4?' special':''}">
+      <div class="pm-card-top"></div>
+      ${is4?'<div class="pm-tag-4">🔥 Offre 4 pneus</div>':''}
+      <div class="pm-card-header">
+        <div class="pm-price-row">
+          <div class="pm-price">${p.price}€</div>
+          <div class="pm-price-suffix">${p.label}</div>
+        </div>
+        <div class="pm-subtitle">Neufs · Montés · Équilibrés${p.brand?' · '+p.brand:''}</div>
+        <div class="pm-included">✓ Montage + Équilibrage inclus</div>
+      </div>
+      <div class="pm-card-body">
+        <div class="pm-dims-label">Dimensions disponibles</div>
+        <div class="pm-dims">${dims}</div>
+        ${brand}
+      </div>
+      <div class="pm-card-footer">
+        
+        <button class="pm-rdv-btn" onclick="cPage('rdv')">Prendre rendez-vous →</button>
+      </div>
+    </div>`;
+}
+
+function pmRender(scope, sizeFilter){
+  const targetId = scope==='pneus' ? 'pm-grid-pneus' : 'pm-grid-all';
+  const el = document.getElementById(targetId);
+  if(!el) return;
+
+  const validSizes = ['14','15','16','17','18','19','utilitaires'];
+  let data = scope==='all' ? PROMOS : PROMOS.filter(p=>validSizes.includes(p.size));
+  if(sizeFilter) data = data.filter(p=>p.size===sizeFilter);
+
+  if(!data.length){
+    el.innerHTML='<div class="pm-empty"><div style="font-size:40px;opacity:.2;margin-bottom:8px">🔥</div><div style="font-size:14px;font-weight:600;color:var(--t2)">Aucune promotion</div></div>';
+    return;
+  }
+
+  const groups = {};
+  data.forEach(p=>{ if(!groups[p.size])groups[p.size]=[]; groups[p.size].push(p); });
+
+  el.innerHTML = Object.entries(groups).map(([sz,items])=>`
+    <div style="margin-bottom:32px">
+      <div class="pm-size-header">
+        <div class="pm-size-title">${PM_SIZE_LABELS[sz]||'Jante '+sz}</div>
+        <div class="pm-size-from">dès ${PM_SIZE_FROM[sz]||''}</div>
+        <div class="pm-size-badge">les 2 pneus</div>
+      </div>
+      <div class="pm-grid">${items.map(p=>pmBuildCard(p)).join('')}</div>
+    </div>
+  `).join('');
+}
+
+
+// ════ SAVE ATELIER → synchronise avec le site client ════
+function saveAtelier(){
+  const nom    = document.getElementById('s-nom')?.value  || 'DR JANTES';
+  const tel    = document.getElementById('s-tel')?.value  || '07 66 35 05 39';
+  const addr   = document.getElementById('s-addr')?.value || '18 Rue de Tourneuve, 44700 Orvault';
+  const email  = document.getElementById('s-email')?.value;
+  const siret  = document.getElementById('s-siret')?.value;
+  const slogan = document.getElementById('s-welcome')?.value;
+
+  // Mettre à jour le titre de la page
+  document.title = nom;
+
+  // Mettre à jour toutes les occurrences côté client
+  const setTxt = (id, val) => { const el=document.getElementById(id); if(el) el.textContent=val; };
+  setTxt('cl-addr',  addr);
+  setTxt('cl-addr2', addr);
+  setTxt('cl-addr3', addr);
+  setTxt('cl-addr4', addr.replace(', 44700 Orvault','').replace(', 44700',''));
+  setTxt('cl-tel',   tel);
+  setTxt('cl-tel2',  tel);
+  setTxt('cl-tel3',  tel);
+
+  // Mettre à jour le lien tel
+  const telLink = document.getElementById('cl-tel-link');
+  if(telLink) telLink.href = 'tel:'+tel.replace(/\s/g,'');
+
+  // Mettre à jour le logo si le nom change
+  const logos = document.querySelectorAll('.clogo, .sblt, .llogo');
+  logos.forEach(el => {
+    const txt = nom.includes('JANTES') ? nom.replace('JANTES','<span style="color:var(--r)">JANTES</span>') 
+              : nom.includes('.') ? nom.replace('.','<span style="color:var(--r)">.</span>')
+              : nom;
+    el.innerHTML = txt;
+  });
+
+  // Mettre à jour les messages de rappel SMS avec la nouvelle adresse
+  document.querySelectorAll('textarea').forEach(ta => {
+    if(ta.value.includes('Tourneuve')) {
+      ta.value = ta.value.replace(/\d+ Rue de Tourneuve[^.]+/g, addr);
+    }
+  });
+
+  toast('✓ Informations mises à jour sur le site !','tg');
+}
+
+// ════ SAVE HORAIRES → afficher côté client sur la page RDV ════
+function saveHoraires(){
+  hors.forEach((h,i)=>{
+    const o=document.getElementById('ho-'+i)?.value||'';
+    const f=document.getElementById('hf-'+i)?.value||'';
+    const on=document.getElementById('hop-'+i)?.checked;
+    h.o=o; h.f=f; h.on=on!==undefined?on:h.on;
+  });
+  renderCCrens();
+  toast('✓ Horaires enregistrés et mis à jour !','tg');
+}
+
+// ════ START ════
+initClient();
 </script>
 </body>
 </html>
