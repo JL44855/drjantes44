@@ -577,7 +577,7 @@ tbody tr:hover td{background:var(--s2)}
       <div style="position:relative;z-index:1">
         <div style="font-size:10px;color:var(--r);font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:8px;font-family:'Barlow Condensed',sans-serif">Orvault — Nantes</div>
         <h1 id="site-slogan">Spécialiste<br>Pneus & Jantes</h1>
-        <p><span id="cl-addr">18 Rue de Tourneuve, 44700 Orvault</span> &nbsp;·&nbsp; <span id="cl-tel">06 63 30 93 49</span></p>
+        <p><span id="cl-addr">18 Rue de Tourneuve, 44700 Orvault</span> &nbsp;·&nbsp; <span id="cl-tel">07 66 35 05 39</span></p>
         <div class="hstats">
           <div class="hstat"><strong>15€</strong><span>Montage dès</span></div>
           <div class="hstat"><strong>50€</strong><span>Réno. jante</span></div>
@@ -759,7 +759,7 @@ tbody tr:hover td{background:var(--s2)}
               <div class="pm-infobar">
                 <div class="pm-infobar-item">✅ <strong>Montage + Équilibrage inclus</strong></div>
                 <div class="pm-infobar-item">📍 <strong id="cl-addr3">18 Rue de Tourneuve, 44700 Orvault</strong></div>
-                <div class="pm-infobar-item">📞 <a href="tel:0663309349" style="color:var(--am);font-weight:700;text-decoration:none"><span id="cl-tel3">06 63 30 93 49</span></a></div>
+                <div class="pm-infobar-item">📞 <a href="tel:0766350539" style="color:var(--am);font-weight:700;text-decoration:none"><span id="cl-tel3">07 66 35 05 39</span></a></div>
                 
               </div>
 
@@ -816,7 +816,7 @@ tbody tr:hover td{background:var(--s2)}
         <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
           <button class="hbtn solid" onclick="cPage('rdv')">📅 Prendre rendez-vous</button>
           <button class="hbtn out" onclick="cPage('devis')">📄 Demander un devis gratuit</button>
-          <a href="tel:0663309349" id="cl-tel-link" style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;padding:11px 22px;border-radius:4px;border:1px solid rgba(29,185,84,.4);color:var(--g1);text-decoration:none;transition:all .15s">📞 <span id="cl-tel2">06 63 30 93 49</span></a>
+          <a href="tel:0766350539" id="cl-tel-link" style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;padding:11px 22px;border-radius:4px;border:1px solid rgba(29,185,84,.4);color:var(--g1);text-decoration:none;transition:all .15s">📞 <span id="cl-tel2">07 66 35 05 39</span></a>
         </div>
       </div>
 
@@ -1176,14 +1176,23 @@ tbody tr:hover td{background:var(--s2)}
           <div class="card"><div class="ch"><span class="ct">Informations atelier</span></div><div class="cb">
             <div class="fgrid" style="margin-bottom:11px">
               <div class="fg"><label>Nom</label><input id="s-nom" value="DR JANTES"></div>
-              <div class="fg"><label>Téléphone</label><input id="s-tel" value="06 63 30 93 49"></div>
+              <div class="fg"><label>Téléphone</label><input id="s-tel" value="07 66 35 05 39"></div>
               <div class="fg s2"><label>Adresse</label><input id="s-addr" value="18 Rue de Tourneuve, 44700 Orvault"></div>
-              <div class="fg"><label>Email</label><input id="s-email" value="lam.jl443@gmail.com"></div>
+              <div class="fg"><label>Email</label><input id="s-email" value="drjantes44@gmail.com"></div>
               <div class="fg"><label>SIRET</label><input id="s-siret" value="95085944700027"></div>
               <div class="fg s2"><label>Message d'accueil</label><textarea id="s-welcome" style="height:50px">Votre spécialiste pneus et jantes à Orvault. Montage rapide, prix compétitifs.</textarea></div>
             </div>
-            <div style="padding:9px 12px;background:var(--s2);border-radius:5px;border-left:3px solid var(--g1);font-size:12px;color:var(--mu);margin-bottom:12px;margin-top:4px">
-              💡 Ces informations sont affichées directement sur le site client (hero, footer, page RDV, etc.)
+            <div style="padding:9px 12px;background:var(--s2);border-radius:5px;border-left:3px solid var(--g1);font-size:12px;color:var(--mu);margin-bottom:8px;margin-top:4px">
+              💡 Ces informations s'affichent sur le site client (hero, footer, page RDV…)
+            </div>
+            <div style="padding:10px 12px;background:#0a1800;border:1px solid rgba(29,185,84,.25);border-radius:5px;border-left:3px solid var(--g1);margin-bottom:12px">
+              <div style="font-size:12px;font-weight:600;color:var(--g1);margin-bottom:5px">📧 Activation des emails (RDV + Devis)</div>
+              <div style="font-size:11px;color:var(--mu);line-height:1.6">
+                1. Va sur <a href="https://formspree.io" target="_blank" style="color:var(--g1)">formspree.io</a> → Créer un compte avec <strong style="color:var(--t2)">drjantes44@gmail.com</strong><br>
+                2. Crée un formulaire → copie l'ID (ex: <code style="color:var(--am)">xyzwabcd</code>)<br>
+                3. Dans le fichier HTML, remplace <code style="color:var(--am)">FORMSPREE_ID</code> par ton ID (2 fois)<br>
+                4. Les RDV et devis arrivent directement dans ta boîte mail !
+              </div>
             </div>
             <div class="fact"><button class="btn P" onclick="saveAtelier()">✓ Enregistrer et appliquer sur le site</button></div>
           </div></div>
@@ -1214,7 +1223,7 @@ tbody tr:hover td{background:var(--s2)}
             <div class="card"><div class="ch"><span class="ct">Modèles de messages</span></div><div class="cb">
               <div class="fg"><label>Confirmation RDV</label><textarea style="height:65px">Bonjour {NOM}, votre RDV chez DR JANTES est confirmé le {DATE} à {HEURE}. À bientôt !</textarea></div>
               <div class="fg"><label>Rappel 24h avant</label><textarea style="height:65px">Rappel : votre RDV chez DR JANTES est demain {DATE} à {HEURE}. 18 Rue de Tourneuve, Orvault.</textarea></div>
-              <div class="fg"><label>Annulation</label><textarea style="height:65px">Votre RDV du {DATE} a été annulé. Contactez-nous au 06 63 30 93 49 pour replanifier.</textarea></div>
+              <div class="fg"><label>Annulation</label><textarea style="height:65px">Votre RDV du {DATE} a été annulé. Contactez-nous au 07 66 35 05 39 pour replanifier.</textarea></div>
               <div style="font-size:10px;color:var(--mu);margin-bottom:9px">Variables : {NOM} {DATE} {HEURE} {SERVICE}</div>
               <div class="fact"><button class="btn P" onclick="toast('Messages enregistrés !','tg')">Enregistrer</button></div>
             </div></div>
@@ -1686,25 +1695,93 @@ function updCDvTotal(){
   document.getElementById('dv-total').textContent=t+'€';
 }
 function submitRdv(){
-  const n=document.getElementById('cn').value.trim(),s=document.getElementById('cs').value,d=document.getElementById('cd').value,h=document.getElementById('ch').value;
+  const n=document.getElementById('cn').value.trim(),
+        s=document.getElementById('cs').value,
+        d=document.getElementById('cd').value,
+        h=document.getElementById('ch').value;
   if(!n||!s||!d||!h){toast('Champs obligatoires manquants','ta');return;}
-  rdvs.push({id:Date.now(),nom:n,tel:document.getElementById('ct').value,email:document.getElementById('ce').value,veh:document.getElementById('cv').value,svc:s,date:d,heure:h,note:document.getElementById('cno').value,rap:true,statut:'Confirmé'});
-  document.getElementById('rdv-ok-txt').textContent=`${n} — ${s} — ${d.split('-').reverse().join('/')} à ${h}`;
-  document.getElementById('rdv-ok').style.display='block';
-  ['cn','ct','ce','cv','cno'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
-  document.getElementById('cs').value='';toast('Rendez-vous confirmé !','tg');
+
+  const tel   = document.getElementById('ct').value;
+  const email = document.getElementById('ce').value;
+  const veh   = document.getElementById('cv').value;
+  const note  = document.getElementById('cno').value;
+
+  // Enregistrer en local
+  rdvs.push({id:Date.now(),nom:n,tel,email,veh,svc:s,date:d,heure:h,note,rap:true,statut:'Confirmé'});
+
+  // Envoyer par email via Formspree
+  const formData = new FormData();
+  formData.append('_subject', '🛞 Nouveau RDV DR JANTES — '+n);
+  formData.append('_replyto', email||'');
+  formData.append('Nom', n);
+  formData.append('Téléphone', tel||'Non renseigné');
+  formData.append('Email', email||'Non renseigné');
+  formData.append('Véhicule', veh||'Non renseigné');
+  formData.append('Service', s);
+  formData.append('Date', d.split('-').reverse().join('/'));
+  formData.append('Heure', h);
+  formData.append('Notes', note||'Aucune');
+
+  fetch('https://formspree.io/f/FORMSPREE_ID', {method:'POST', body:formData, headers:{'Accept':'application/json'}})
+    .then(r=>{
+      if(r.ok){
+        document.getElementById('rdv-ok-txt').textContent=n+' — '+s+' — '+d.split('-').reverse().join('/')+' à '+h;
+        document.getElementById('rdv-ok').style.display='block';
+        ['cn','ct','ce','cv','cno'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+        document.getElementById('cs').value='';
+        toast('✅ Rendez-vous confirmé ! Email envoyé.','tg');
+      } else {
+        // Afficher quand même la confirmation même si email échoue
+        document.getElementById('rdv-ok-txt').textContent=n+' — '+s+' — '+d.split('-').reverse().join('/')+' à '+h;
+        document.getElementById('rdv-ok').style.display='block';
+        toast('Rendez-vous enregistré (email non configuré)','ta');
+      }
+    })
+    .catch(()=>{
+      document.getElementById('rdv-ok-txt').textContent=n+' — '+s+' — '+d.split('-').reverse().join('/')+' à '+h;
+      document.getElementById('rdv-ok').style.display='block';
+      toast('Rendez-vous enregistré localement','ta');
+    });
 }
 function submitDevis(){
-  const n=document.getElementById('dvn').value.trim();if(!n){toast('Votre nom est requis','ta');return;}
-  const ps=prods.filter(p=>p.statut==='Actif'&&p.prix>0);let t=0;
-  document.querySelectorAll('#dv-prods input[type=number]').forEach((inp,i)=>{t+=(ps[i]?.prix||0)*parseInt(inp.value||0);});
+  const n=document.getElementById('dvn').value.trim();
+  if(!n){toast('Votre nom est requis','ta');return;}
+  const veh=document.getElementById('dvv').value;
+  const ps=prods.filter(p=>p.statut==='Actif'&&p.prix>0);
+  let t=0; const lignes=[];
+  document.querySelectorAll('#dv-prods input[type=number]').forEach((inp,i)=>{
+    const qty=parseInt(inp.value||0);
+    if(qty>0&&ps[i]){t+=ps[i].prix*qty; lignes.push(ps[i].nom+' x'+qty+' = '+ps[i].prix*qty+'€');}
+  });
   if(!t){toast('Sélectionnez au moins une prestation','ta');return;}
-  dvCtr++;const now=new Date();
-  dvis.push({ref:`DRJ-0${dvCtr}`,client:n,veh:document.getElementById('dvv').value,date:`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`,montant:t,statut:'En attente'});
-  document.getElementById('dv-ok-txt').textContent=`Réf. DRJ-0${dvCtr} — Montant estimé : ${t}€. Nous vous contacterons.`;
-  document.getElementById('dv-ok').style.display='block';
-  document.querySelectorAll('#dv-prods input[type=number]').forEach(inp=>inp.value=0);
-  updCDvTotal();toast(`Devis DRJ-0${dvCtr} envoyé !`,'tg');
+  dvCtr++;
+  const now=new Date();
+  const ref='DRJ-0'+dvCtr;
+  dvis.push({ref,client:n,veh,date:now.toISOString().split('T')[0],montant:t,statut:'En attente'});
+
+  // Envoyer par email
+  const formData = new FormData();
+  formData.append('_subject', '📄 Nouveau devis DR JANTES — '+n+' — '+t+'€');
+  formData.append('Référence', ref);
+  formData.append('Client', n);
+  formData.append('Véhicule', veh||'Non renseigné');
+  formData.append('Prestations', lignes.join(', '));
+  formData.append('Total estimé', t+'€ TTC');
+  formData.append('Date demande', now.toLocaleDateString('fr-FR'));
+
+  fetch('https://formspree.io/f/FORMSPREE_ID', {method:'POST', body:formData, headers:{'Accept':'application/json'}})
+    .then(r=>{
+      document.getElementById('dv-ok-txt').textContent='Réf. '+ref+' — Montant estimé : '+t+'€.';
+      document.getElementById('dv-ok').style.display='block';
+      document.querySelectorAll('#dv-prods input[type=number]').forEach(inp=>inp.value=0);
+      updCDvTotal();
+      toast(r.ok?'✅ Devis '+ref+' envoyé !':'Devis enregistré (email non configuré)', r.ok?'tg':'ta');
+    })
+    .catch(()=>{
+      document.getElementById('dv-ok-txt').textContent='Réf. '+ref+' — Montant estimé : '+t+'€.';
+      document.getElementById('dv-ok').style.display='block';
+      toast('Devis enregistré localement','ta');
+    });
 }
 
 // ════ GALLERY ════
@@ -2559,7 +2636,7 @@ function pmRender(scope, sizeFilter){
 // ════ SAVE ATELIER → synchronise avec le site client ════
 function saveAtelier(){
   const nom    = document.getElementById('s-nom')?.value  || 'DR JANTES';
-  const tel    = document.getElementById('s-tel')?.value  || '06 63 30 93 49';
+  const tel    = document.getElementById('s-tel')?.value  || '07 66 35 05 39';
   const addr   = document.getElementById('s-addr')?.value || '18 Rue de Tourneuve, 44700 Orvault';
   const email  = document.getElementById('s-email')?.value;
   const siret  = document.getElementById('s-siret')?.value;
