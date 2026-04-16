@@ -1293,16 +1293,173 @@ tbody tr:hover td{background:var(--s2)}
         <div class="ssec" id="ss-photos">
           <div class="card">
             <div class="ch">
-              <span class="ct">Photos du site — Modifier les images</span>
-              <button class="btn P" onclick="renderSitePhotos()" style="font-size:10px;padding:5px 10px">↺ Actualiser</button>
+              <span class="ct">Photos du site</span>
+              <span style="font-size:11px;color:var(--mu)">Modifiez les images affichées sur votre site</span>
             </div>
-            <div class="cb">
-              <div style="padding:9px 12px;background:var(--s2);border-radius:4px;border-left:3px solid var(--bl);font-size:12px;color:var(--mu);margin-bottom:14px">
-                📁 <strong style="color:var(--t2)">Upload PC</strong> — glisse ou clique pour uploader depuis ton ordinateur &nbsp;·&nbsp;
-                🔗 <strong style="color:var(--t2)">URL</strong> — colle un lien image puis clique <strong style="color:var(--t2)">Appliquer</strong>
+            <div class="cb" style="padding:0 16px">
+              <div style="padding:8px 0 12px;font-size:12px;color:var(--mu);border-bottom:1px solid var(--b2);margin-bottom:4px">
+                Survolez une photo pour la changer — ou uploadez depuis votre PC — ou collez une URL
               </div>
-              <div id="site-photos-list">
-                <div class="empty"><div class="eico">🖼️</div><div>Chargement...</div></div>
+              
+              <div style="display:grid;grid-template-columns:150px 1fr;gap:14px;padding:14px 0;border-bottom:1px solid var(--b2);align-items:start">
+                <div style="position:relative">
+                  <img id="prev-hero-main" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&q=80" style="width:150px;height:95px;object-fit:cover;border-radius:6px;border:1px solid var(--b2);display:block">
+                  <div style="position:absolute;inset:0;background:rgba(0,0,0,.5);border-radius:6px;display:flex;align-items:center;justify-content:center;opacity:0;transition:.2s;cursor:pointer" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0" onclick="document.getElementById('fup-hero-main').click()">
+                    <span style="color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Changer</span>
+                  </div>
+                </div>
+                <div>
+                  <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:2px">Bande hero — Photo principale</div>
+                  <div style="font-size:11px;color:var(--mu);margin-bottom:10px">Grande photo à gauche en haut</div>
+                  <input type="file" id="fup-hero-main" accept="image/*" style="display:none" onchange="spUpload(event,'hero-main')">
+                  <button onclick="document.getElementById('fup-hero-main').click()" style="width:100%;background:var(--s2);border:1px dashed var(--b2);border-radius:5px;color:var(--t2);font-size:12px;padding:8px 10px;cursor:pointer;text-align:left;margin-bottom:7px;display:flex;align-items:center;gap:7px">
+                    <span>📁</span><span>Uploader depuis mon PC</span>
+                  </button>
+                  <div style="display:flex;gap:6px">
+                    <input id="url-hero-main" type="text" value="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&q=80" placeholder="https://..." style="flex:1;background:var(--s3);border:1px solid var(--b2);border-radius:4px;color:var(--t1);font-size:12px;padding:7px 9px;outline:none">
+                    <button onclick="spApplyUrl('hero-main')" style="background:var(--r);border:none;border-radius:4px;color:#fff;font-size:12px;font-weight:700;padding:7px 13px;cursor:pointer;white-space:nowrap">Appliquer</button>
+                  </div>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:150px 1fr;gap:14px;padding:14px 0;border-bottom:1px solid var(--b2);align-items:start">
+                <div style="position:relative">
+                  <img id="prev-hero-col2" src="https://images.unsplash.com/photo-1600712242805-5f78671b24da?w=400&q=80" style="width:150px;height:95px;object-fit:cover;border-radius:6px;border:1px solid var(--b2);display:block">
+                  <div style="position:absolute;inset:0;background:rgba(0,0,0,.5);border-radius:6px;display:flex;align-items:center;justify-content:center;opacity:0;transition:.2s;cursor:pointer" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0" onclick="document.getElementById('fup-hero-col2').click()">
+                    <span style="color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Changer</span>
+                  </div>
+                </div>
+                <div>
+                  <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:2px">Bande hero — Photo centre</div>
+                  <div style="font-size:11px;color:var(--mu);margin-bottom:10px">Photo au milieu (jantes)</div>
+                  <input type="file" id="fup-hero-col2" accept="image/*" style="display:none" onchange="spUpload(event,'hero-col2')">
+                  <button onclick="document.getElementById('fup-hero-col2').click()" style="width:100%;background:var(--s2);border:1px dashed var(--b2);border-radius:5px;color:var(--t2);font-size:12px;padding:8px 10px;cursor:pointer;text-align:left;margin-bottom:7px;display:flex;align-items:center;gap:7px">
+                    <span>📁</span><span>Uploader depuis mon PC</span>
+                  </button>
+                  <div style="display:flex;gap:6px">
+                    <input id="url-hero-col2" type="text" value="https://images.unsplash.com/photo-1600712242805-5f78671b24da?w=400&q=80" placeholder="https://..." style="flex:1;background:var(--s3);border:1px solid var(--b2);border-radius:4px;color:var(--t1);font-size:12px;padding:7px 9px;outline:none">
+                    <button onclick="spApplyUrl('hero-col2')" style="background:var(--r);border:none;border-radius:4px;color:#fff;font-size:12px;font-weight:700;padding:7px 13px;cursor:pointer;white-space:nowrap">Appliquer</button>
+                  </div>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:150px 1fr;gap:14px;padding:14px 0;border-bottom:1px solid var(--b2);align-items:start">
+                <div style="position:relative">
+                  <img id="prev-hero-col3" src="https://images.unsplash.com/photo-1625047509248-ec889cbff17f?w=400&q=80" style="width:150px;height:95px;object-fit:cover;border-radius:6px;border:1px solid var(--b2);display:block">
+                  <div style="position:absolute;inset:0;background:rgba(0,0,0,.5);border-radius:6px;display:flex;align-items:center;justify-content:center;opacity:0;transition:.2s;cursor:pointer" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0" onclick="document.getElementById('fup-hero-col3').click()">
+                    <span style="color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Changer</span>
+                  </div>
+                </div>
+                <div>
+                  <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:2px">Bande hero — Photo droite</div>
+                  <div style="font-size:11px;color:var(--mu);margin-bottom:10px">Photo à droite (atelier)</div>
+                  <input type="file" id="fup-hero-col3" accept="image/*" style="display:none" onchange="spUpload(event,'hero-col3')">
+                  <button onclick="document.getElementById('fup-hero-col3').click()" style="width:100%;background:var(--s2);border:1px dashed var(--b2);border-radius:5px;color:var(--t2);font-size:12px;padding:8px 10px;cursor:pointer;text-align:left;margin-bottom:7px;display:flex;align-items:center;gap:7px">
+                    <span>📁</span><span>Uploader depuis mon PC</span>
+                  </button>
+                  <div style="display:flex;gap:6px">
+                    <input id="url-hero-col3" type="text" value="https://images.unsplash.com/photo-1625047509248-ec889cbff17f?w=400&q=80" placeholder="https://..." style="flex:1;background:var(--s3);border:1px solid var(--b2);border-radius:4px;color:var(--t1);font-size:12px;padding:7px 9px;outline:none">
+                    <button onclick="spApplyUrl('hero-col3')" style="background:var(--r);border:none;border-radius:4px;color:#fff;font-size:12px;font-weight:700;padding:7px 13px;cursor:pointer;white-space:nowrap">Appliquer</button>
+                  </div>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:150px 1fr;gap:14px;padding:14px 0;border-bottom:1px solid var(--b2);align-items:start">
+                <div style="position:relative">
+                  <img id="prev-svc-pneus" src="https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=600&q=80" style="width:150px;height:95px;object-fit:cover;border-radius:6px;border:1px solid var(--b2);display:block">
+                  <div style="position:absolute;inset:0;background:rgba(0,0,0,.5);border-radius:6px;display:flex;align-items:center;justify-content:center;opacity:0;transition:.2s;cursor:pointer" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0" onclick="document.getElementById('fup-svc-pneus').click()">
+                    <span style="color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Changer</span>
+                  </div>
+                </div>
+                <div>
+                  <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:2px">Card service — Pneus</div>
+                  <div style="font-size:11px;color:var(--mu);margin-bottom:10px">Photo de la carte Pneus</div>
+                  <input type="file" id="fup-svc-pneus" accept="image/*" style="display:none" onchange="spUpload(event,'svc-pneus')">
+                  <button onclick="document.getElementById('fup-svc-pneus').click()" style="width:100%;background:var(--s2);border:1px dashed var(--b2);border-radius:5px;color:var(--t2);font-size:12px;padding:8px 10px;cursor:pointer;text-align:left;margin-bottom:7px;display:flex;align-items:center;gap:7px">
+                    <span>📁</span><span>Uploader depuis mon PC</span>
+                  </button>
+                  <div style="display:flex;gap:6px">
+                    <input id="url-svc-pneus" type="text" value="https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=600&q=80" placeholder="https://..." style="flex:1;background:var(--s3);border:1px solid var(--b2);border-radius:4px;color:var(--t1);font-size:12px;padding:7px 9px;outline:none">
+                    <button onclick="spApplyUrl('svc-pneus')" style="background:var(--r);border:none;border-radius:4px;color:#fff;font-size:12px;font-weight:700;padding:7px 13px;cursor:pointer;white-space:nowrap">Appliquer</button>
+                  </div>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:150px 1fr;gap:14px;padding:14px 0;border-bottom:1px solid var(--b2);align-items:start">
+                <div style="position:relative">
+                  <img id="prev-svc-jantes" src="https://images.unsplash.com/photo-1600712242805-5f78671b24da?w=600&q=80" style="width:150px;height:95px;object-fit:cover;border-radius:6px;border:1px solid var(--b2);display:block">
+                  <div style="position:absolute;inset:0;background:rgba(0,0,0,.5);border-radius:6px;display:flex;align-items:center;justify-content:center;opacity:0;transition:.2s;cursor:pointer" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0" onclick="document.getElementById('fup-svc-jantes').click()">
+                    <span style="color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Changer</span>
+                  </div>
+                </div>
+                <div>
+                  <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:2px">Card service — Jantes</div>
+                  <div style="font-size:11px;color:var(--mu);margin-bottom:10px">Photo de la carte Jantes</div>
+                  <input type="file" id="fup-svc-jantes" accept="image/*" style="display:none" onchange="spUpload(event,'svc-jantes')">
+                  <button onclick="document.getElementById('fup-svc-jantes').click()" style="width:100%;background:var(--s2);border:1px dashed var(--b2);border-radius:5px;color:var(--t2);font-size:12px;padding:8px 10px;cursor:pointer;text-align:left;margin-bottom:7px;display:flex;align-items:center;gap:7px">
+                    <span>📁</span><span>Uploader depuis mon PC</span>
+                  </button>
+                  <div style="display:flex;gap:6px">
+                    <input id="url-svc-jantes" type="text" value="https://images.unsplash.com/photo-1600712242805-5f78671b24da?w=600&q=80" placeholder="https://..." style="flex:1;background:var(--s3);border:1px solid var(--b2);border-radius:4px;color:var(--t1);font-size:12px;padding:7px 9px;outline:none">
+                    <button onclick="spApplyUrl('svc-jantes')" style="background:var(--r);border:none;border-radius:4px;color:#fff;font-size:12px;font-weight:700;padding:7px 13px;cursor:pointer;white-space:nowrap">Appliquer</button>
+                  </div>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:150px 1fr;gap:14px;padding:14px 0;border-bottom:1px solid var(--b2);align-items:start">
+                <div style="position:relative">
+                  <img id="prev-svc-freinage" src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=600&q=80" style="width:150px;height:95px;object-fit:cover;border-radius:6px;border:1px solid var(--b2);display:block">
+                  <div style="position:absolute;inset:0;background:rgba(0,0,0,.5);border-radius:6px;display:flex;align-items:center;justify-content:center;opacity:0;transition:.2s;cursor:pointer" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0" onclick="document.getElementById('fup-svc-freinage').click()">
+                    <span style="color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Changer</span>
+                  </div>
+                </div>
+                <div>
+                  <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:2px">Card service — Freinage</div>
+                  <div style="font-size:11px;color:var(--mu);margin-bottom:10px">Photo de la carte Freinage</div>
+                  <input type="file" id="fup-svc-freinage" accept="image/*" style="display:none" onchange="spUpload(event,'svc-freinage')">
+                  <button onclick="document.getElementById('fup-svc-freinage').click()" style="width:100%;background:var(--s2);border:1px dashed var(--b2);border-radius:5px;color:var(--t2);font-size:12px;padding:8px 10px;cursor:pointer;text-align:left;margin-bottom:7px;display:flex;align-items:center;gap:7px">
+                    <span>📁</span><span>Uploader depuis mon PC</span>
+                  </button>
+                  <div style="display:flex;gap:6px">
+                    <input id="url-svc-freinage" type="text" value="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=600&q=80" placeholder="https://..." style="flex:1;background:var(--s3);border:1px solid var(--b2);border-radius:4px;color:var(--t1);font-size:12px;padding:7px 9px;outline:none">
+                    <button onclick="spApplyUrl('svc-freinage')" style="background:var(--r);border:none;border-radius:4px;color:#fff;font-size:12px;font-weight:700;padding:7px 13px;cursor:pointer;white-space:nowrap">Appliquer</button>
+                  </div>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:150px 1fr;gap:14px;padding:14px 0;border-bottom:1px solid var(--b2);align-items:start">
+                <div style="position:relative">
+                  <img id="prev-svc-services" src="https://images.unsplash.com/photo-1615906655593-ad0386982a0f?w=600&q=80" style="width:150px;height:95px;object-fit:cover;border-radius:6px;border:1px solid var(--b2);display:block">
+                  <div style="position:absolute;inset:0;background:rgba(0,0,0,.5);border-radius:6px;display:flex;align-items:center;justify-content:center;opacity:0;transition:.2s;cursor:pointer" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0" onclick="document.getElementById('fup-svc-services').click()">
+                    <span style="color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Changer</span>
+                  </div>
+                </div>
+                <div>
+                  <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:2px">Card service — Services</div>
+                  <div style="font-size:11px;color:var(--mu);margin-bottom:10px">Photo de la carte Services</div>
+                  <input type="file" id="fup-svc-services" accept="image/*" style="display:none" onchange="spUpload(event,'svc-services')">
+                  <button onclick="document.getElementById('fup-svc-services').click()" style="width:100%;background:var(--s2);border:1px dashed var(--b2);border-radius:5px;color:var(--t2);font-size:12px;padding:8px 10px;cursor:pointer;text-align:left;margin-bottom:7px;display:flex;align-items:center;gap:7px">
+                    <span>📁</span><span>Uploader depuis mon PC</span>
+                  </button>
+                  <div style="display:flex;gap:6px">
+                    <input id="url-svc-services" type="text" value="https://images.unsplash.com/photo-1615906655593-ad0386982a0f?w=600&q=80" placeholder="https://..." style="flex:1;background:var(--s3);border:1px solid var(--b2);border-radius:4px;color:var(--t1);font-size:12px;padding:7px 9px;outline:none">
+                    <button onclick="spApplyUrl('svc-services')" style="background:var(--r);border:none;border-radius:4px;color:#fff;font-size:12px;font-weight:700;padding:7px 13px;cursor:pointer;white-space:nowrap">Appliquer</button>
+                  </div>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:150px 1fr;gap:14px;padding:14px 0;border-bottom:1px solid var(--b2);align-items:start">
+                <div style="position:relative">
+                  <img id="prev-why-us" src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=800&q=80" style="width:150px;height:95px;object-fit:cover;border-radius:6px;border:1px solid var(--b2);display:block">
+                  <div style="position:absolute;inset:0;background:rgba(0,0,0,.5);border-radius:6px;display:flex;align-items:center;justify-content:center;opacity:0;transition:.2s;cursor:pointer" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0" onclick="document.getElementById('fup-why-us').click()">
+                    <span style="color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Changer</span>
+                  </div>
+                </div>
+                <div>
+                  <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:2px">Section Pourquoi nous</div>
+                  <div style="font-size:11px;color:var(--mu);margin-bottom:10px">Grande photo section arguments</div>
+                  <input type="file" id="fup-why-us" accept="image/*" style="display:none" onchange="spUpload(event,'why-us')">
+                  <button onclick="document.getElementById('fup-why-us').click()" style="width:100%;background:var(--s2);border:1px dashed var(--b2);border-radius:5px;color:var(--t2);font-size:12px;padding:8px 10px;cursor:pointer;text-align:left;margin-bottom:7px;display:flex;align-items:center;gap:7px">
+                    <span>📁</span><span>Uploader depuis mon PC</span>
+                  </button>
+                  <div style="display:flex;gap:6px">
+                    <input id="url-why-us" type="text" value="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=800&q=80" placeholder="https://..." style="flex:1;background:var(--s3);border:1px solid var(--b2);border-radius:4px;color:var(--t1);font-size:12px;padding:7px 9px;outline:none">
+                    <button onclick="spApplyUrl('why-us')" style="background:var(--r);border:none;border-radius:4px;color:#fff;font-size:12px;font-weight:700;padding:7px 13px;cursor:pointer;white-space:nowrap">Appliquer</button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -2040,81 +2197,17 @@ const SITE_PHOTOS = [
   {id:'why-us', imgId:'img-why-us', label:'Section Pourquoi nous', desc:'Grande photo section arguments', current:'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=800&q=80'},
 ];
 
-function renderSitePhotos(){
-  const el=document.getElementById('site-photos-list');
-  if(!el) return;
-  el.innerHTML=SITE_PHOTOS.map(p=>`
-    <div class="photo-row">
-      <div>
-        <img id="prev-${p.id}" class="photo-preview" src="${p.current}"
-          onerror="this.style.display='none';document.getElementById('prevph-${p.id}').style.display='flex'"
-          onload="this.style.display='block';document.getElementById('prevph-${p.id}').style.display='none'">
-        <div id="prevph-${p.id}" class="photo-preview-ph" style="display:none">🖼️</div>
-      </div>
-      <div style="flex:1;min-width:0">
-        <div class="photo-label">${p.label}</div>
-        <div class="photo-desc" style="margin-bottom:8px">${p.desc}</div>
-        <div style="position:relative;border:1px dashed var(--b2);border-radius:5px;padding:10px 12px;background:var(--s2);display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:7px;overflow:hidden" onclick="document.getElementById('fup-${p.id}').click()">
-          <input type="file" id="fup-${p.id}" accept="image/*" style="display:none" onchange="photoUpload(event,'${p.id}')">
-          <span style="font-size:16px">📁</span>
-          <span style="font-size:12px;color:var(--mu)">Uploader depuis mon PC</span>
-        </div>
-        <div class="photo-url-row">
-          <input class="photo-url-inp" id="url-${p.id}" type="url" placeholder="https://... coller une URL image" value="${p.current||''}">
-          <button class="photo-apply" onclick="applyPhotoUrl('${p.id}')">✓ Appliquer</button>
-        </div>
-      </div>
-    </div>`).join('');
-}
 
-function photoUpload(e, photoId){
-  const file = e.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    const url = ev.target.result;
-    applyPhoto(photoId, url);
-    const inp = document.getElementById('url-'+photoId);
-    if(inp) inp.value = '('+file.name+')';
-    toast('✓ "'+file.name+'" appliquée !', 'tg');
-  };
-  reader.readAsDataURL(file);
-  e.target.value = '';
-}
 
-function applyPhotoUrl(photoId){
-  const inp = document.getElementById('url-'+photoId);
-  if(!inp) return;
-  const url = inp.value.trim();
-  if(!url || !url.startsWith('http')){
-    toast('URL invalide — doit commencer par https://', 'ta');
-    return;
-  }
-  applyPhoto(photoId, url);
-  toast('Photo mise à jour !', 'tg');
-}
 
-function applyPhoto(photoId, url){
-  const p = SITE_PHOTOS.find(x=>x.id===photoId);
-  if(!p) return;
-  p.current = url;
-  // Image sur le site
-  const img = document.getElementById(p.imgId);
-  if(img) img.src = url;
-  // Fond hero
-  if(photoId==='hero-main'){
-    const bg = document.querySelector('.hero div[style*="background-image"]');
-    if(bg) bg.style.backgroundImage="url('"+url+"')";
-  }
-  // Catalogue cards
-  const cat = {svc_pneus:'Pneus','svc-pneus':'Pneus','svc-jantes':'Jantes','svc-freinage':'Freinage','svc-services':'Services'};
-  if(cat[photoId]){CL_PHOTOS[cat[photoId]]=url; clRender();}
-  // Preview admin
-  const pv=document.getElementById('prev-'+photoId);
-  if(pv){pv.src=url;pv.style.display='block';}
-  const ph=document.getElementById('prevph-'+photoId);
-  if(ph) ph.style.display='none';
-}
+
+
+
+
+
+
+
+
 
 
 // ════ JANTES + PROMOS ════
@@ -2625,6 +2718,51 @@ function saveHoraires(){
   renderCCrens();
   toast('✓ Horaires enregistrés et mis à jour !','tg');
 }
+
+
+function spUpload(e,pid){
+  var file=e.target.files[0];
+  if(!file)return;
+  var r=new FileReader();
+  r.onload=function(ev){
+    var url=ev.target.result;
+    spApply(pid,url);
+    document.getElementById('url-'+pid).value=file.name+' (uploadé)';
+    toast('Photo mise à jour : '+file.name,'tg');
+  };
+  r.readAsDataURL(file);
+  e.target.value='';
+}
+
+function spApplyUrl(pid){
+  var url=document.getElementById('url-'+pid).value.trim();
+  if(!url){toast('Entrez une URL','ta');return;}
+  spApply(pid,url);
+  toast('Photo mise à jour !','tg');
+}
+
+function spApply(pid,url){
+  // Preview admin
+  var prev=document.getElementById('prev-'+pid);
+  if(prev)prev.src=url;
+  // Image sur le site
+  var p=SITE_PHOTOS.find(function(x){return x.id===pid;});
+  if(p){
+    p.current=url;
+    var img=document.getElementById(p.imgId);
+    if(img)img.src=url;
+  }
+  // Fond hero
+  if(pid==='hero-main'){
+    var bg=document.querySelector('.hero div[style*="background-image"]');
+    if(bg)bg.style.backgroundImage='url('+url+')';
+  }
+  // Catalogue
+  var cm={svc_pneus:'Pneus','svc-pneus':'Pneus','svc-jantes':'Jantes','svc-freinage':'Freinage','svc-services':'Services'};
+  if(cm[pid]){CL_PHOTOS[cm[pid]]=url;clRender();}
+}
+
+function renderSitePhotos(){/* HTML statique, rien à rendre */}
 
 // ════ START ════
 initClient();
