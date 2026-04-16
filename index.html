@@ -594,7 +594,7 @@ tbody tr:hover td{background:var(--s2)}
     <!-- ══ BANDE D'IMAGES ══ -->
     <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:3px;height:180px;overflow:hidden">
       <div style="overflow:hidden;position:relative;cursor:pointer" onclick="goSection('sec-catalogue')">
-        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&q=80" alt="Atelier DR Jantes" style="width:100%;height:100%;object-fit:cover;transition:transform .5s" onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'">
+        <img id="img-hero-main" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&q=80" alt="Atelier DR Jantes" style="width:100%;height:100%;object-fit:cover;transition:transform .5s" onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'">
         <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(192,57,43,.3),transparent 60%)"></div>
         <div style="position:absolute;bottom:14px;left:14px">
           <div style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:900;color:#fff;text-transform:uppercase;text-shadow:0 1px 8px rgba(0,0,0,.8)">Spécialiste pneus & jantes</div>
@@ -602,10 +602,10 @@ tbody tr:hover td{background:var(--s2)}
         </div>
       </div>
       <div style="overflow:hidden;cursor:pointer" onclick="goSection('sec-catalogue')">
-        <img src="https://images.unsplash.com/photo-1600712242805-5f78671b24da?w=400&q=80" alt="Jantes" style="width:100%;height:100%;object-fit:cover;transition:transform .5s" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'">
+        <img id="img-hero-col2" src="https://images.unsplash.com/photo-1600712242805-5f78671b24da?w=400&q=80" alt="Jantes" style="width:100%;height:100%;object-fit:cover;transition:transform .5s" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'">
       </div>
       <div style="overflow:hidden;cursor:pointer" onclick="goSection('sec-galerie')">
-        <img src="https://images.unsplash.com/photo-1625047509248-ec889cbff17f?w=400&q=80" alt="Atelier" style="width:100%;height:100%;object-fit:cover;transition:transform .5s" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'">
+        <img id="img-hero-col3" src="https://images.unsplash.com/photo-1625047509248-ec889cbff17f?w=400&q=80" alt="Atelier" style="width:100%;height:100%;object-fit:cover;transition:transform .5s" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'">
       </div>
     </div>
 
@@ -617,7 +617,7 @@ tbody tr:hover td{background:var(--s2)}
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:32px">
         <div class="scard" onclick="goSection('sec-catalogue');clTab('pneus',document.querySelector('[data-tab=pneus]'))" style="padding:0;overflow:hidden">
           <div style="height:140px;overflow:hidden;position:relative">
-            <img src="https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=600&q=80" alt="Pneus" style="width:100%;height:100%;object-fit:cover;transition:transform .4s" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'">
+            <img id="img-svc-pneus" src="https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=600&q=80" alt="Pneus" style="width:100%;height:100%;object-fit:cover;transition:transform .4s" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'">
             <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75),transparent 60%)"></div>
             <div style="position:absolute;bottom:0;left:0;right:0;padding:12px 14px">
               <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;color:#fff;text-transform:uppercase">Pneus</div>
@@ -628,7 +628,7 @@ tbody tr:hover td{background:var(--s2)}
         </div>
         <div class="scard" onclick="goSection('sec-catalogue');clTab('jantes',document.querySelector('[data-tab=jantes]'))" style="padding:0;overflow:hidden">
           <div style="height:140px;overflow:hidden;position:relative">
-            <img src="https://images.unsplash.com/photo-1600712242805-5f78671b24da?w=600&q=80" alt="Jantes" style="width:100%;height:100%;object-fit:cover;transition:transform .4s" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'">
+            <img id="img-svc-jantes" src="https://images.unsplash.com/photo-1600712242805-5f78671b24da?w=600&q=80" alt="Jantes" style="width:100%;height:100%;object-fit:cover;transition:transform .4s" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'">
             <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75),transparent 60%)"></div>
             <div style="position:absolute;bottom:0;left:0;right:0;padding:12px 14px">
               <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;color:#fff;text-transform:uppercase">Jantes</div>
@@ -639,7 +639,7 @@ tbody tr:hover td{background:var(--s2)}
         </div>
         <div class="scard" onclick="goSection('sec-catalogue');clTab('freinage',document.querySelector('[data-tab=freinage]'))" style="padding:0;overflow:hidden">
           <div style="height:140px;overflow:hidden;position:relative">
-            <img src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=600&q=80" alt="Freinage" style="width:100%;height:100%;object-fit:cover;transition:transform .4s" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'">
+            <img id="img-svc-freinage" src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=600&q=80" alt="Freinage" style="width:100%;height:100%;object-fit:cover;transition:transform .4s" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'">
             <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75),transparent 60%)"></div>
             <div style="position:absolute;bottom:0;left:0;right:0;padding:12px 14px">
               <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;color:#fff;text-transform:uppercase">Freinage</div>
@@ -650,7 +650,7 @@ tbody tr:hover td{background:var(--s2)}
         </div>
         <div class="scard" onclick="goSection('sec-catalogue');clTab('services',document.querySelector('[data-tab=services]'))" style="padding:0;overflow:hidden">
           <div style="height:140px;overflow:hidden;position:relative">
-            <img src="https://images.unsplash.com/photo-1615906655593-ad0386982a0f?w=600&q=80" alt="Services" style="width:100%;height:100%;object-fit:cover;transition:transform .4s" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'">
+            <img id="img-svc-services" src="https://images.unsplash.com/photo-1615906655593-ad0386982a0f?w=600&q=80" alt="Services" style="width:100%;height:100%;object-fit:cover;transition:transform .4s" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'">
             <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75),transparent 60%)"></div>
             <div style="position:absolute;bottom:0;left:0;right:0;padding:12px 14px">
               <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;color:#fff;text-transform:uppercase">Services</div>
@@ -664,7 +664,7 @@ tbody tr:hover td{background:var(--s2)}
       <!-- ══ POURQUOI NOUS ══ -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:40px;align-items:center">
         <div style="border-radius:10px;overflow:hidden;position:relative;height:260px">
-          <img src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=800&q=80" alt="Atelier montage pneus" style="width:100%;height:100%;object-fit:cover">
+          <img id="img-why-us" src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=800&q=80" alt="Atelier montage pneus" style="width:100%;height:100%;object-fit:cover">
           <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(192,57,43,.4),transparent 60%)"></div>
           <div style="position:absolute;bottom:16px;left:16px;right:16px">
             <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:#fff;text-transform:uppercase;line-height:1">Montage professionnel</div>
@@ -2030,91 +2030,41 @@ function confirmLogout(){
 
 // ════ SITE PHOTO EDITOR ════
 const SITE_PHOTOS = [
-  {
-    id: 'hero-main',
-    label: 'Bande hero — Photo principale',
-    desc: 'Grande photo à gauche en haut de la page',
-    current: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&q=80',
-    altTarget: 'Atelier DR Jantes'
-  },
-  {
-    id: 'hero-col2',
-    label: 'Bande hero — Photo centre',
-    desc: 'Photo au milieu de la bande (jantes)',
-    current: 'https://images.unsplash.com/photo-1600712242805-5f78671b24da?w=400&q=80',
-    altTarget: 'Jantes'
-  },
-  {
-    id: 'hero-col3',
-    label: 'Bande hero — Photo droite',
-    desc: 'Photo à droite de la bande (atelier)',
-    current: 'https://images.unsplash.com/photo-1625047509248-ec889cbff17f?w=400&q=80',
-    altTarget: 'Atelier'
-  },
-  {
-    id: 'svc-pneus',
-    label: 'Card service — Pneus',
-    desc: 'Photo de la carte Pneus',
-    current: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=600&q=80',
-    altTarget: 'Pneus'
-  },
-  {
-    id: 'svc-jantes',
-    label: 'Card service — Jantes',
-    desc: 'Photo de la carte Jantes',
-    current: 'https://images.unsplash.com/photo-1600712242805-5f78671b24da?w=600&q=80',
-    altTarget: 'Jantes'
-  },
-  {
-    id: 'svc-freinage',
-    label: 'Card service — Freinage',
-    desc: 'Photo de la carte Freinage',
-    current: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=600&q=80',
-    altTarget: 'Freinage'
-  },
-  {
-    id: 'svc-services',
-    label: 'Card service — Services',
-    desc: 'Photo de la carte Services',
-    current: 'https://images.unsplash.com/photo-1615906655593-ad0386982a0f?w=600&q=80',
-    altTarget: 'Services'
-  },
-  {
-    id: 'why-us',
-    label: 'Section "Pourquoi nous"',
-    desc: 'Grande photo à gauche de la section arguments',
-    current: 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=800&q=80',
-    altTarget: 'Atelier montage pneus'
-  },
+  {id:'hero-main', imgId:'img-hero-main', label:'Bande hero — Photo principale', desc:'Grande photo à gauche en haut', current:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&q=80'},
+  {id:'hero-col2', imgId:'img-hero-col2', label:'Bande hero — Photo centre', desc:'Photo au milieu (jantes)', current:'https://images.unsplash.com/photo-1600712242805-5f78671b24da?w=400&q=80'},
+  {id:'hero-col3', imgId:'img-hero-col3', label:'Bande hero — Photo droite', desc:'Photo à droite (atelier)', current:'https://images.unsplash.com/photo-1625047509248-ec889cbff17f?w=400&q=80'},
+  {id:'svc-pneus', imgId:'img-svc-pneus', label:'Card service — Pneus', desc:'Photo de la carte Pneus', current:'https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=600&q=80'},
+  {id:'svc-jantes', imgId:'img-svc-jantes', label:'Card service — Jantes', desc:'Photo de la carte Jantes', current:'https://images.unsplash.com/photo-1600712242805-5f78671b24da?w=600&q=80'},
+  {id:'svc-freinage', imgId:'img-svc-freinage', label:'Card service — Freinage', desc:'Photo de la carte Freinage', current:'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=600&q=80'},
+  {id:'svc-services', imgId:'img-svc-services', label:'Card service — Services', desc:'Photo de la carte Services', current:'https://images.unsplash.com/photo-1615906655593-ad0386982a0f?w=600&q=80'},
+  {id:'why-us', imgId:'img-why-us', label:'Section Pourquoi nous', desc:'Grande photo section arguments', current:'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=800&q=80'},
 ];
 
 function renderSitePhotos(){
-  const el = document.getElementById('site-photos-list');
+  const el=document.getElementById('site-photos-list');
   if(!el) return;
-  el.innerHTML = SITE_PHOTOS.map(p => {
-    const imgHtml = p.current
-      ? `<img id="prev-${p.id}" class="photo-preview" src="${p.current}" alt="${p.label}" onerror="this.style.display='none';document.getElementById('prevph-${p.id}').style.display='flex'" onload="this.style.display='block';document.getElementById('prevph-${p.id}').style.display='none'">`
-      : '';
-    return `<div class="photo-row">
+  el.innerHTML=SITE_PHOTOS.map(p=>`
+    <div class="photo-row">
       <div>
-        ${imgHtml}
-        <div id="prevph-${p.id}" class="photo-preview-ph" style="${p.current?'display:none':'display:flex'}">🖼️</div>
+        <img id="prev-${p.id}" class="photo-preview" src="${p.current}"
+          onerror="this.style.display='none';document.getElementById('prevph-${p.id}').style.display='flex'"
+          onload="this.style.display='block';document.getElementById('prevph-${p.id}').style.display='none'">
+        <div id="prevph-${p.id}" class="photo-preview-ph" style="display:none">🖼️</div>
       </div>
       <div style="flex:1;min-width:0">
         <div class="photo-label">${p.label}</div>
-        <div class="photo-desc">${p.desc}</div>
-        <label class="photo-zone" style="display:flex;align-items:center;gap:8px;cursor:pointer">
-          <input type="file" accept="image/*" style="display:none" onchange="photoUpload(event,'${p.id}')">
+        <div class="photo-desc" style="margin-bottom:8px">${p.desc}</div>
+        <label class="photo-zone" style="cursor:pointer">
+          <input type="file" accept="image/*" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%" onchange="photoUpload(event,'${p.id}')">
           <span style="font-size:15px">📁</span>
-          <span class="photo-zone-txt">Uploader depuis mon PC (cliquez ici)</span>
+          <span class="photo-zone-txt">Uploader depuis mon PC</span>
         </label>
-        <div class="photo-url-row">
-          <input class="photo-url-inp" id="url-${p.id}" type="url" placeholder="https://..." value="${p.current||''}">
-          <button class="photo-apply" onclick="applyPhotoUrl('${p.id}')">Appliquer</button>
+        <div class="photo-url-row" style="margin-top:7px">
+          <input class="photo-url-inp" id="url-${p.id}" type="url" placeholder="https://... coller une URL" value="${p.current||''}">
+          <button class="photo-apply" onclick="applyPhotoUrl('${p.id}')">✓ Appliquer</button>
         </div>
       </div>
-    </div>`;
-  }).join('');
+    </div>`).join('');
 }
 
 function photoUpload(e, photoId){
@@ -2150,34 +2100,25 @@ function applyPhotoUrl(photoId){
 }
 
 function applyPhoto(photoId, url){
-  // Met à jour la preview dans l'admin
-  const prev = document.getElementById('prev-'+photoId);
-  if(prev){ prev.src=url; prev.style.display='block'; }
-
-  // Trouve la config de ce photo
-  const p = SITE_PHOTOS.find(p=>p.id===photoId);
+  const p = SITE_PHOTOS.find(x=>x.id===photoId);
   if(!p) return;
-
-  // Met à jour toutes les images avec le bon alt sur la page
-  document.querySelectorAll('img[alt="'+p.altTarget+'"]').forEach(img=>{
-    img.src = url;
-  });
-
-  // Pour hero-main: aussi mettre à jour le fond du hero
+  p.current = url;
+  // Image sur le site
+  const img = document.getElementById(p.imgId);
+  if(img) img.src = url;
+  // Fond hero
   if(photoId==='hero-main'){
-    const heroDiv = document.querySelector('.hero');
-    if(heroDiv){
-      const bgDiv = heroDiv.querySelector('div[style*="background-image"]');
-      if(bgDiv) bgDiv.style.backgroundImage = "url('"+url+"')";
-    }
+    const bg = document.querySelector('.hero div[style*="background-image"]');
+    if(bg) bg.style.backgroundImage="url('"+url+"')";
   }
-
-  // Mettre à jour CL_PHOTOS si c'est une card catalogue
-  const catMap = {'svc-pneus':'Pneus','svc-jantes':'Jantes','svc-freinage':'Freinage','svc-services':'Services'};
-  if(catMap[photoId]){ CL_PHOTOS[catMap[photoId]] = url; clRender(); }
-
-  // Stocker dans SITE_PHOTOS
-  if(p) p.current = url;
+  // Catalogue cards
+  const cat = {svc_pneus:'Pneus','svc-pneus':'Pneus','svc-jantes':'Jantes','svc-freinage':'Freinage','svc-services':'Services'};
+  if(cat[photoId]){CL_PHOTOS[cat[photoId]]=url; clRender();}
+  // Preview admin
+  const pv=document.getElementById('prev-'+photoId);
+  if(pv){pv.src=url;pv.style.display='block';}
+  const ph=document.getElementById('prevph-'+photoId);
+  if(ph) ph.style.display='none';
 }
 
 
