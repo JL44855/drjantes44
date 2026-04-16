@@ -2054,13 +2054,13 @@ function renderSitePhotos(){
       <div style="flex:1;min-width:0">
         <div class="photo-label">${p.label}</div>
         <div class="photo-desc" style="margin-bottom:8px">${p.desc}</div>
-        <label class="photo-zone" style="cursor:pointer">
-          <input type="file" accept="image/*" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%" onchange="photoUpload(event,'${p.id}')">
-          <span style="font-size:15px">📁</span>
-          <span class="photo-zone-txt">Uploader depuis mon PC</span>
-        </label>
-        <div class="photo-url-row" style="margin-top:7px">
-          <input class="photo-url-inp" id="url-${p.id}" type="url" placeholder="https://... coller une URL" value="${p.current||''}">
+        <div style="position:relative;border:1px dashed var(--b2);border-radius:5px;padding:10px 12px;background:var(--s2);display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:7px;overflow:hidden" onclick="document.getElementById('fup-${p.id}').click()">
+          <input type="file" id="fup-${p.id}" accept="image/*" style="display:none" onchange="photoUpload(event,'${p.id}')">
+          <span style="font-size:16px">📁</span>
+          <span style="font-size:12px;color:var(--mu)">Uploader depuis mon PC</span>
+        </div>
+        <div class="photo-url-row">
+          <input class="photo-url-inp" id="url-${p.id}" type="url" placeholder="https://... coller une URL image" value="${p.current||''}">
           <button class="photo-apply" onclick="applyPhotoUrl('${p.id}')">✓ Appliquer</button>
         </div>
       </div>
@@ -2074,14 +2074,9 @@ function photoUpload(e, photoId){
   reader.onload = ev => {
     const url = ev.target.result;
     applyPhoto(photoId, url);
-    const urlInp = document.getElementById('url-'+photoId);
-    if(urlInp) urlInp.value = '(image uploadée)';
-    // Rafraîchir preview
-    const prev = document.getElementById('prev-'+photoId);
-    if(prev){ prev.src=url; prev.style.display='block'; }
-    const ph = document.getElementById('prevph-'+photoId);
-    if(ph) ph.style.display='none';
-    toast('✓ Photo "'+file.name+'" appliquée !', 'tg');
+    const inp = document.getElementById('url-'+photoId);
+    if(inp) inp.value = '('+file.name+')';
+    toast('✓ "'+file.name+'" appliquée !', 'tg');
   };
   reader.readAsDataURL(file);
   e.target.value = '';
