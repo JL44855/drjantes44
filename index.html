@@ -893,20 +893,133 @@ tbody tr:hover td{background:var(--s2)}
 
   <div class="cpage" id="cp-devis">
     <div class="ccontent">
-      <div class="cttl">Devis gratuit</div><div class="csub">Estimez votre intervention instantanément</div>
-      <div style="max-width:600px">
+      <div class="cttl">Demande de devis</div>
+      <div class="csub">Remplissez le formulaire — nous vous recontactons rapidement</div>
+
+      <div style="max-width:640px">
         <div class="fpanel">
-          <div class="fg"><label>Votre nom *</label><input id="dvn" placeholder="Nom Prénom"></div>
-          <div class="fg"><label>Véhicule</label><input id="dvv" placeholder="ex: Renault Clio 3 2008"></div>
-          <div style="font-size:10px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px;margin-top:3px">Prestations souhaitées</div>
-          <div id="dv-prods" style="margin-bottom:11px"></div>
-          <div class="tbox" id="dv-tbox" style="display:none;margin-bottom:11px"><span>Total estimé TTC</span><strong id="dv-total">0€</strong></div>
-          <button class="bigbtn" onclick="submitDevis()">Envoyer ma demande →</button>
-          <div id="dv-ok" style="display:none;margin-top:11px" class="confirmbox"><div style="font-size:24px;margin-bottom:5px">📄</div><h4>Devis envoyé !</h4><p id="dv-ok-txt"></p></div>
+
+          <!-- Infos client -->
+          <div style="font-size:10px;font-weight:700;color:var(--r);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">👤 Vos coordonnées</div>
+          <div class="fgrid">
+            <div class="fg"><label>Nom complet *</label><input id="dvn" placeholder="ex: Jean Dupont"></div>
+            <div class="fg"><label>Téléphone *</label><input id="dvphone" type="tel" placeholder="ex: 06 12 34 56 78"></div>
+          </div>
+          <div class="fg"><label>Email</label><input id="dvemail" type="email" placeholder="ex: jean@email.com"></div>
+
+          <!-- Véhicule -->
+          <div style="font-size:10px;font-weight:700;color:var(--r);text-transform:uppercase;letter-spacing:1px;margin:16px 0 12px">🚗 Votre véhicule</div>
+          <div class="fgrid">
+            <div class="fg">
+              <label>Marque *</label>
+              <select id="dv-marque" onchange="dvUpdateModeles()">
+                <option value="">-- Choisir une marque --</option>
+                <option>Renault</option><option>Peugeot</option><option>Citroën</option>
+                <option>Volkswagen</option><option>BMW</option><option>Mercedes</option>
+                <option>Audi</option><option>Toyota</option><option>Ford</option>
+                <option>Opel</option><option>Nissan</option><option>Hyundai</option>
+                <option>Kia</option><option>Seat</option><option>Skoda</option>
+                <option>Dacia</option><option>Autre marque</option>
+              </select>
+            </div>
+            <div class="fg">
+              <label>Modèle *</label>
+              <select id="dv-modele" onchange="dvUpdateDims()">
+                <option value="">-- Choisir d'abord une marque --</option>
+              </select>
+            </div>
+          </div>
+          <div class="fgrid">
+            <div class="fg">
+              <label>Année</label>
+              <input id="dv-annee" placeholder="ex: 2018" oninput="dvSyncVeh()">
+            </div>
+            <div class="fg" id="dv-dim-wrap" style="display:none">
+              <label>Taille pneu (sélectionner)</label>
+              <select id="dv-dim-sel" onchange="dvDimSelect()">
+                <option value="">-- Choisir une taille --</option>
+              </select>
+            </div>
+          </div>
+          <div class="fg">
+            <label>Dimension pneu <span style="color:var(--mu);font-weight:400">(vérifier ou saisir manuellement)</span></label>
+            <input id="dvdim" placeholder="ex: 185/65 R15">
+          </div>
+          <div class="fg">
+            <label>Marque & modèle complet</label>
+            <input id="dvv" placeholder="ex: Renault Clio 3 2008 — renseigné auto">
+          </div>
+
+          <!-- Service -->
+          <div style="font-size:10px;font-weight:700;color:var(--r);text-transform:uppercase;letter-spacing:1px;margin:16px 0 12px">🔧 Service souhaité</div>
+          <div class="fg">
+            <label>Type de prestation *</label>
+            <select id="dvsvc">
+              <option value="">-- Choisir une prestation --</option>
+              <option>Montage pneus</option>
+              <option>Équilibrage</option>
+              <option>Montage + Équilibrage</option>
+              <option>Rénovation jante</option>
+              <option>Changement jantes</option>
+              <option>Freinage (plaquettes)</option>
+              <option>Freinage (disques + plaquettes)</option>
+              <option>Recharge climatisation</option>
+              <option>Permutation pneus</option>
+              <option>Diagnostic</option>
+              <option>Autre</option>
+            </select>
+          </div>
+
+          <!-- Date & heure souhaitées -->
+          <div style="font-size:10px;font-weight:700;color:var(--r);text-transform:uppercase;letter-spacing:1px;margin:16px 0 12px">📅 Date & heure souhaitées</div>
+          <div class="fgrid">
+            <div class="fg"><label>Date souhaitée</label><input id="dvdate" type="date"></div>
+            <div class="fg"><label>Heure souhaitée</label>
+              <select id="dvheure">
+                <option value="">-- Choisir --</option>
+                <option>08:00</option><option>08:30</option><option>09:00</option><option>09:30</option>
+                <option>10:00</option><option>10:30</option><option>11:00</option><option>11:30</option>
+                <option>12:00</option><option>13:00</option><option>13:30</option><option>14:00</option>
+                <option>14:30</option><option>15:00</option><option>15:30</option><option>16:00</option>
+                <option>16:30</option><option>17:00</option><option>17:30</option><option>18:00</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Notes -->
+          <div style="font-size:10px;font-weight:700;color:var(--r);text-transform:uppercase;letter-spacing:1px;margin:16px 0 12px">📝 Informations complémentaires</div>
+          <div class="fg"><label>Notes / Précisions</label><textarea id="dvnotes" style="height:80px" placeholder="Décrivez votre besoin, état du véhicule, urgence..."></textarea></div>
+
+          <!-- Photo optionnelle -->
+          <div style="font-size:10px;font-weight:700;color:var(--r);text-transform:uppercase;letter-spacing:1px;margin:16px 0 12px">📷 Photo (optionnel)</div>
+          <div style="border:1px dashed var(--b2);border-radius:6px;padding:14px;background:var(--s2);margin-bottom:6px">
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <button onclick="document.getElementById('dvphoto').click()" style="background:var(--s3);border:1px solid var(--b2);border-radius:5px;color:var(--t2);font-size:12px;padding:8px 14px;cursor:pointer;display:flex;align-items:center;gap:6px">
+                <span>📁</span> Choisir une photo
+              </button>
+              <input type="file" id="dvphoto" accept="image/*" style="display:none" onchange="dvPhotoPreview(event)">
+              <span id="dv-photo-name" style="font-size:12px;color:var(--mu)">Aucune photo sélectionnée</span>
+            </div>
+            <div id="dv-photo-preview" style="display:none;margin-top:10px">
+              <img id="dv-photo-img" style="max-width:200px;max-height:120px;border-radius:5px;border:1px solid var(--b2)" alt="aperçu">
+            </div>
+          </div>
+          <div style="font-size:11px;color:var(--mu);margin-bottom:16px">Photo de votre véhicule, pneu, jante ou du problème constaté</div>
+
+          <button class="bigbtn" onclick="submitDevisNew()">📄 Envoyer ma demande →</button>
+
+          <div id="dv-ok" style="display:none;margin-top:14px" class="confirmbox">
+            <div style="font-size:28px;margin-bottom:6px">✅</div>
+            <h4>Demande envoyée !</h4>
+            <p id="dv-ok-txt"></p>
+            <p style="font-size:12px;color:var(--mu);margin-top:6px">Nous vous recontactons très rapidement au <strong style="color:var(--t2)">07 66 35 05 39</strong></p>
+          </div>
+
         </div>
       </div>
     </div>
   </div>
+
 
 </div>
 
@@ -1735,7 +1848,7 @@ function checkPin(){
 }
 
 // ════ CLIENT ════
-function initClient(){renderCCrens();renderCDvForm();renderGallery();document.getElementById('h-nprods').textContent=prods.filter(p=>p.statut==='Actif').length;initCatalogue();}
+function initClient(){renderCCrens();renderGallery();document.getElementById('h-nprods').textContent=prods.filter(p=>p.statut==='Actif').length;initCatalogue();}
 function cPage(id,el){
   document.querySelectorAll('.cpage').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.ctab').forEach(t=>t.classList.remove('on'));
@@ -1841,16 +1954,8 @@ function renderCCrens(){
       <span class="tag ${h.on?'tg':'tr'}">${h.on?'Ouvert':'Fermé'}</span>
     </div>`).join('');
 }
-function renderCDvForm(){
-  const el=document.getElementById('dv-prods');if(!el)return;
-  el.innerHTML=prods.filter(p=>p.statut==='Actif'&&p.prix>0).map(p=>`<div class="dv-row"><span class="ico">${p.emoji||'📦'}</span><span class="nm">${p.nom}</span><span class="pr">${p.prix}€ ${p.unite}</span><input type="number" min="0" value="0" onchange="updCDvTotal()"></div>`).join('');
-}
-function updCDvTotal(){
-  const ps=prods.filter(p=>p.statut==='Actif'&&p.prix>0);let t=0;
-  document.querySelectorAll('#dv-prods input[type=number]').forEach((inp,i)=>{t+=(ps[i]?.prix||0)*parseInt(inp.value||0);});
-  document.getElementById('dv-tbox').style.display=t>0?'flex':'none';
-  document.getElementById('dv-total').textContent=t+'€';
-}
+
+
 function submitRdv(){
   const n=document.getElementById('cn').value.trim(),
         s=document.getElementById('cs').value,
@@ -1900,46 +2005,7 @@ function submitRdv(){
       toast('Rendez-vous enregistré localement','ta');
     });
 }
-function submitDevis(){
-  const n=document.getElementById('dvn').value.trim();
-  if(!n){toast('Votre nom est requis','ta');return;}
-  const veh=document.getElementById('dvv').value;
-  const ps=prods.filter(p=>p.statut==='Actif'&&p.prix>0);
-  let t=0; const lignes=[];
-  document.querySelectorAll('#dv-prods input[type=number]').forEach((inp,i)=>{
-    const qty=parseInt(inp.value||0);
-    if(qty>0&&ps[i]){t+=ps[i].prix*qty; lignes.push(ps[i].nom+' x'+qty+' = '+ps[i].prix*qty+'€');}
-  });
-  if(!t){toast('Sélectionnez au moins une prestation','ta');return;}
-  dvCtr++;
-  const now=new Date();
-  const ref='DRJ-0'+dvCtr;
-  dvis.push({ref,client:n,veh,date:now.toISOString().split('T')[0],montant:t,statut:'En attente'});
 
-  // Envoyer par email
-  const formData = new FormData();
-  formData.append('_subject', '📄 Nouveau devis DR JANTES — '+n+' — '+t+'€');
-  formData.append('Référence', ref);
-  formData.append('Client', n);
-  formData.append('Véhicule', veh||'Non renseigné');
-  formData.append('Prestations', lignes.join(', '));
-  formData.append('Total estimé', t+'€ TTC');
-  formData.append('Date demande', now.toLocaleDateString('fr-FR'));
-
-  fetch('https://formspree.io/f/mlgabdza', {method:'POST', body:formData, headers:{'Accept':'application/json'}})
-    .then(r=>{
-      document.getElementById('dv-ok-txt').textContent='Réf. '+ref+' — Montant estimé : '+t+'€.';
-      document.getElementById('dv-ok').style.display='block';
-      document.querySelectorAll('#dv-prods input[type=number]').forEach(inp=>inp.value=0);
-      updCDvTotal();
-      toast(r.ok?'✅ Devis '+ref+' envoyé !':'Devis enregistré (email non configuré)', r.ok?'tg':'ta');
-    })
-    .catch(()=>{
-      document.getElementById('dv-ok-txt').textContent='Réf. '+ref+' — Montant estimé : '+t+'€.';
-      document.getElementById('dv-ok').style.display='block';
-      toast('Devis enregistré localement','ta');
-    });
-}
 
 // ════ GALLERY ════
 // Default placeholder images per category
@@ -2044,7 +2110,7 @@ function saveProd(){
   if(!nom||!cat){toast('Nom et catégorie requis','ta');return;}
   const p={id:eProdIdx>=0?prods[eProdIdx].id:Date.now(),ref:eProdIdx>=0?prods[eProdIdx].ref:'PRD-'+String(prods.length+1).padStart(3,'0'),nom,cat,prix:parseFloat(document.getElementById('mp-p').value)||0,unite:document.getElementById('mp-u').value,stock:parseInt(document.getElementById('mp-s').value)||0,seuil:parseInt(document.getElementById('mp-sl').value)||5,emoji:document.getElementById('mp-e').value||'📦',statut:document.getElementById('mp-st').value,desc:document.getElementById('mp-d').value};
   if(eProdIdx>=0)prods[eProdIdx]=p;else prods.push(p);
-  cm('m-prod');renderProds(document.getElementById('p-filter').value);renderStock();renderDash();popDvProd();renderCDvForm();initCatalogue();initCatalogue();
+  cm('m-prod');renderProds(document.getElementById('p-filter').value);renderStock();renderDash();popDvProd();initCatalogue();initCatalogue();
   toast(eProdIdx>=0?'Produit modifié !':'Produit ajouté !','tg');
 }
 function delProd(i){if(!confirm('Supprimer ce produit ?'))return;prods.splice(i,1);renderProds(document.getElementById('p-filter').value);renderStock();renderDash();toast('Produit supprimé','tr');}
@@ -2111,7 +2177,7 @@ function saveHoraires(){hors.forEach((h,i)=>{h.o=document.getElementById('ho-'+i
 
 // ════ TARIFS ════
 function renderTarifs(){const tb=document.getElementById('tarifs-tbody');if(!tb)return;tb.innerHTML=prods.map((p,i)=>`<tr><td style="font-size:10px;color:var(--mu)">${p.ref}</td><td><div style="display:flex;align-items:center;gap:7px"><span style="font-size:14px">${p.emoji||'📦'}</span><div><div style="color:#fff;font-size:12px;font-weight:500">${p.nom}</div><div style="font-size:10px;color:var(--mu)">${p.desc||''}</div></div></div></td><td><span class="tag tgr">${p.cat}</span></td><td><input class="tarif-inp" type="number" min="0" value="${p.prix}" id="tp-${i}"></td><td style="color:var(--mu)">${p.unite}</td></tr>`).join('');}
-function saveTarifs(){let n=0;prods.forEach((p,i)=>{const el=document.getElementById('tp-'+i);if(el){const v=parseFloat(el.value)||0;if(v!==p.prix){p.prix=v;n++;}}});popDvProd();renderCDvForm();renderDash();toast(n>0?`${n} tarif(s) mis à jour !`:'Aucune modification','tg');
+function saveTarifs(){let n=0;prods.forEach((p,i)=>{const el=document.getElementById('tp-'+i);if(el){const v=parseFloat(el.value)||0;if(v!==p.prix){p.prix=v;n++;}}});popDvProd();renderDash();toast(n>0?`${n} tarif(s) mis à jour !`:'Aucune modification','tg');
   if(n>0) initCatalogue();}
 
 // ════ PIN ════
@@ -2763,6 +2829,377 @@ function spApply(pid,url){
 }
 
 function renderSitePhotos(){/* HTML statique, rien à rendre */}
+
+
+// ════ PREVIEW PHOTO DEVIS ════
+function dvPhotoPreview(e){
+  var file = e.target.files[0];
+  if(!file) return;
+  document.getElementById('dv-photo-name').textContent = file.name;
+  var reader = new FileReader();
+  reader.onload = function(ev){
+    document.getElementById('dv-photo-img').src = ev.target.result;
+    document.getElementById('dv-photo-preview').style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+// ════ SUBMIT DEVIS COMPLET ════
+function submitDevisNew(){
+  var nom    = (document.getElementById('dvn').value||'').trim();
+  var phone  = (document.getElementById('dvphone').value||'').trim();
+  var email  = (document.getElementById('dvemail').value||'').trim();
+  var marque = (document.getElementById('dv-marque').value||'').trim();
+  var modele = (document.getElementById('dv-modele').value||'').trim();
+  var annee  = (document.getElementById('dv-annee').value||'').trim();
+  var veh    = (document.getElementById('dvv').value||[marque,modele,annee].filter(Boolean).join(' ')).trim();
+  var dim    = (document.getElementById('dvdim').value||'').trim();
+  var svc    = (document.getElementById('dvsvc').value||'').trim();
+  var date   = (document.getElementById('dvdate').value||'').trim();
+  var heure  = (document.getElementById('dvheure').value||'').trim();
+  var notes  = (document.getElementById('dvnotes').value||'').trim();
+  var photo  = document.getElementById('dvphoto').files[0];
+
+  if(!nom)  { toast('Votre nom est requis','ta'); return; }
+  if(!phone){ toast('Votre téléphone est requis','ta'); return; }
+  if(!svc)  { toast('Choisissez une prestation','ta'); return; }
+
+  var dateF = date ? date.split('-').reverse().join('/') : 'Non précisée';
+
+  var formData = new FormData();
+  formData.append('_subject', '📄 Nouveau devis DR JANTES — ' + nom);
+  formData.append('Nom',         nom);
+  formData.append('Téléphone',   phone || 'Non renseigné');
+  formData.append('Email',       email || 'Non renseigné');
+  formData.append('Marque',      marque|| 'Non renseignée');
+  formData.append('Modèle',      modele|| 'Non renseigné');
+  formData.append('Année',       annee || 'Non précisée');
+  formData.append('Véhicule',    veh   || 'Non renseigné');
+  formData.append('Dimension pneu', dim || 'Non précisée');
+  formData.append('Prestation',  svc);
+  formData.append('Date souhaitée', dateF);
+  formData.append('Heure souhaitée', heure || 'Non précisée');
+  formData.append('Notes',       notes || 'Aucune');
+  if(photo) formData.append('Photo', photo, photo.name);
+
+  fetch('https://formspree.io/f/mlgabdza', {
+    method: 'POST',
+    body: formData,
+    headers: { 'Accept': 'application/json' }
+  })
+  .then(function(r){
+    var ok = document.getElementById('dv-ok');
+    var txt = document.getElementById('dv-ok-txt');
+    if(ok) ok.style.display = 'block';
+    if(txt) txt.textContent = nom + ' — ' + svc + ' — ' + dateF;
+    if(r.ok){
+      toast('✅ Demande envoyée ! Vous serez recontacté rapidement.','tg');
+    } else {
+      toast('Demande enregistrée (vérifiez votre connexion)','ta');
+    }
+    // Reset
+    ['dvn','dvphone','dvemail','dvv','dvdim','dvnotes','dv-annee'].forEach(function(id){
+      var el=document.getElementById(id); if(el) el.value='';
+    });
+    document.getElementById('dvsvc').value='';
+    document.getElementById('dv-marque').value='';
+    document.getElementById('dv-modele').innerHTML='<option>-- Choisir d\'abord une marque --</option>';
+    document.getElementById('dv-dim-wrap').style.display='none';
+    document.getElementById('dvdate').value='';
+    document.getElementById('dvheure').value='';
+    document.getElementById('dvphoto').value='';
+    document.getElementById('dv-photo-name').textContent='Aucune photo sélectionnée';
+    document.getElementById('dv-photo-preview').style.display='none';
+  })
+  .catch(function(){
+    var ok=document.getElementById('dv-ok');
+    if(ok) ok.style.display='block';
+    toast('Demande enregistrée localement','ta');
+  });
+}
+
+
+const CAR_DB = {
+  'Renault': {
+    'Clio 2': ['155/65 R14','165/65 R14','175/65 R14','185/60 R15'],
+    'Clio 3': ['185/60 R15','185/55 R16','195/45 R16','195/50 R16'],
+    'Clio 4': ['185/65 R15','185/60 R15','185/55 R16','195/45 R17'],
+    'Clio 5': ['185/65 R15','195/55 R16','205/45 R17'],
+    'Megane 2': ['195/65 R15','205/55 R16','215/45 R17'],
+    'Megane 3': ['195/65 R15','205/55 R16','215/45 R17','225/40 R18'],
+    'Megane 4': ['205/55 R16','215/45 R17','225/40 R18'],
+    'Laguna 2': ['205/55 R16','215/55 R16','225/45 R17'],
+    'Laguna 3': ['215/55 R16','215/50 R17','225/45 R17','235/45 R17'],
+    'Scenic 2': ['205/55 R16','215/55 R16'],
+    'Scenic 3': ['205/60 R16','215/55 R17'],
+    'Captur 1': ['185/65 R15','195/55 R16','205/45 R17'],
+    'Captur 2': ['195/55 R16','205/45 R17','215/40 R18'],
+    'Kadjar': ['215/55 R17','225/45 R18','235/45 R18'],
+    'Talisman': ['215/55 R17','225/50 R17','235/45 R18'],
+    'Zoe': ['185/65 R15','195/50 R16','205/45 R17'],
+    'Twingo 2': ['155/65 R14','165/60 R14','175/55 R15'],
+    'Twingo 3': ['165/65 R15','185/55 R15','185/50 R16'],
+    'Kangoo': ['185/65 R15','195/65 R15','205/65 R15C'],
+    'Trafic': ['205/65 R16C','215/65 R16C','225/55 R17'],
+    'Master': ['215/65 R16C','225/65 R16C','235/65 R16C'],
+    'Autre modèle': [],
+  },
+  'Peugeot': {
+    '106': ['155/65 R14','165/65 R14','175/60 R14'],
+    '206': ['175/65 R14','185/60 R15','185/55 R15'],
+    '207': ['185/65 R15','195/55 R15','195/55 R16'],
+    '208 1': ['185/65 R15','195/55 R16','205/45 R17'],
+    '208 2': ['195/55 R16','205/45 R17','215/40 R18'],
+    '306': ['185/60 R15','195/60 R15','195/55 R15'],
+    '307': ['195/65 R15','205/55 R16','215/45 R17'],
+    '308 1': ['205/55 R16','215/45 R17','225/45 R17'],
+    '308 2': ['205/55 R16','215/45 R17','225/40 R18'],
+    '3008 1': ['215/60 R17','225/55 R17','235/50 R18'],
+    '3008 2': ['215/55 R17','235/50 R18','235/45 R19'],
+    '5008': ['215/60 R17','235/50 R18','235/45 R19'],
+    '406': ['195/65 R15','205/55 R16','215/55 R16'],
+    '407': ['205/55 R16','225/50 R17','235/45 R18'],
+    '508 1': ['215/55 R17','225/50 R17','245/40 R18'],
+    '508 2': ['225/50 R17','235/45 R18','245/40 R18'],
+    '2008 1': ['195/65 R15','205/55 R16','215/45 R17'],
+    '2008 2': ['205/55 R16','215/45 R17','225/40 R18'],
+    'Partner': ['185/65 R15','195/65 R15','205/65 R15C'],
+    'Boxer': ['215/65 R16C','225/65 R16C','235/65 R16C'],
+    'Autre modèle': [],
+  },
+  'Citroën': {
+    'C1': ['155/65 R14','165/65 R14','175/60 R15'],
+    'C2': ['165/65 R14','185/60 R15','195/45 R16'],
+    'C3 1': ['175/65 R14','185/60 R15','185/55 R15'],
+    'C3 2': ['185/65 R15','195/55 R16','205/45 R17'],
+    'C3 3': ['185/65 R15','195/55 R16','205/45 R17'],
+    'C4 1': ['195/65 R15','205/55 R16','215/45 R17'],
+    'C4 2': ['205/55 R16','215/45 R17','225/40 R18'],
+    'C4 Picasso': ['205/55 R16','215/55 R16','225/45 R17'],
+    'C4 Cactus': ['195/60 R16','205/50 R17'],
+    'C5 1': ['205/55 R16','215/55 R16','225/55 R16'],
+    'C5 2': ['215/55 R17','225/50 R17','235/45 R18'],
+    'C5 Aircross': ['215/60 R17','225/55 R18','235/50 R18'],
+    'C3 Aircross': ['195/65 R15','205/60 R16','215/50 R17'],
+    'Berlingo': ['185/65 R15','195/65 R15','205/55 R16'],
+    'Jumpy': ['205/65 R16C','215/65 R16C'],
+    'Jumper': ['215/65 R16C','225/65 R16C'],
+    'Autre modèle': [],
+  },
+  'Volkswagen': {
+    'Polo 5': ['185/60 R15','195/50 R15','195/55 R16'],
+    'Polo 6': ['195/55 R16','205/45 R17','215/40 R18'],
+    'Golf 5': ['195/65 R15','205/55 R16','225/45 R17'],
+    'Golf 6': ['195/65 R15','205/55 R16','225/45 R17'],
+    'Golf 7': ['205/55 R16','225/45 R17','225/40 R18'],
+    'Golf 8': ['205/55 R16','225/45 R17','225/40 R18'],
+    'Passat B7': ['205/55 R16','215/55 R17','225/45 R18'],
+    'Passat B8': ['215/55 R17','225/50 R17','235/45 R18'],
+    'Tiguan 1': ['215/65 R16','215/55 R17','235/45 R18'],
+    'Tiguan 2': ['215/55 R17','235/50 R18','235/45 R19'],
+    'T-Roc': ['205/55 R17','215/50 R18','235/45 R19'],
+    'Touareg': ['235/60 R18','255/50 R19','265/45 R20'],
+    'Touran': ['205/55 R16','215/55 R16','225/45 R17'],
+    'Sharan': ['215/55 R16','225/45 R17','235/45 R18'],
+    'Caddy': ['195/65 R15','205/65 R15C','215/60 R17'],
+    'Transporter T5': ['215/65 R16C','235/50 R18'],
+    'Transporter T6': ['215/65 R16C','235/50 R18'],
+    'Autre modèle': [],
+  },
+  'BMW': {
+    'Série 1 E87': ['195/55 R16','205/50 R17','225/45 R17'],
+    'Série 1 F20': ['195/55 R16','205/50 R17','225/45 R17'],
+    'Série 1 F40': ['205/55 R16','205/50 R17','225/40 R18'],
+    'Série 3 E90': ['205/55 R16','225/45 R17','225/40 R18'],
+    'Série 3 F30': ['205/55 R16','225/45 R17','245/40 R18'],
+    'Série 3 G20': ['225/45 R18','245/40 R18','255/35 R19'],
+    'Série 5 F10': ['225/55 R17','245/45 R18','245/40 R19'],
+    'Série 5 G30': ['225/55 R17','245/45 R18','255/40 R19'],
+    'X1 F48': ['205/60 R16','225/50 R17','225/45 R18'],
+    'X3 F25': ['225/55 R17','245/45 R18','255/45 R19'],
+    'X5 E70': ['255/55 R18','275/40 R20'],
+    'X5 F15': ['255/50 R19','275/40 R20'],
+    'Autre modèle': [],
+  },
+  'Mercedes': {
+    'Classe A W168': ['185/55 R15','195/50 R15','195/45 R16'],
+    'Classe A W176': ['195/60 R16','205/55 R16','225/45 R17'],
+    'Classe A W177': ['205/55 R16','225/45 R17','235/40 R18'],
+    'Classe B W245': ['195/60 R16','205/55 R16'],
+    'Classe B W246': ['195/60 R16','205/55 R16','225/45 R17'],
+    'Classe C W203': ['195/65 R15','205/55 R16','225/45 R17'],
+    'Classe C W204': ['205/55 R16','225/45 R17','245/40 R18'],
+    'Classe C W205': ['205/55 R16','225/45 R17','245/40 R18'],
+    'Classe E W212': ['225/55 R17','245/45 R18','255/35 R19'],
+    'GLA': ['215/55 R17','225/50 R18','235/45 R19'],
+    'GLC': ['235/55 R18','255/45 R19','265/40 R20'],
+    'Vito': ['215/65 R16C','235/50 R18'],
+    'Sprinter': ['215/65 R16C','225/65 R16C','235/65 R16C'],
+    'Autre modèle': [],
+  },
+  'Audi': {
+    'A1 8X': ['185/60 R15','195/55 R16','205/45 R17'],
+    'A1 GB': ['195/55 R16','205/45 R17','215/40 R18'],
+    'A3 8P': ['195/65 R15','205/55 R16','225/45 R17'],
+    'A3 8V': ['205/55 R16','225/45 R17','225/40 R18'],
+    'A4 B8': ['205/55 R16','225/50 R17','245/40 R18'],
+    'A4 B9': ['215/55 R16','225/50 R17','245/40 R18'],
+    'A6 C7': ['225/55 R17','245/45 R18','255/35 R19'],
+    'Q2': ['205/60 R16','215/50 R17','225/45 R18'],
+    'Q3 8U': ['215/55 R17','235/50 R18'],
+    'Q5 8R': ['225/55 R17','255/45 R19'],
+    'Autre modèle': [],
+  },
+  'Toyota': {
+    'Aygo': ['165/65 R14','175/55 R15'],
+    'Yaris 2': ['175/65 R14','185/60 R15','185/55 R16'],
+    'Yaris 3': ['185/60 R15','185/55 R16','195/50 R16'],
+    'Yaris 4': ['185/65 R15','195/55 R16','205/45 R17'],
+    'Corolla E12': ['185/65 R15','195/55 R16','205/50 R17'],
+    'Corolla E21': ['205/55 R16','215/45 R17','225/40 R18'],
+    'RAV4 4': ['225/65 R17','235/55 R18','235/50 R18'],
+    'Auris': ['195/65 R15','205/55 R16','215/45 R17'],
+    'Autre modèle': [],
+  },
+  'Ford': {
+    'Fiesta 6': ['175/65 R14','185/60 R15','195/50 R15'],
+    'Fiesta 7': ['185/60 R15','195/50 R15','205/45 R16'],
+    'Focus 2': ['195/65 R15','205/55 R16','215/45 R17'],
+    'Focus 3': ['195/65 R15','205/55 R16','225/45 R17'],
+    'Focus 4': ['215/55 R16','225/45 R17','235/40 R18'],
+    'Mondeo 4': ['205/55 R16','215/55 R17','225/45 R18'],
+    'Kuga 1': ['215/65 R16','235/50 R18'],
+    'Kuga 2': ['215/55 R17','235/50 R18','235/45 R19'],
+    'Puma': ['195/55 R17','215/45 R18'],
+    'Transit Custom': ['215/65 R16C','235/50 R18'],
+    'Autre modèle': [],
+  },
+  'Opel': {
+    'Corsa D': ['175/65 R14','185/60 R15','195/55 R16'],
+    'Corsa E': ['185/65 R15','195/55 R16','205/45 R17'],
+    'Astra H': ['195/65 R15','205/55 R16','215/45 R17'],
+    'Astra J': ['195/65 R15','205/55 R16','215/45 R17'],
+    'Astra K': ['205/55 R16','215/50 R17','225/40 R18'],
+    'Insignia A': ['215/55 R16','225/50 R17','245/45 R18'],
+    'Mokka': ['215/55 R18','215/65 R16'],
+    'Crossland': ['195/65 R15','205/55 R16','215/50 R17'],
+    'Vivaro': ['195/65 R16C','215/65 R16C'],
+    'Autre modèle': [],
+  },
+  'Nissan': {
+    'Micra K12': ['155/65 R14','165/65 R14','175/60 R15'],
+    'Micra K13': ['175/65 R15','185/60 R15','185/55 R16'],
+    'Juke': ['195/60 R16','205/55 R17','215/50 R17'],
+    'Qashqai 1': ['215/65 R16','225/55 R17','235/45 R18'],
+    'Qashqai 2': ['215/60 R17','225/55 R17','235/45 R18'],
+    'X-Trail': ['225/65 R17','235/55 R18'],
+    'Autre modèle': [],
+  },
+  'Hyundai': {
+    'i10': ['165/65 R14','175/55 R15','185/55 R15'],
+    'i20': ['185/65 R15','195/55 R16','205/45 R17'],
+    'i30': ['195/65 R15','205/55 R16','225/45 R17'],
+    'Tucson 1': ['215/65 R16','225/55 R17','235/50 R18'],
+    'Tucson 2': ['215/60 R17','235/50 R18','235/45 R19'],
+    'Kona': ['195/60 R16','215/55 R17','215/50 R18'],
+    'Autre modèle': [],
+  },
+  'Kia': {
+    'Picanto': ['165/65 R14','175/55 R15','185/55 R15'],
+    'Rio 3': ['185/65 R15','195/55 R16','205/45 R17'],
+    'Ceed 2': ['195/65 R15','205/55 R16','225/45 R17'],
+    'Sportage 3': ['215/65 R16','225/55 R17','235/50 R18'],
+    'Sportage 4': ['215/60 R17','235/50 R18','235/45 R19'],
+    'Stonic': ['195/60 R16','215/55 R17'],
+    'Autre modèle': [],
+  },
+  'Seat': {
+    'Ibiza 4': ['185/60 R15','195/55 R16','205/45 R17'],
+    'Ibiza 5': ['195/55 R16','205/45 R17','215/40 R18'],
+    'Leon 2': ['195/65 R15','205/55 R16','225/45 R17'],
+    'Leon 3': ['205/55 R16','225/45 R17','225/40 R18'],
+    'Ateca': ['215/55 R17','235/50 R18','235/45 R19'],
+    'Arona': ['195/65 R15','205/55 R16','215/45 R17'],
+    'Autre modèle': [],
+  },
+  'Skoda': {
+    'Fabia 2': ['185/60 R15','195/55 R16','205/45 R17'],
+    'Fabia 3': ['185/65 R15','195/55 R16','205/45 R17'],
+    'Octavia 2': ['195/65 R15','205/55 R16','225/45 R17'],
+    'Octavia 3': ['205/55 R16','225/45 R17','225/40 R18'],
+    'Superb 3': ['215/55 R17','225/50 R17','245/40 R18'],
+    'Karoq': ['215/55 R17','235/50 R18'],
+    'Kodiaq': ['225/60 R17','235/55 R18','235/50 R19'],
+    'Autre modèle': [],
+  },
+  'Dacia': {
+    'Sandero 2': ['185/65 R15','195/55 R16'],
+    'Sandero 3': ['185/65 R15','195/55 R16','205/45 R17'],
+    'Logan 2': ['185/65 R15','195/55 R16'],
+    'Duster 1': ['215/65 R16','215/60 R17'],
+    'Duster 2': ['215/65 R16','215/60 R17','215/55 R18'],
+    'Lodgy': ['185/65 R15','195/55 R16'],
+    'Dokker': ['185/65 R15','195/65 R15C'],
+    'Autre modèle': [],
+  },
+  'Autre marque': { 'Autre modèle': [] },
+};
+
+
+// Auto-remplir champ véhicule texte
+function dvSyncVeh(){
+  var m = document.getElementById('dv-marque').value;
+  var mo = document.getElementById('dv-modele').value;
+  var a = document.getElementById('dv-annee').value;
+  var veh = [m,mo,a].filter(Boolean).join(' ');
+  var el = document.getElementById('dvv');
+  if(el) el.value = veh;
+}
+function dvUpdateModeles(){
+  dvSyncVeh();
+  var marque = document.getElementById('dv-marque').value;
+  var sel = document.getElementById('dv-modele');
+  sel.innerHTML = '<option value="">-- Choisir un modèle --</option>';
+  if(!marque || !CAR_DB[marque]) return;
+  Object.keys(CAR_DB[marque]).forEach(function(m){
+    var opt = document.createElement('option');
+    opt.value = m; opt.textContent = m;
+    sel.appendChild(opt);
+  });
+  document.getElementById('dv-dim-wrap').style.display = 'none';
+  document.getElementById('dvdim').value = '';
+}
+
+function dvUpdateDims(){
+  dvSyncVeh();
+  var marque = document.getElementById('dv-marque').value;
+  var modele = document.getElementById('dv-modele').value;
+  var wrap = document.getElementById('dv-dim-wrap');
+  var sel  = document.getElementById('dv-dim-sel');
+  var inp  = document.getElementById('dvdim');
+  if(!marque || !modele || !CAR_DB[marque] || !CAR_DB[marque][modele]){
+    wrap.style.display = 'none'; return;
+  }
+  var dims = CAR_DB[marque][modele];
+  inp.value = '';
+  if(dims.length === 0){
+    // Modèle inconnu → saisie libre
+    wrap.style.display = 'none';
+    return;
+  }
+  sel.innerHTML = '<option value="">-- Choisir une taille --</option>';
+  dims.forEach(function(d){
+    var opt = document.createElement('option');
+    opt.value = d; opt.textContent = d;
+    sel.appendChild(opt);
+  });
+  wrap.style.display = 'block';
+}
+
+function dvDimSelect(){
+  var val = document.getElementById('dv-dim-sel').value;
+  if(val) document.getElementById('dvdim').value = val;
+}
 
 // ════ START ════
 initClient();
