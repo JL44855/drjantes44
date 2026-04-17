@@ -1190,7 +1190,7 @@ tbody tr:hover td{background:var(--s2)}
               <div style="font-size:11px;color:var(--mu);line-height:1.6">
                 1. Va sur <a href="https://formspree.io" target="_blank" style="color:var(--g1)">formspree.io</a> → Créer un compte avec <strong style="color:var(--t2)">drjantes44@gmail.com</strong><br>
                 2. Crée un formulaire → copie l'ID (ex: <code style="color:var(--am)">xyzwabcd</code>)<br>
-                3. Dans le fichier HTML, remplace <code style="color:var(--am)">FORMSPREE_ID</code> par ton ID (2 fois)<br>
+                3. Dans le fichier HTML, remplace <code style="color:var(--am)">mlgabdza</code> par ton ID (2 fois)<br>
                 4. Les RDV et devis arrivent directement dans ta boîte mail !
               </div>
             </div>
@@ -1879,7 +1879,7 @@ function submitRdv(){
   formData.append('Heure', h);
   formData.append('Notes', note||'Aucune');
 
-  fetch('https://formspree.io/f/FORMSPREE_ID', {method:'POST', body:formData, headers:{'Accept':'application/json'}})
+  fetch('https://formspree.io/f/mlgabdza', {method:'POST', body:formData, headers:{'Accept':'application/json'}})
     .then(r=>{
       if(r.ok){
         document.getElementById('rdv-ok-txt').textContent=n+' — '+s+' — '+d.split('-').reverse().join('/')+' à '+h;
@@ -1926,7 +1926,7 @@ function submitDevis(){
   formData.append('Total estimé', t+'€ TTC');
   formData.append('Date demande', now.toLocaleDateString('fr-FR'));
 
-  fetch('https://formspree.io/f/FORMSPREE_ID', {method:'POST', body:formData, headers:{'Accept':'application/json'}})
+  fetch('https://formspree.io/f/mlgabdza', {method:'POST', body:formData, headers:{'Accept':'application/json'}})
     .then(r=>{
       document.getElementById('dv-ok-txt').textContent='Réf. '+ref+' — Montant estimé : '+t+'€.';
       document.getElementById('dv-ok').style.display='block';
