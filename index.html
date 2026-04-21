@@ -8,7 +8,7 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --r:#c0392b;--r2:#962d22;--r3:#7a1a10;
+  --r:#c0392b;--r2:#962d22;--r3:#7a1a10;a
   --dk:#060606;--md:#0e0e0e;--s1:#141414;--s2:#1a1a1a;--s3:#222;
   --b1:#1e1e1e;--b2:#2a2a2a;--b3:#363636;
   --t1:#f2f2f2;--t2:#b8b8b8;--mu:#5a5a5a;--mu2:#3e3e3e;
@@ -772,7 +772,7 @@ tbody tr:hover td{background:var(--s2)}
               <div class="pm-infobar">
                 <div class="pm-infobar-item">✅ <strong>Montage + Équilibrage inclus</strong></div>
                 <div class="pm-infobar-item">📍 <strong id="cl-addr3">18 Rue de Tourneuve, 44700 Orvault</strong></div>
-                <div class="pm-infobar-item">📞 <a href="tel:0766350539" style="color:var(--am);font-weight:700;text-decoration:none"><span id="cl-tel3">07 66 35 05 39</span></a></div>
+                <div class="pm-infobar-item">📞 <a href="tel:0766350539" id="cl-tel-link" style="color:var(--am);font-weight:700;text-decoration:none"><span id="cl-tel3">07 66 35 05 39</span></a></div>
                 
               </div>
 
@@ -3167,9 +3167,79 @@ function fbSetStatut(ouvert,message){fbSave('statut',{ouvert:ouvert,message:mess
 function fbListen(){if(!fbReady)return;fbDb.ref('produits').on('value',function(snap){var d=snap.val();if(d&&Array.isArray(d)){prods=d;if(typeof initCatalogue==='function')initCatalogue();}});fbDb.ref('horaires').on('value',function(snap){var d=snap.val();if(d&&Array.isArray(d)){hors=d;if(typeof renderCCrens==='function')renderCCrens();}});fbDb.ref('rdvs').on('value',function(snap){var d=snap.val();if(!d)return;var arr=Array.isArray(d)?d:Object.values(d);var isNew=arr.length>rdvs.length;rdvs=arr;if(typeof renderRdvs==='function')renderRdvs();if(typeof renderDash==='function')renderDash();if(isNew)toast('Nouveau RDV !','tb');saveAll();});fbDb.ref('devis').on('value',function(snap){var d=snap.val();if(!d)return;var arr=Array.isArray(d)?d:Object.values(d);var isNew=arr.length>dvis.length;dvis=arr;if(typeof renderDvis==='function')renderDvis();if(typeof renderDash==='function')renderDash();if(isNew)toast('Nouveau devis !','tb');saveAll();});fbDb.ref('statut').on('value',function(snap){var d=snap.val();if(d)applyStatut(d);});fbDb.ref('atelier').on('value',function(snap){var d=snap.val();if(d)applyAtelierData(d);});}
 function applyStatut(s){var el=document.getElementById('statut-magasin');if(!el)return;el.textContent=s.ouvert?'Ouvert':'Ferme';el.style.color=s.ouvert?'var(--g1)':'var(--r)';el.style.display='inline-block';if(s.message){var msg=document.getElementById('statut-message');if(msg){msg.textContent=s.message;msg.style.display=s.message?'':'none';}}}
 function applyAtelierData(a){if(a.tel){['cl-tel','cl-tel2','cl-tel3'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=a.tel;});var tl=document.getElementById('cl-tel-link');if(tl)tl.href='tel:'+a.tel.replace(/\s/g,'');}if(a.addr){['cl-addr','cl-addr2','cl-addr3'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=a.addr;});}}
+
+// ════ PERSISTANCE ════
+const LS_KEY='drjantes_v1';
+function saveAll(){try{localStorage.setItem('drjantes_logo',JSON.stringify(LOGO_DATA));var d={prods:prods,medias:medias,hors:hors,crens:crens,rdvs:rdvs,dvis:dvis,dvCtr:dvCtr,mIdN:mIdN,PIN:PIN};localStorage.setItem(LS_KEY,JSON.stringify(d));}catch(e){}}
+function loadAll(){try{var raw=localStorage.getItem(LS_KEY);if(!raw)return false;var d=JSON.parse(raw);if(d.prods&&d.prods.length)prods=d.prods;if(d.medias&&d.medias.length)medias=d.medias;if(d.hors&&d.hors.length)hors=d.hors;if(d.crens&&d.crens.length)crens=d.crens;if(d.rdvs&&d.rdvs.length)rdvs=d.rdvs;if(d.dvis&&d.dvis.length)dvis=d.dvis;if(d.dvCtr)dvCtr=d.dvCtr;if(d.mIdN)mIdN=d.mIdN;if(d.PIN)PIN=d.PIN;return true;}catch(e){return false;}}
+function clearAll(){if(confirm('Reinitialiser ?')){localStorage.removeItem(LS_KEY);localStorage.removeItem('drjantes_logo');location.reload();}}
+
+
+function spUpload(e,pid){var file=e.target.files[0];if(!file)return;var r=new FileReader();r.onload=function(ev){spApply(pid,ev.target.result);var inp=document.getElementById('url-'+pid);if(inp)inp.value=file.name;toast('Photo mise a jour !','tg');};r.readAsDataURL(file);e.target.value='';}
+function spApplyUrl(pid){var inp=document.getElementById('url-'+pid);if(!inp||!inp.value.trim()){toast('Entrez une URL','ta');return;}spApply(pid,inp.value.trim());toast('Photo mise a jour !','tg');}
+function spApply(pid,url){
+  var p=SITE_PHOTOS.find(function(x){return x.id===pid;});
+  if(!p)return;
+  p.current=url;
+  // Mettre à jour la preview admin
+  var prev=document.getElementById('prev-'+pid);if(prev)prev.src=url;
+  // Mettre à jour l'image sur le site client
+  var imgId=p.imgId||('img-'+pid);
+  var img=document.getElementById(imgId);if(img)img.src=url;
+  // Hero background
+  if(pid==='hero-main'){var bg=document.querySelector('.hero div[style*="background-image"]');if(bg)bg.style.backgroundImage="url('"+url+"')";}
+  // Cards catalogue
+  var cat={'svc-pneus':'Pneus','svc-jantes':'Jantes','svc-freinage':'Freinage','svc-services':'Services'};
+  if(cat[pid]&&typeof CL_PHOTOS!=='undefined'){CL_PHOTOS[cat[pid]]=url;if(typeof clRender==='function')clRender();}
+  // Images dans les cards NOS SERVICES
+  var svcImg=document.getElementById('img-'+pid);if(svcImg)svcImg.src=url;
+  var whyImg=document.getElementById('img-'+pid);if(whyImg)whyImg.src=url;
+  setTimeout(saveAll,200);
+  toast('Photo mise a jour !','tg');
+}
+
+// ════ CATALOGUE SETTINGS ════
+function renderCatSettings(){var s=CAT_SETTINGS;var g=function(id){return document.getElementById(id);};if(g('cs-view'))g('cs-view').value=s.view;if(g('cs-cols'))g('cs-cols').value=s.cols;if(g('cs-imgH'))g('cs-imgH').value=s.imgH;['showImg','showDesc','showPrix','showStock','search','fPrix','fStock','fTri','viewSwitch','devisBt'].forEach(function(k){if(g('cs-'+k))g('cs-'+k).checked=s[k]!==false;});}
+function saveCatSettings(){var g=function(id){return document.getElementById(id);};if(g('cs-view'))CAT_SETTINGS.view=g('cs-view').value;if(g('cs-cols'))CAT_SETTINGS.cols=g('cs-cols').value;['showImg','showDesc','showPrix','showStock','search','fPrix','fStock','fTri','viewSwitch','devisBt'].forEach(function(k){if(g('cs-'+k))CAT_SETTINGS[k]=g('cs-'+k).checked!==false;});}
+function applyCatSettings(){var s=CAT_SETTINGS;catView=s.view;document.querySelectorAll('.cl-view-btn').forEach(function(b){b.classList.remove('on');});var cvb=document.getElementById('cvb-'+s.view);if(cvb)cvb.classList.add('on');if(typeof clRender==='function')clRender();toast('Parametres appliques','tg');}
+
+// ════ RDV ADMIN ════
+var eRdvIdx=-1,eDvIdx=-1;
+function delRDV(idx){if(!confirm('Supprimer ?'))return;rdvs.splice(idx,1);fbSaveAll();if(typeof renderRdvs==='function')renderRdvs();if(typeof renderDash==='function')renderDash();toast('RDV supprime','tr');}
+function saveRDVEdit(){var r=rdvs[eRdvIdx];if(!r)return;r.nom=document.getElementById('erm-nom').value;r.tel=document.getElementById('erm-tel').value;r.email=document.getElementById('erm-email').value;r.veh=document.getElementById('erm-veh').value;r.svc=document.getElementById('erm-svc').value;r.date=document.getElementById('erm-date').value;r.heure=document.getElementById('erm-heure').value;r.note=document.getElementById('erm-note').value;r.statut=document.getElementById('erm-statut').value;cm('m-rdv-edit');fbSaveAll();if(typeof renderRdvs==='function')renderRdvs();toast('RDV mis a jour','tg');}
+function openDvModal(idx){var d=dvis[idx];if(!d)return;eDvIdx=idx;document.getElementById('edm-client').value=d.client||'';document.getElementById('edm-tel').value=d.tel||'';document.getElementById('edm-veh').value=d.veh||'';document.getElementById('edm-dim').value=d.dim||'';document.getElementById('edm-svc').value=d.svc||'';document.getElementById('edm-statut').value=d.statut||'En attente';document.getElementById('m-dv-edit').classList.add('ON');}
+function saveDvEdit(){var d=dvis[eDvIdx];if(!d)return;d.client=document.getElementById('edm-client').value;d.tel=document.getElementById('edm-tel').value;d.veh=document.getElementById('edm-veh').value;d.dim=document.getElementById('edm-dim').value;d.svc=document.getElementById('edm-svc').value;d.statut=document.getElementById('edm-statut').value;cm('m-dv-edit');fbSaveAll();if(typeof renderDvis==='function')renderDvis();toast('Devis mis a jour','tg');}
+function delDv(idx){if(!confirm('Supprimer ?'))return;dvis.splice(idx,1);fbSaveAll();if(typeof renderDvis==='function')renderDvis();toast('Devis supprime','tr');}
+
+// ════ STOCK RAPIDE ════
+function quickStockInit(){var sel=document.getElementById('quick-prod-sel');if(!sel)return;sel.innerHTML=prods.filter(function(p){return p.stock!==999;}).map(function(p){return '<option value="'+prods.indexOf(p)+'">'+p.nom+' ('+p.stock+')</option>';}).join('');quickStockLoad();}
+function quickStockLoad(){var sel=document.getElementById('quick-prod-sel'),inp=document.getElementById('quick-stock-val');if(!sel||!inp)return;var i=parseInt(sel.value);if(!isNaN(i)&&prods[i])inp.value=prods[i].stock;}
+function quickStockChange(d){var inp=document.getElementById('quick-stock-val');if(!inp)return;inp.value=Math.max(0,parseInt(inp.value||0)+d);}
+function quickStockSave(){var sel=document.getElementById('quick-prod-sel'),inp=document.getElementById('quick-stock-val');if(!sel||!inp)return;var i=parseInt(sel.value),v=parseInt(inp.value||0);if(isNaN(i)||!prods[i])return;prods[i].stock=v;fbSaveAll();sel.options[sel.selectedIndex].text=prods[i].nom+' ('+v+')';if(typeof renderStock==='function')renderStock();if(typeof renderDash==='function')renderDash();if(typeof initCatalogue==='function')initCatalogue();toast('Stock: '+v+' unites','tg');}
+
+// ════ LOGO ════
+var LOGO_DATA={src:'',showAdmin:true,showClient:false,showHero:false};
+function logoUpload(e){var file=e.target.files[0];if(!file)return;var r=new FileReader();r.onload=function(ev){LOGO_DATA.src=ev.target.result;var img=document.getElementById('logo-prev-img'),txt=document.getElementById('logo-prev-txt');if(img){img.src=ev.target.result;img.style.display='block';}if(txt)txt.style.display='none';logoApply();toast('Logo importe !','tg');};r.readAsDataURL(file);e.target.value='';}
+function logoRemove(){LOGO_DATA.src='';document.querySelectorAll('.clogo,.sblt,.llogo').forEach(function(el){el.innerHTML='DR<span style="color:var(--r)">.</span>JANTES';});saveAll();toast('Logo retire','tg');}
+function logoApply(){var src=LOGO_DATA.src;LOGO_DATA.showAdmin=document.getElementById('logo-show-admin')&&document.getElementById('logo-show-admin').checked!==false;LOGO_DATA.showClient=document.getElementById('logo-show-client')&&document.getElementById('logo-show-client').checked===true;if(!src){logoRemove();return;}var sblt=document.querySelector('.sblt');if(sblt)sblt.innerHTML=LOGO_DATA.showAdmin?'<img src="'+src+'" style="max-height:42px;max-width:140px;object-fit:contain">':'DR<span style="color:var(--r)">.</span>JANTES';var clogo=document.querySelector('.clogo');if(clogo)clogo.innerHTML=LOGO_DATA.showClient?'<img src="'+src+'" style="max-height:36px;max-width:130px;object-fit:contain;vertical-align:middle">':'DR<span>.</span>JANTES';saveAll();}
+function logoLoadFromStorage(){try{var s=localStorage.getItem('drjantes_logo');if(s){var d=JSON.parse(s);LOGO_DATA=d;if(d.src){var img=document.getElementById('logo-prev-img'),txt=document.getElementById('logo-prev-txt');if(img){img.src=d.src;img.style.display='block';}if(txt)txt.style.display='none';logoApply();}}}catch(e){}}
+
+// ════ DEVIS CLIENT ════
+function dvPhotoPreview(e){var file=e.target.files[0];if(!file)return;document.getElementById('dv-photo-name').textContent=file.name;var r=new FileReader();r.onload=function(ev){document.getElementById('dv-photo-img').src=ev.target.result;document.getElementById('dv-photo-preview').style.display='block';};r.readAsDataURL(file);}
+function dvUpdateModeles(){var marque=document.getElementById('dv-marque').value,sel=document.getElementById('dv-modele');sel.innerHTML='<option value="">-- Modele --</option>';if(!marque||!CAR_DB[marque])return;Object.keys(CAR_DB[marque]).forEach(function(m){var opt=document.createElement('option');opt.value=m;opt.textContent=m;sel.appendChild(opt);});var dw=document.getElementById('dv-dim-wrap');if(dw)dw.style.display='none';var di=document.getElementById('dvdim');if(di)di.value='';}
+function dvUpdateDims(){var marque=document.getElementById('dv-marque').value,modele=document.getElementById('dv-modele').value,wrap=document.getElementById('dv-dim-wrap'),sel=document.getElementById('dv-dim-sel'),inp=document.getElementById('dvdim');if(!marque||!modele||!CAR_DB[marque]||!CAR_DB[marque][modele]){if(wrap)wrap.style.display='none';return;}var dims=CAR_DB[marque][modele];if(inp)inp.value='';if(!dims.length){if(wrap)wrap.style.display='none';return;}if(sel){sel.innerHTML='<option value="">-- Taille --</option>';dims.forEach(function(d){var opt=document.createElement('option');opt.value=d;opt.textContent=d;sel.appendChild(opt);});}if(wrap)wrap.style.display='block';}
+function dvDimSelect(){var val=document.getElementById('dv-dim-sel').value;if(val){var di=document.getElementById('dvdim');if(di)di.value=val;}}
+function dvSyncVeh(){var m=document.getElementById('dv-marque').value,mo=document.getElementById('dv-modele').value,a=document.getElementById('dv-annee').value;var el=document.getElementById('dvv');if(el)el.value=[m,mo,a].filter(Boolean).join(' ');}
+function submitDevisNew(){var nom=(document.getElementById('dvn').value||'').trim(),phone=(document.getElementById('dvphone').value||'').trim(),email=(document.getElementById('dvemail').value||'').trim(),veh=(document.getElementById('dvv').value||'').trim(),dim=(document.getElementById('dvdim').value||'').trim(),svc=(document.getElementById('dvsvc').value||'').trim(),date=(document.getElementById('dvdate').value||'').trim(),heure=(document.getElementById('dvheure').value||'').trim(),notes=(document.getElementById('dvnotes').value||'').trim(),photo=document.getElementById('dvphoto').files[0];if(!nom){toast('Nom requis','ta');return;}if(!phone){toast('Tel requis','ta');return;}if(!svc){toast('Choisissez une prestation','ta');return;}var dateF=date?date.split('-').reverse().join('/'):'';dvCtr++;var ref='DRJ-0'+dvCtr;dvis.push({ref:ref,client:nom,tel:phone,email:email,veh:veh,dim:dim,svc:svc,date:date||new Date().toISOString().split('T')[0],statut:'En attente'});if(fbReady)fbDb.ref('devis').set(dvis);saveAll();var fd=new FormData();fd.append('_subject','Devis DR JANTES - '+nom);fd.append('Nom',nom);fd.append('Tel',phone);fd.append('Email',email||'');fd.append('Vehicule',veh||'');fd.append('Dimension',dim||'');fd.append('Prestation',svc);fd.append('Date',dateF||'');fd.append('Heure',heure||'');fd.append('Notes',notes||'');if(photo)fd.append('Photo',photo,photo.name);fetch('https://formspree.io/f/mlgabdza',{method:'POST',body:fd,headers:{'Accept':'application/json'}}).then(function(r){var ok=document.getElementById('dv-ok');var txt=document.getElementById('dv-ok-txt');if(ok)ok.style.display='block';if(txt)txt.textContent=nom+' - '+svc;toast(r.ok?'Demande envoyee !':'Enregistree','tg');}).catch(function(){var ok=document.getElementById('dv-ok');if(ok)ok.style.display='block';});}
+
+// ════ HEURES RDV ════
+function initHeureRdv(){var el=document.getElementById('ch');if(!el)return;var opts=['<option value="">-- Choisir --</option>'];for(var h=10;h<=20;h++){for(var m of ['00','30']){if(h===20&&m==='30')break;var t=(h<10?'0':'')+h+':'+m;opts.push('<option value="'+t+'">'+t+'</option>');}}el.innerHTML=opts.join('');}
+function filterCreneauxByDate(){var dateEl=document.getElementById('cd'),heureEl=document.getElementById('ch');if(!dateEl||!heureEl)return;if(!dateEl.value){initHeureRdv();return;}var d=new Date(dateEl.value),days=['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'],jour=days[d.getDay()];var horaire=hors.find(function(h){return h.j===jour||h.jour===jour;});if(!horaire||!horaire.on){heureEl.innerHTML='<option value="">Ferme ce jour</option>';return;}var open=horaire.o||'10:00',close=horaire.f||'20:00';var opts=['<option value="">-- Choisir --</option>'];for(var h=10;h<=20;h++){for(var m of ['00','30']){if(h===20&&m==='30')break;var t=(h<10?'0':'')+h+':'+m;if(t>=open&&t<=close)opts.push('<option>'+t+'</option>');}}heureEl.innerHTML=opts.join('');}
+
 // ════ START ════
 loadAll();
 fbInit();
+logoLoadFromStorage();
 initClient();
 </script>
 </body>
