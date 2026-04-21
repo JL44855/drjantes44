@@ -1448,6 +1448,47 @@ tbody tr:hover td{background:var(--s2)}
               <div class="fact"><button class="btn P" onclick="toast('Options enregistrées !','tg')">Enregistrer</button></div>
             </div></div>
           </div>
+              <div class="card" style="margin-top:14px">
+                <div class="ch">
+                  <span class="ct">🖼️ Logo de l'atelier</span>
+                  <span style="font-size:11px;color:var(--mu)">Remplace le texte DR.JANTES</span>
+                </div>
+                <div class="cb">
+                  <!-- Preview logo -->
+                  <div style="display:flex;align-items:center;gap:16px;margin-bottom:14px">
+                    <div id="logo-prev-wrap" style="width:140px;height:80px;background:var(--md);border:1px solid var(--b2);border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden">
+                      <img id="logo-prev-img" src="" alt="" style="max-width:130px;max-height:70px;object-fit:contain;display:none">
+                      <span id="logo-prev-txt" style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;color:#fff">DR<span style="color:var(--r)">.</span>JANTES</span>
+                    </div>
+                    <div style="flex:1">
+                      <div style="font-size:12px;color:var(--t2);margin-bottom:8px">Importez votre logo (PNG, JPG, SVG)</div>
+                      <button onclick="document.getElementById('logo-file-inp').click()" style="background:var(--s2);border:1px dashed var(--b2);border-radius:5px;color:var(--t2);font-size:12px;padding:8px 14px;cursor:pointer;display:flex;align-items:center;gap:7px;margin-bottom:7px">
+                        <span>📁</span> Uploader le logo
+                      </button>
+                      <input type="file" id="logo-file-inp" accept="image/*" style="display:none" onchange="logoUpload(event)">
+                      <button onclick="logoRemove()" style="background:transparent;border:1px solid var(--b2);border-radius:5px;color:var(--mu);font-size:11px;padding:6px 12px;cursor:pointer">✕ Retirer le logo</button>
+                    </div>
+                  </div>
+                  <!-- Où afficher le logo -->
+                  <div style="font-size:10px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Afficher le logo sur :</div>
+                  <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:12px">
+                    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--t2)">
+                      <input type="checkbox" id="logo-show-admin" checked onchange="logoApply()">
+                      <span>Sidebar admin (en haut à gauche)</span>
+                    </label>
+                    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--t2)">
+                      <input type="checkbox" id="logo-show-client" onchange="logoApply()">
+                      <span>Site client (barre de navigation)</span>
+                    </label>
+                    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--t2)">
+                      <input type="checkbox" id="logo-show-hero" onchange="logoApply()">
+                      <span>Page de connexion admin</span>
+                    </label>
+                  </div>
+                  <button class="btn P" onclick="logoApply()" style="width:100%">✓ Appliquer le logo</button>
+                </div>
+              </div>
+
         </div>
 
         <div class="ssec" id="ss-export">
@@ -4915,6 +4956,8 @@ function dvDimSelect(){
 const LS_KEY = 'drjantes_v1';
 
 function saveAll(){
+  // Sauvegarder logo séparément (base64 trop lourd pour JSON principal)
+  try { localStorage.setItem('drjantes_logo', JSON.stringify(LOGO_DATA)); } catch(e){}
   try {
     var data = {
       prods:       prods,
@@ -5552,9 +5595,119 @@ function applyCatSettings(){
   toast('✓ Paramètres catalogue appliqués !','tg');
 }
 
+
+// ════ LOGO DR JANTES ════
+var LOGO_DATA = {src: '', showAdmin: true, showClient: false, showHero: false};
+
+function logoUpload(e){
+  var file = e.target.files[0];
+  if(!file) return;
+  var r = new FileReader();
+  r.onload = function(ev){
+    LOGO_DATA.src = ev.target.result;
+    // Preview
+    var img = document.getElementById('logo-prev-img');
+    var txt = document.getElementById('logo-prev-txt');
+    if(img){ img.src = ev.target.result; img.style.display = 'block'; }
+    if(txt) txt.style.display = 'none';
+    logoApply();
+    toast('Logo importé !','tg');
+  };
+  r.readAsDataURL(file);
+  e.target.value = '';
+}
+
+function logoRemove(){
+  LOGO_DATA.src = '';
+  var img = document.getElementById('logo-prev-img');
+  var txt = document.getElementById('logo-prev-txt');
+  if(img) img.style.display = 'none';
+  if(txt) txt.style.display = '';
+  // Remettre le texte partout
+  document.querySelectorAll('.clogo,.sblt,.llogo').forEach(function(el){
+    el.innerHTML = 'DR<span style="color:var(--r)">.</span>JANTES';
+    el.style.backgroundImage = '';
+  });
+  // Retirer les imgs logo
+  document.querySelectorAll('.logo-img-injected').forEach(function(el){ el.remove(); });
+  fbSaveAll(); saveAll();
+  toast('Logo retiré','tg');
+}
+
+function logoApply(){
+  var src = LOGO_DATA.src;
+  LOGO_DATA.showAdmin  = document.getElementById('logo-show-admin')?.checked !== false;
+  LOGO_DATA.showClient = document.getElementById('logo-show-client')?.checked === true;
+  LOGO_DATA.showHero   = document.getElementById('logo-show-hero')?.checked  === true;
+
+  if(!src){ logoRemove(); return; }
+
+  // Sidebar admin
+  var sblt = document.querySelector('.sblt');
+  if(sblt){
+    if(LOGO_DATA.showAdmin){
+      sblt.innerHTML = '<img src="'+src+'" class="logo-img-injected" style="max-height:42px;max-width:140px;object-fit:contain">';
+    } else {
+      sblt.innerHTML = 'DR<span style="color:var(--r)">.</span>JANTES';
+    }
+  }
+
+  // Site client — barre nav
+  var clogo = document.querySelector('.clogo');
+  if(clogo){
+    if(LOGO_DATA.showClient){
+      clogo.innerHTML = '<img src="'+src+'" class="logo-img-injected" style="max-height:36px;max-width:130px;object-fit:contain;vertical-align:middle">';
+    } else {
+      clogo.innerHTML = 'DR<span>.</span>JANTES';
+    }
+  }
+
+  // Page login
+  var llogo = document.querySelector('.llogo');
+  if(llogo){
+    if(LOGO_DATA.showHero){
+      llogo.innerHTML = '<img src="'+src+'" class="logo-img-injected" style="max-height:60px;max-width:200px;object-fit:contain">';
+    } else {
+      llogo.innerHTML = 'DR<span style="color:var(--r)">.</span>JANTES';
+    }
+  }
+
+  // Sauvegarder
+  if(typeof fbSaveAll === 'function') fbSaveAll();
+  if(typeof saveAll === 'function') saveAll();
+}
+
+function logoLoadFromStorage(){
+  // Charger le logo depuis localStorage au démarrage
+  try {
+    var saved = localStorage.getItem('drjantes_logo');
+    if(saved){
+      var data = JSON.parse(saved);
+      LOGO_DATA = data;
+      // Mettre à jour la preview
+      if(data.src){
+        var img = document.getElementById('logo-prev-img');
+        var txt = document.getElementById('logo-prev-txt');
+        if(img){ img.src = data.src; img.style.display='block'; }
+        if(txt) txt.style.display='none';
+        // Mettre à jour les checkboxes
+        var sa = document.getElementById('logo-show-admin');
+        var sc = document.getElementById('logo-show-client');
+        var sh = document.getElementById('logo-show-hero');
+        if(sa) sa.checked = data.showAdmin;
+        if(sc) sc.checked = data.showClient;
+        if(sh) sh.checked = data.showHero;
+        // Appliquer
+        logoApply();
+      }
+    }
+  } catch(e){}
+}
+
 // ════ START ════
 loadAll();
 fbInit();
+logoLoadFromStorage();
 initClient();
 </script>
 </body>
