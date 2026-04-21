@@ -1208,7 +1208,7 @@ tbody tr:hover td{background:var(--s2)}
                 <span class="ct">Rendez-vous <span style="font-size:11px;color:var(--mu);font-weight:400" id="rdv-flbl"></span></span>
                 <div class="chr"><button class="btn" onclick="selDate=null;renderRdvs()">Tous</button><button class="btn P" onclick="openRDVModal()">+ Nouveau RDV</button></div>
               </div>
-              <div id="rdv-list"></div>
+              <div style="display:flex;gap:6px;margin-bottom:10px"><select id="rdv-filter" onchange="renderRdvs()" style="background:var(--s2);border:1px solid var(--b2);border-radius:4px;color:var(--t1);font-size:12px;padding:5px 8px;outline:none"><option value="">Tous les statuts</option><option>Confirmé</option><option>En cours</option><option>Annulé</option><option>Terminé</option></select><button class="btn SM" onclick="renderRdvs()">↺</button></div><div id="rdv-list"></div>
             </div>
           </div>
           <div>
@@ -1238,7 +1238,17 @@ tbody tr:hover td{background:var(--s2)}
             </div>
             <div class="fact"><button class="btn" onclick="clearDv()">Effacer</button><button class="btn P" onclick="saveDv()">Enregistrer</button></div>
           </div></div>
-          <div class="card"><div class="ch"><span class="ct">Devis enregistrés</span></div><table><thead><tr><th>Réf.</th><th>Client</th><th>Date</th><th>Montant</th><th>Statut</th><th>Action</th></tr></thead><tbody id="dv-tbody"></tbody></table></div>
+          <div class="card"><div class="ch"><span class="ct">Devis reçus</span>
+            <div style="display:flex;gap:6px;align-items:center">
+              <select id="dv-filter" onchange="renderDvis()" style="background:var(--s2);border:1px solid var(--b2);border-radius:4px;color:var(--t1);font-size:12px;padding:5px 8px;outline:none">
+                <option value="">Tous</option>
+                <option>En attente</option><option>Accepté</option><option>Réalisé</option><option>Annulé</option>
+              </select>
+              <button class="btn SM" onclick="renderDvis()">↺</button>
+            </div>
+          </div>
+          <div class="cb"><div id="dv-list"></div></div></div>
+          <div style="display:none"><table><thead><tr><th>Réf.</th><th>Client</th><th>Date</th><th>Montant</th><th>Statut</th><th>Action</th></tr></thead><tbody id="dv-tbody"></tbody></table></div>
         </div>
       </div>
 
@@ -3020,6 +3030,45 @@ function saveAtelier(){
 }
 
 // ════ SAVE HORAIRES → afficher côté client sur la page RDV ════
+
+// ════ HORAIRES ADMIN ════
+function renderHors(){
+  var el = document.getElementById('hor-list');
+  if(!el) return;
+
+  // Générer les options 00:00 → 23:30
+  function timeOpts(selectedVal){
+    var opts = ['<option value="">--</option>'];
+    for(var h=0;h<24;h++){
+      for(var m of ['00','30']){
+        var t = (h<10?'0':'')+h+':'+m;
+        var sel = t===selectedVal?' selected':'';
+        opts.push('<option value="'+t+'"'+sel+'>'+t+'</option>');
+      }
+    }
+    return opts.join('');
+  }
+
+  var html = '';
+  hors.forEach(function(h, i){
+    html += '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--b2)">';
+    // Toggle ouvert/fermé
+    html += '<label class="tog"><input type="checkbox" id="hop-'+i+'"'+(h.on?' checked':'')+'><span class="tog-s"></span></label>';
+    // Nom du jour
+    html += '<div style="font-size:14px;font-weight:700;color:#fff;min-width:90px">'+h.j+'</div>';
+    // Heure ouverture
+    html += '<select id="ho-'+i+'" style="background:var(--s2);border:1px solid var(--b2);border-radius:4px;color:var(--t1);font-size:12px;padding:5px 8px;outline:none;cursor:pointer">';
+    html += timeOpts(h.o||'');
+    html += '</select>';
+    html += '<span style="font-size:12px;color:var(--mu)">→</span>';
+    // Heure fermeture
+    html += '<select id="hf-'+i+'" style="background:var(--s2);border:1px solid var(--b2);border-radius:4px;color:var(--t1);font-size:12px;padding:5px 8px;outline:none;cursor:pointer">';
+    html += timeOpts(h.f||'');
+    html += '</select>';
+    html += '</div>';
+  });
+  el.innerHTML = html;
+}
 function saveHoraires(){
   hors.forEach((h,i)=>{
     const o=document.getElementById('ho-'+i)?.value||'';
@@ -3955,6 +4004,142 @@ function initHeureRdv(){
   }
   el.innerHTML = opts.join('');
 }
+
+// ════ TARIFS ════
+function renderTarifs(){
+  var tb = document.getElementById('tarifs-tbody');
+  if(!tb) return;
+  tb.innerHTML = prods.map(function(p,i){
+    if(p.stock===999) return (
+      '<tr><td>'+p.nom+'</td>'+
+      '<td><input id="tp-'+i+'" type="number" value="'+p.prix+'" min="0" step="1" style="width:80px;background:var(--s3);border:1px solid var(--b2);border-radius:4px;color:var(--t1);padding:4px 6px;outline:none;text-align:right"></td>'+
+      '<td>'+p.cat+'</td></tr>'
+    );
+    return (
+      '<tr><td>'+p.nom+'</td>'+
+      '<td><input id="tp-'+i+'" type="number" value="'+p.prix+'" min="0" step="1" style="width:80px;background:var(--s3);border:1px solid var(--b2);border-radius:4px;color:var(--t1);padding:4px 6px;outline:none;text-align:right"></td>'+
+      '<td>'+p.cat+'</td></tr>'
+    );
+  }).join('');
+}
+
+function saveTarifs(){
+  var n=0;
+  prods.forEach(function(p,i){
+    var el=document.getElementById('tp-'+i);
+    if(el){
+      var v=parseInt(el.value);
+      if(!isNaN(v) && v!==p.prix){ p.prix=v; n++; }
+    }
+  });
+  fbSaveAll();
+  if(n>0) initCatalogue();
+  toast(n>0?n+' tarif(s) sauvegardés !':'Aucune modification','tg');
+}
+
+// ════ APPARENCE ════
+function setColor(hex, el){
+  document.querySelectorAll('.csw').forEach(function(s){ s.classList.remove('on'); });
+  if(el) el.classList.add('on');
+  document.documentElement.style.setProperty('--r', hex);
+  document.documentElement.style.setProperty('--r2', hex);
+  var cc=document.getElementById('cc-inp'); if(cc) cc.value=hex;
+}
+
+function applyA(){
+  var l = document.getElementById('a-logo')?.value  || 'DR JANTES';
+  var s = document.getElementById('a-slogan')?.value || '';
+  var sl = document.getElementById('site-slogan');
+  if(sl) sl.innerHTML = s.replace('\n','<br>').replace('&','<br>');
+  document.querySelectorAll('.clogo,.sblt,.llogo').forEach(function(el){
+    el.innerHTML = l.replace('.','<span style="color:var(--r)">.</span>');
+  });
+  document.title = l;
+  fbSaveAll();
+  toast('✓ Apparence sauvegardée !','tg');
+}
+
+// ════ PIN ════
+function savePin(){
+  var p1 = document.getElementById('np1')?.value || '';
+  var p2 = document.getElementById('np2')?.value || '';
+  if(p1.length!==6 || isNaN(p1)){ toast('Le PIN doit faire 6 chiffres','ta'); return; }
+  if(p1!==p2){ toast('Les deux codes ne correspondent pas','ta'); return; }
+  PIN = p1;
+  fbSave('pin', PIN);
+  saveAll();
+  toast('✓ Code PIN modifié !','tg');
+}
+
+// ════ CATALOGUE SETTINGS ════
+
+function renderCatSettings(){
+  var s = CAT_SETTINGS;
+  var g = function(id){ return document.getElementById(id); };
+  if(g('cs-view'))       g('cs-view').value         = s.view;
+  if(g('cs-cols'))       g('cs-cols').value         = s.cols;
+  if(g('cs-imgH'))       g('cs-imgH').value         = s.imgH;
+  if(g('cs-showImg'))    g('cs-showImg').checked    = s.showImg;
+  if(g('cs-showDesc'))   g('cs-showDesc').checked   = s.showDesc;
+  if(g('cs-showPrix'))   g('cs-showPrix').checked   = s.showPrix;
+  if(g('cs-showStock'))  g('cs-showStock').checked  = s.showStock;
+  if(g('cs-search'))     g('cs-search').checked     = s.search;
+  if(g('cs-fPrix'))      g('cs-fPrix').checked      = s.fPrix;
+  if(g('cs-fStock'))     g('cs-fStock').checked     = s.fStock;
+  if(g('cs-fTri'))       g('cs-fTri').checked       = s.fTri;
+  if(g('cs-viewSwitch')) g('cs-viewSwitch').checked = s.viewSwitch;
+  if(g('cs-devisBt'))    g('cs-devisBt').checked    = s.devisBt;
+  if(g('cs-prixMax'))    g('cs-prixMax').value      = s.prixMax;
+  if(g('cs-prixColor'))  g('cs-prixColor').value    = s.prixColor;
+  ['pneus','jantes','freinage','services','accessoires','promos'].forEach(function(t){
+    var el=g('cs-tab-'+t); if(el) el.checked = s.tabs[t]!==false;
+  });
+}
+
+function saveCatSettings(){
+  var g = function(id){ return document.getElementById(id); };
+  CAT_SETTINGS.view       = g('cs-view')?.value||'grid';
+  CAT_SETTINGS.cols       = g('cs-cols')?.value||'200';
+  CAT_SETTINGS.imgH       = g('cs-imgH')?.value||'100';
+  CAT_SETTINGS.showImg    = g('cs-showImg')?.checked!==false;
+  CAT_SETTINGS.showDesc   = g('cs-showDesc')?.checked!==false;
+  CAT_SETTINGS.showPrix   = g('cs-showPrix')?.checked!==false;
+  CAT_SETTINGS.showStock  = g('cs-showStock')?.checked!==false;
+  CAT_SETTINGS.search     = g('cs-search')?.checked!==false;
+  CAT_SETTINGS.fPrix      = g('cs-fPrix')?.checked!==false;
+  CAT_SETTINGS.fStock     = g('cs-fStock')?.checked!==false;
+  CAT_SETTINGS.fTri       = g('cs-fTri')?.checked!==false;
+  CAT_SETTINGS.viewSwitch = g('cs-viewSwitch')?.checked!==false;
+  CAT_SETTINGS.devisBt    = g('cs-devisBt')?.checked!==false;
+  CAT_SETTINGS.prixMax    = parseInt(g('cs-prixMax')?.value)||500;
+  CAT_SETTINGS.prixColor  = g('cs-prixColor')?.value||'#c0392b';
+  ['pneus','jantes','freinage','services','accessoires','promos'].forEach(function(t){
+    CAT_SETTINGS.tabs[t] = g('cs-tab-'+t)?.checked!==false;
+  });
+}
+
+function applyCatSettings(){
+  var s = CAT_SETTINGS;
+  catView = s.view;
+  document.querySelectorAll('.cl-view-btn').forEach(function(b){ b.classList.remove('on'); });
+  var cvb = document.getElementById('cvb-'+s.view);
+  if(cvb) cvb.classList.add('on');
+  var sw = document.querySelector('.cat-search-wrap');
+  if(sw) sw.style.display = s.search ? '' : 'none';
+  var fpMin = document.getElementById('cl-pmin');
+  var fpMax = document.getElementById('cl-pmax');
+  if(fpMax){ fpMax.max = s.prixMax; _clPmax = s.prixMax; }
+  var lmax = document.getElementById('cl-pmax-lbl');
+  if(lmax) lmax.textContent = s.prixMax+'€+';
+  document.querySelectorAll('#cl-tabs .cl-tab').forEach(function(btn){
+    var m = btn.getAttribute('onclick')?.match(/clTab\('(\w+)'/);
+    if(m) btn.style.display = s.tabs[m[1]]!==false ? '' : 'none';
+  });
+  document.documentElement.style.setProperty('--prix-color', s.prixColor);
+  renderCatTab ? renderCatTab(catTab||'pneus') : clRender();
+  toast('✓ Paramètres catalogue appliqués !','tg');
+}
+
 // ════ START ════
 loadAll();
 fbInit();
