@@ -551,6 +551,10 @@ tbody tr:hover td{background:var(--s2)}
 .pm-empty{text-align:center;padding:40px;color:var(--mu)}
 
 </style>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 </head>
 <body>
 
@@ -577,7 +581,10 @@ tbody tr:hover td{background:var(--s2)}
       <div style="position:relative;z-index:1">
         <div style="font-size:10px;color:var(--r);font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:8px;font-family:'Barlow Condensed',sans-serif">Orvault — Nantes</div>
         <h1 id="site-slogan">Spécialiste<br>Pneus & Jantes</h1>
-        <p><span id="cl-addr">18 Rue de Tourneuve, 44700 Orvault</span> &nbsp;·&nbsp; <span id="cl-tel">07 66 35 05 39</span></p>
+        <p>
+          <span id="statut-magasin" style="display:none;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;padding:2px 10px;border-radius:3px;background:rgba(0,0,0,.3);margin-right:8px"></span>
+          <span id="cl-addr">18 Rue de Tourneuve, 44700 Orvault</span> &nbsp;·&nbsp; <span id="cl-tel">07 66 35 05 39</span></p>
+        <div id="statut-message" style="display:none;font-size:12px;color:var(--am);margin-bottom:8px;padding:6px 12px;background:rgba(212,133,15,.1);border-radius:4px;border-left:3px solid var(--am)"></div>
         <div class="hstats">
           <div class="hstat"><strong>15€</strong><span>Montage dès</span></div>
           <div class="hstat"><strong>50€</strong><span>Réno. jante</span></div>
@@ -1294,6 +1301,33 @@ tbody tr:hover td{background:var(--s2)}
               <div class="fg"><label>Email</label><input id="s-email" value="drjantes44@gmail.com"></div>
               <div class="fg"><label>SIRET</label><input id="s-siret" value="95085944700027"></div>
               <div class="fg s2"><label>Message d'accueil</label><textarea id="s-welcome" style="height:50px">Votre spécialiste pneus et jantes à Orvault. Montage rapide, prix compétitifs.</textarea></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+              <div class="card" style="margin:0">
+                <div class="ch"><span class="ct">Statut magasin</span></div>
+                <div class="cb" style="display:flex;flex-direction:column;gap:8px">
+                  <div style="font-size:12px;color:var(--mu);margin-bottom:4px">Les clients voient ce statut en temps réel</div>
+                  <div style="display:flex;gap:8px">
+                    <button class="btn G" style="flex:1;padding:10px" onclick="fbSetStatut(true,'')">✅ Ouvrir</button>
+                    <button class="btn D" style="flex:1;padding:10px" onclick="fbSetStatut(false,'')">🔴 Fermer</button>
+                  </div>
+                  <input id="statut-msg-inp" placeholder="Message optionnel (ex: Fermé ce samedi)" style="background:var(--s2);border:1px solid var(--b2);border-radius:4px;color:var(--t1);font-size:12px;padding:7px;outline:none;width:100%">
+                  <button class="btn" onclick="fbSetStatut(true,document.getElementById('statut-msg-inp').value)" style="font-size:11px">Appliquer avec message</button>
+                </div>
+              </div>
+              <div class="card" style="margin:0">
+                <div class="ch"><span class="ct">Stock rapide</span></div>
+                <div class="cb">
+                  <div style="font-size:12px;color:var(--mu);margin-bottom:8px">Modifier le stock d'un produit</div>
+                  <select id="quick-prod-sel" style="width:100%;background:var(--s2);border:1px solid var(--b2);border-radius:4px;color:var(--t1);font-size:12px;padding:7px;outline:none;margin-bottom:7px" onchange="quickStockLoad()"></select>
+                  <div style="display:flex;gap:6px;align-items:center">
+                    <button class="btn" style="padding:6px 10px;font-size:16px" onclick="quickStockChange(-1)">−</button>
+                    <input id="quick-stock-val" type="number" min="0" style="flex:1;background:var(--s2);border:1px solid var(--b2);border-radius:4px;color:var(--t1);font-size:14px;font-weight:700;padding:6px;outline:none;text-align:center">
+                    <button class="btn" style="padding:6px 10px;font-size:16px" onclick="quickStockChange(1)">+</button>
+                    <button class="btn P" style="padding:6px 12px" onclick="quickStockSave()">✓</button>
+                  </div>
+                </div>
+              </div>
             </div>
             <div style="padding:9px 12px;background:var(--s2);border-radius:5px;border-left:3px solid var(--g1);font-size:12px;color:var(--mu);margin-bottom:8px;margin-top:4px">
               💡 Ces informations s'affichent sur le site client (hero, footer, page RDV…)
@@ -2052,7 +2086,7 @@ function initAdmin(){
   const now=new Date();calY=now.getFullYear();calM=now.getMonth();
   const days=['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'],mons=['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.'];
   document.getElementById('tbdate').textContent=days[now.getDay()]+' '+now.getDate()+' '+mons[now.getMonth()]+' '+now.getFullYear();
-  renderDash();renderProds('');renderStock();renderCrens();renderCal();renderRdvs();renderDvis();renderHors();renderMGrid();
+  renderDash();quickStockInit();renderProds('');renderStock();renderCrens();renderCal();renderRdvs();renderDvis();renderHors();renderMGrid();
   popDvProd();popRProd();
   // Synchroniser les valeurs des paramètres avec l'état actuel
   const sNom=document.getElementById('s-nom');
@@ -2111,9 +2145,9 @@ function saveProd(){
   const p={id:eProdIdx>=0?prods[eProdIdx].id:Date.now(),ref:eProdIdx>=0?prods[eProdIdx].ref:'PRD-'+String(prods.length+1).padStart(3,'0'),nom,cat,prix:parseFloat(document.getElementById('mp-p').value)||0,unite:document.getElementById('mp-u').value,stock:parseInt(document.getElementById('mp-s').value)||0,seuil:parseInt(document.getElementById('mp-sl').value)||5,emoji:document.getElementById('mp-e').value||'📦',statut:document.getElementById('mp-st').value,desc:document.getElementById('mp-d').value};
   if(eProdIdx>=0)prods[eProdIdx]=p;else prods.push(p);
   cm('m-prod');renderProds(document.getElementById('p-filter').value);renderStock();renderDash();popDvProd();initCatalogue();initCatalogue();
-  toast(eProdIdx>=0?'Produit modifié !':'Produit ajouté !','tg');
+  saveAll();toast(eProdIdx>=0?'Produit modifié !':'Produit ajouté !','tg');
 }
-function delProd(i){if(!confirm('Supprimer ce produit ?'))return;prods.splice(i,1);renderProds(document.getElementById('p-filter').value);renderStock();renderDash();toast('Produit supprimé','tr');}
+function delProd(i){if(!confirm('Supprimer ce produit ?'))return;prods.splice(i,1);renderProds(document.getElementById('p-filter').value);renderStock();renderDash();saveAll();toast('Produit supprimé','tr');}
 
 // ════ STOCK ════
 function renderStock(){
@@ -2137,7 +2171,7 @@ function renderCrens(){
 function cdur(d,f){const[dh,dm]=d.split(':').map(Number),[fh,fm]=f.split(':').map(Number),m=(fh*60+fm)-(dh*60+dm);return m>=60?`${Math.floor(m/60)}h${m%60?String(m%60).padStart(2,'0'):''}`:m+'min';}
 function openCModal(){document.getElementById('m-cren').classList.add('ON');}
 function saveCren(){const j=document.getElementById('mc-j').value,d=document.getElementById('mc-d').value,f=document.getElementById('mc-f').value;if(!j){toast('Sélectionnez un jour','ta');return;}crens.push({id:Date.now(),jour:j,deb:d,fin:f,rec:document.getElementById('mc-r').value});cm('m-cren');renderCrens();toast(`Créneau ${j} ${d}–${f} ajouté !`,'tg');}
-function delCren(id){if(!confirm('Supprimer ?'))return;crens=crens.filter(c=>c.id!==id);renderCrens();toast('Créneau supprimé','tr');}
+function delCren(id){if(!confirm('Supprimer ?'))return;crens=crens.filter(c=>c.id!==id);renderCrens();saveAll();toast('Créneau supprimé','tr');}
 
 // ════ RDV ════
 function renderRdvs(){
@@ -2173,11 +2207,11 @@ function changeDvSt(ref,s){if(!s)return;const d=dvis.find(d=>d.ref===ref);if(d){
 
 // ════ HORAIRES ════
 function renderHors(){document.getElementById('hor-list').innerHTML=hors.map((h,i)=>`<div style="display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid var(--b1)"><div style="font-size:12px;color:var(--t2);width:86px;flex-shrink:0">${h.j}</div><div style="display:flex;align-items:center;gap:6px;flex:1"><input style="background:var(--s2);border:1px solid var(--b2);border-radius:3px;color:var(--t1);font-size:11px;padding:4px 6px;width:72px;outline:none" type="time" id="ho-${i}" value="${h.o}" ${!h.on?'disabled style="opacity:.3"':''}><span style="font-size:10px;color:var(--mu)">–</span><input style="background:var(--s2);border:1px solid var(--b2);border-radius:3px;color:var(--t1);font-size:11px;padding:4px 6px;width:72px;outline:none" type="time" id="hf-${i}" value="${h.f}" ${!h.on?'disabled style="opacity:.3"':''}></div><label class="tog"><input type="checkbox" id="hop-${i}" ${h.on?'checked':''} onchange="hors[${i}].on=this.checked;renderHors()"><span class="tog-s"></span></label><span class="tag ${h.on?'tg':'tr'}" style="min-width:46px;text-align:center">${h.on?'Ouvert':'Fermé'}</span></div>`).join('');}
-function saveHoraires(){hors.forEach((h,i)=>{h.o=document.getElementById('ho-'+i)?.value||'';h.f=document.getElementById('hf-'+i)?.value||'';});renderCCrens();toast('✓ Horaires enregistrés et mis à jour !','tg');}
+function saveHoraires(){hors.forEach((h,i)=>{h.o=document.getElementById('ho-'+i)?.value||'';h.f=document.getElementById('hf-'+i)?.value||'';});renderCCrens();saveAll();toast('✓ Horaires enregistrés !','tg');}
 
 // ════ TARIFS ════
 function renderTarifs(){const tb=document.getElementById('tarifs-tbody');if(!tb)return;tb.innerHTML=prods.map((p,i)=>`<tr><td style="font-size:10px;color:var(--mu)">${p.ref}</td><td><div style="display:flex;align-items:center;gap:7px"><span style="font-size:14px">${p.emoji||'📦'}</span><div><div style="color:#fff;font-size:12px;font-weight:500">${p.nom}</div><div style="font-size:10px;color:var(--mu)">${p.desc||''}</div></div></div></td><td><span class="tag tgr">${p.cat}</span></td><td><input class="tarif-inp" type="number" min="0" value="${p.prix}" id="tp-${i}"></td><td style="color:var(--mu)">${p.unite}</td></tr>`).join('');}
-function saveTarifs(){let n=0;prods.forEach((p,i)=>{const el=document.getElementById('tp-'+i);if(el){const v=parseFloat(el.value)||0;if(v!==p.prix){p.prix=v;n++;}}});popDvProd();renderDash();toast(n>0?`${n} tarif(s) mis à jour !`:'Aucune modification','tg');
+function saveTarifs(){let n=0;prods.forEach((p,i)=>{const el=document.getElementById('tp-'+i);if(el){const v=parseFloat(el.value)||0;if(v!==p.prix){p.prix=v;n++;}}});popDvProd();renderDash();saveAll();toast(n>0?`${n} tarif(s) sauvegardés !`:'Aucune modification','tg');
   if(n>0) initCatalogue();}
 
 // ════ PIN ════
@@ -2209,7 +2243,7 @@ function exportD(type){
   else if(type==='complet'){const save={v:'1.0',date:new Date().toISOString(),prods,crens,rdvs,dvis,hors,medias};data=JSON.stringify(save,null,2);fn='sauvegarde-drjantes.json';mime='application/json;charset=utf-8;';}
   const blob=new Blob([data],{type:mime});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=fn;a.click();URL.revokeObjectURL(url);toast(`"${fn}" téléchargé !`,'tg');
 }
-function importD(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=ev=>{try{if(!file.name.endsWith('.json')){toast('Format JSON requis','ta');return;}const d=JSON.parse(ev.target.result);if(d.prods)prods=d.prods;if(d.rdvs)rdvs=d.rdvs;if(d.dvis)dvis=d.dvis;if(d.crens)crens=d.crens;if(d.hors)hors=d.hors;if(d.medias)medias=d.medias;const res=document.getElementById('imp-res');if(res){res.style.display='block';res.textContent=`✓ Import réussi — ${d.prods?.length||0} produits, ${d.rdvs?.length||0} RDV, ${d.dvis?.length||0} devis.`;}renderDash();renderProds('');renderStock();renderCrens();renderRdvs();renderDvis();renderHors();renderMGrid();toast('Import réussi !','tg');}catch(err){toast('Fichier invalide','tr');}};reader.readAsText(file);e.target.value='';}
+function importD(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=ev=>{try{if(!file.name.endsWith('.json')){toast('Format JSON requis','ta');return;}const d=JSON.parse(ev.target.result);if(d.prods)prods=d.prods;if(d.rdvs)rdvs=d.rdvs;if(d.dvis)dvis=d.dvis;if(d.crens)crens=d.crens;if(d.hors)hors=d.hors;if(d.medias)medias=d.medias;const res=document.getElementById('imp-res');if(res){res.style.display='block';res.textContent=`✓ Import réussi — ${d.prods?.length||0} produits, ${d.rdvs?.length||0} RDV, ${d.dvis?.length||0} devis.`;}renderDash();quickStockInit();renderProds('');renderStock();renderCrens();renderRdvs();renderDvis();renderHors();renderMGrid();toast('Import réussi !','tg');}catch(err){toast('Fichier invalide','tr');}};reader.readAsText(file);e.target.value='';}
 function resetSec(t){const lbl={rdv:'tous les RDV',devis:'tous les devis',medias:'tous les médias'};if(!confirm(`Supprimer ${lbl[t]} ? Action irréversible.`))return;if(t==='rdv'){rdvs=[];renderRdvs();renderCal();renderDash();}else if(t==='devis'){dvis=[];renderDvis();renderDash();}else if(t==='medias'){medias=[];renderMGrid();renderGallery();renderDash();}toast('Données effacées','tr');}
 
 // ════ MEDIA MANAGER ════
@@ -2231,8 +2265,8 @@ function renderMGrid(){
   grid.innerHTML=all.map((m,i)=>{const idx=medias.indexOf(m);let th='';if(m.type==='photo'&&m.url)th=`<img class="mthumb" src="${m.url}" alt="${m.name}">`;else if(m.type==='video'&&m.isYT)th=`<div class="mph"><span style="font-size:26px">▶</span><small>YouTube</small></div>`;else th=`<div class="mph"><span style="font-size:26px">${m.em||'📷'}</span><small>${m.cat||m.type}</small></div>`;return `<div class="mcard">${th}<div class="mbadge mbd ${m.type==='photo'?'ph':'vi'}">${m.type==='photo'?'Photo':'Vidéo'}</div><div class="mvis" style="background:${m.vis?'#2ecc71':'var(--b2)'}"></div><div class="movl"><button class="moa" onclick="openMEdit(${idx})">Modifier</button><button class="moa" onclick="openLB(${idx})">Voir</button><button class="moa" onclick="delMedia(${idx})">Suppr.</button></div><div class="minfo"><div class="mname">${m.name}</div><div class="mmeta"><span>${m.cat||'—'}</span><span style="color:${m.vis?'var(--g1)':'var(--mu)'}">${m.vis?'✓ Visible':'Masqué'}</span></div></div></div>`;}).join('');
 }
 function openMEdit(idx){eMedIdx=idx;const m=medias[idx];document.getElementById('m-med-t').textContent='Modifier : '+m.name;document.getElementById('mm-n').value=m.name;document.getElementById('mm-d').value=m.desc||'';document.getElementById('mm-c').value=m.cat||'';document.getElementById('mm-v').checked=m.vis;const prev=document.getElementById('m-med-prev');if(m.type==='photo'&&m.url)prev.innerHTML=`<img src="${m.url}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:5px">`;else if(m.type==='video'&&m.isYT)prev.innerHTML=`<iframe style="width:100%;height:140px;border-radius:5px" src="${m.url}" frameborder="0" allowfullscreen></iframe>`;else prev.innerHTML=`<div style="font-size:40px;text-align:center">${m.em||'📷'}</div>`;document.getElementById('m-media').classList.add('ON');}
-function saveMediaEdit(){const m=medias[eMedIdx];m.name=document.getElementById('mm-n').value;m.desc=document.getElementById('mm-d').value;m.cat=document.getElementById('mm-c').value;m.vis=document.getElementById('mm-v').checked;cm('m-media');renderMGrid();renderGallery();renderDash();toast('Média mis à jour !','tg');}
-function delMedia(idx){if(!confirm('Supprimer ce média ?'))return;medias.splice(idx,1);renderMGrid();renderGallery();renderDash();toast('Média supprimé','tr');}
+function saveMediaEdit(){const m=medias[eMedIdx];m.name=document.getElementById('mm-n').value;m.desc=document.getElementById('mm-d').value;m.cat=document.getElementById('mm-c').value;m.vis=document.getElementById('mm-v').checked;cm('m-media');renderMGrid();renderGallery();renderDash();saveAll();toast('Média mis à jour !','tg');}
+function delMedia(idx){if(!confirm('Supprimer ce média ?'))return;medias.splice(idx,1);renderMGrid();renderGallery();renderDash();saveAll();toast('Média supprimé','tr');}
 function delMediaCur(){if(eMedIdx<0)return;delMedia(eMedIdx);cm('m-media');}
 
 // ════ MODAL ════
@@ -2770,7 +2804,7 @@ function saveAtelier(){
     }
   });
 
-  toast('✓ Informations mises à jour sur le site !','tg');
+  saveAll();toast('✓ Informations enregistrées et sauvegardées !','tg');
 }
 
 // ════ SAVE HORAIRES → afficher côté client sur la page RDV ════
@@ -2782,7 +2816,7 @@ function saveHoraires(){
     h.o=o; h.f=f; h.on=on!==undefined?on:h.on;
   });
   renderCCrens();
-  toast('✓ Horaires enregistrés et mis à jour !','tg');
+  saveAll();toast('✓ Horaires enregistrés !','tg');
 }
 
 
@@ -2807,7 +2841,7 @@ function spApplyUrl(pid){
   toast('Photo mise à jour !','tg');
 }
 
-function spApply(pid,url){
+function spApply(pid,url){ setTimeout(saveAll,200);
   // Preview admin
   var prev=document.getElementById('prev-'+pid);
   if(prev)prev.src=url;
@@ -3201,7 +3235,315 @@ function dvDimSelect(){
   if(val) document.getElementById('dvdim').value = val;
 }
 
+
+// ════════════════════════════════════════
+// PERSISTANCE localStorage
+// ════════════════════════════════════════
+
+const LS_KEY = 'drjantes_v1';
+
+function saveAll(){
+  try {
+    var data = {
+      prods:       prods,
+      medias:      medias,
+      hors:        hors,
+      crens:       crens,
+      rdvs:        rdvs,
+      dvis:        dvis,
+      dvCtr:       dvCtr,
+      mIdN:        mIdN,
+      PIN:         PIN,
+      atelier: {
+        nom:    document.getElementById('s-nom')?.value   || 'DR JANTES',
+        tel:    document.getElementById('s-tel')?.value   || '07 66 35 05 39',
+        addr:   document.getElementById('s-addr')?.value  || '18 Rue de Tourneuve, 44700 Orvault',
+        email:  document.getElementById('s-email')?.value || 'drjantes44@gmail.com',
+        siret:  document.getElementById('s-siret')?.value || '95085944700027',
+        slogan: document.getElementById('s-welcome')?.value || '',
+      },
+      apparence: {
+        logo:   document.getElementById('a-logo')?.value   || 'DR JANTES',
+        slogan: document.getElementById('a-slogan')?.value || 'Spécialiste\nPneus & Jantes',
+        couleur:document.getElementById('cc-inp')?.value   || '#c0392b',
+      },
+      sitePhotos: SITE_PHOTOS.map(function(p){ return {id:p.id, current:p.current}; }),
+      clPhotos:   Object.assign({}, CL_PHOTOS),
+    };
+    localStorage.setItem(LS_KEY, JSON.stringify(data));
+  } catch(e){ console.warn('Save error:', e); }
+}
+
+function loadAll(){
+  try {
+    var raw = localStorage.getItem(LS_KEY);
+    if(!raw) return false;
+    var data = JSON.parse(raw);
+
+    if(data.prods  && data.prods.length)  prods  = data.prods;
+    if(data.medias && data.medias.length) medias = data.medias;
+    if(data.hors   && data.hors.length)   hors   = data.hors;
+    if(data.crens  && data.crens.length)  crens  = data.crens;
+    if(data.rdvs   && data.rdvs.length)   rdvs   = data.rdvs;
+    if(data.dvis   && data.dvis.length)   dvis   = data.dvis;
+    if(data.dvCtr) dvCtr = data.dvCtr;
+    if(data.mIdN)  mIdN  = data.mIdN;
+    if(data.PIN)   PIN   = data.PIN;
+
+    // Atelier
+    if(data.atelier){
+      var a = data.atelier;
+      // Appliquer sur le site client directement
+      if(a.tel){
+        ['cl-tel','cl-tel2','cl-tel3'].forEach(function(id){
+          var el=document.getElementById(id); if(el) el.textContent=a.tel;
+        });
+        var tl=document.getElementById('cl-tel-link');
+        if(tl) tl.href='tel:'+a.tel.replace(/\s/g,'');
+      }
+      if(a.addr){
+        ['cl-addr','cl-addr2','cl-addr3','cl-addr4'].forEach(function(id){
+          var el=document.getElementById(id);
+          if(el) el.textContent = id==='cl-addr4' ? a.addr.split(',')[0] : a.addr;
+        });
+      }
+    }
+
+    // Apparence
+    if(data.apparence){
+      var ap = data.apparence;
+      if(ap.couleur){
+      document.documentElement.style.setProperty('--r',ap.couleur);
+      var cc=document.getElementById('cc-inp'); if(cc) cc.value=ap.couleur;
+    }
+      if(ap.logo){
+        document.querySelectorAll('.clogo,.sblt,.llogo').forEach(function(el){
+          el.innerHTML = ap.logo.replace('.','<span style="color:var(--r)">.</span>');
+        });
+      }
+      if(ap.slogan){
+        var sl=document.getElementById('site-slogan');
+        if(sl) sl.innerHTML=ap.slogan.replace('\n','<br>');
+      }
+      if(ap.logo) document.title = ap.logo;
+    }
+
+    // Photos du site
+    if(data.sitePhotos){
+      data.sitePhotos.forEach(function(saved){
+        var p = SITE_PHOTOS.find(function(x){ return x.id===saved.id; });
+        if(p && saved.current){
+          p.current = saved.current;
+          var img = document.getElementById(p.imgId);
+          if(img) img.src = saved.current;
+          if(saved.id==='hero-main'){
+            var bg=document.querySelector('.hero div[style*="background-image"]');
+            if(bg) bg.style.backgroundImage="url('"+saved.current+"')";
+          }
+        }
+      });
+    }
+
+    // Photos catalogue
+    if(data.clPhotos){
+      Object.assign(CL_PHOTOS, data.clPhotos);
+    }
+
+    return true;
+  } catch(e){ console.warn('Load error:', e); return false; }
+}
+
+function clearAll(){
+  if(confirm('Réinitialiser toutes les données ? Cette action est irréversible.')){
+    localStorage.removeItem(LS_KEY);
+    location.reload();
+  }
+}
+
+
+// ════════════════════════════════════════════════
+// FIREBASE — Synchronisation temps réel
+// ════════════════════════════════════════════════
+
+const FB_CONFIG = {
+  apiKey:            'AIzaSyBsMaBrBbpEMO-lEpBgq2XjP_k8vkzthZ0',
+  authDomain:        'ajouter-une-application.firebaseapp.com',
+  projectId:         'ajouter-une-application',
+  storageBucket:     'ajouter-une-application.firebasestorage.app',
+  messagingSenderId: '1010089221320',
+  appId:             '1:1010089221320:web:4b5dfdfd106469e04999fd',
+  databaseURL:       'https://ajouter-une-application-default-rtdb.europe-west1.firebasedatabase.app',
+};
+
+let fbApp, fbDb, fbReady = false;
+
+function fbInit(){
+  try {
+    fbApp = firebase.initializeApp(FB_CONFIG);
+    fbDb  = firebase.database();
+    fbReady = true;
+    console.log('Firebase connecté');
+    fbListen(); // écouter les changements en temps réel
+  } catch(e) {
+    console.warn('Firebase non disponible:', e);
+    fbReady = false;
+  }
+}
+
+// ── ÉCRIRE dans Firebase ──
+function fbSave(path, data){
+  if(!fbReady) return;
+  fbDb.ref(path).set(data).catch(function(e){ console.warn('fbSave error:', e); });
+}
+
+// ── LIRE depuis Firebase ──
+function fbLoad(path, callback){
+  if(!fbReady) return;
+  fbDb.ref(path).once('value').then(function(snap){
+    callback(snap.val());
+  }).catch(function(e){ console.warn('fbLoad error:', e); });
+}
+
+// ── ÉCOUTER les changements en temps réel (côté client) ──
+function fbListen(){
+  if(!fbReady) return;
+
+  // Stock produits → mise à jour catalogue client
+  fbDb.ref('produits').on('value', function(snap){
+    var data = snap.val();
+    if(data && Array.isArray(data)){
+      prods = data;
+      initCatalogue();
+      document.getElementById('h-nprods').textContent = prods.filter(function(p){return p.statut==='Actif';}).length;
+    }
+  });
+
+  // Statut magasin → afficher ouvert/fermé
+  fbDb.ref('statut').on('value', function(snap){
+    var data = snap.val();
+    if(data) applyStatut(data);
+  });
+
+  // Horaires → page RDV
+  fbDb.ref('horaires').on('value', function(snap){
+    var data = snap.val();
+    if(data && Array.isArray(data)){
+      hors = data;
+      renderCCrens();
+    }
+  });
+
+  // Infos atelier
+  fbDb.ref('atelier').on('value', function(snap){
+    var data = snap.val();
+    if(data) applyAtelierData(data);
+  });
+}
+
+// ── Appliquer statut ouvert/fermé sur le site client ──
+function applyStatut(s){
+  var el = document.getElementById('statut-magasin');
+  if(!el) return;
+  el.textContent   = s.ouvert ? '✅ Ouvert' : '🔴 Fermé';
+  el.style.color   = s.ouvert ? 'var(--g1)' : 'var(--r)';
+  el.style.display = 'inline-block';
+  if(s.message){
+    var msg = document.getElementById('statut-message');
+    if(msg){ msg.textContent = s.message; msg.style.display = s.message ? '' : 'none'; }
+  }
+}
+
+// ── Appliquer infos atelier ──
+function applyAtelierData(a){
+  if(a.tel){
+    ['cl-tel','cl-tel2','cl-tel3'].forEach(function(id){
+      var el=document.getElementById(id); if(el) el.textContent=a.tel;
+    });
+    var tl=document.getElementById('cl-tel-link');
+    if(tl) tl.href='tel:'+a.tel.replace(/\s/g,'');
+  }
+  if(a.addr){
+    ['cl-addr','cl-addr2','cl-addr3'].forEach(function(id){
+      var el=document.getElementById(id); if(el) el.textContent=a.addr;
+    });
+    var a4=document.getElementById('cl-addr4');
+    if(a4) a4.textContent=a.addr.split(',')[0];
+  }
+}
+
+// ── SAUVEGARDER tout dans Firebase depuis l'admin ──
+function fbSaveAll(){
+  if(!fbReady){ saveAll(); return; } // fallback localStorage
+  fbSave('produits', prods);
+  fbSave('medias',   medias);
+  fbSave('horaires', hors);
+  fbSave('creneaux', crens);
+  fbSave('rdvs',     rdvs);
+  fbSave('devis',    dvis);
+  fbSave('pin',      PIN);
+  // Atelier
+  var at = {
+    nom:   document.getElementById('s-nom')?.value   || '',
+    tel:   document.getElementById('s-tel')?.value   || '',
+    addr:  document.getElementById('s-addr')?.value  || '',
+    email: document.getElementById('s-email')?.value || '',
+  };
+  fbSave('atelier', at);
+  // Aussi sauvegarder en localStorage comme backup
+  saveAll();
+}
+
+// ── Statut magasin depuis l'admin ──
+function fbSetStatut(ouvert, message){
+  fbSave('statut', {ouvert: ouvert, message: message||'', ts: Date.now()});
+  toast(ouvert ? '✅ Magasin marqué OUVERT' : '🔴 Magasin marqué FERMÉ', ouvert?'tg':'tr');
+}
+
+
+// ════ STOCK RAPIDE ════
+function quickStockInit(){
+  var sel = document.getElementById('quick-prod-sel');
+  if(!sel) return;
+  sel.innerHTML = prods.filter(function(p){return p.stock!==999;})
+    .map(function(p){ return '<option value="'+prods.indexOf(p)+'">'+p.nom+' ('+p.stock+')</option>'; })
+    .join('');
+  quickStockLoad();
+}
+
+function quickStockLoad(){
+  var sel = document.getElementById('quick-prod-sel');
+  var inp = document.getElementById('quick-stock-val');
+  if(!sel||!inp) return;
+  var idx = parseInt(sel.value);
+  if(!isNaN(idx) && prods[idx]) inp.value = prods[idx].stock;
+}
+
+function quickStockChange(delta){
+  var inp = document.getElementById('quick-stock-val');
+  if(!inp) return;
+  var v = parseInt(inp.value||0) + delta;
+  inp.value = Math.max(0, v);
+}
+
+function quickStockSave(){
+  var sel = document.getElementById('quick-prod-sel');
+  var inp = document.getElementById('quick-stock-val');
+  if(!sel||!inp) return;
+  var idx = parseInt(sel.value);
+  var val = parseInt(inp.value||0);
+  if(isNaN(idx)||!prods[idx]) return;
+  prods[idx].stock = val;
+  fbSaveAll();
+  // Mettre à jour le select
+  sel.options[sel.selectedIndex].text = prods[idx].nom + ' (' + val + ')';
+  renderStock();
+  renderDash();
+  initCatalogue();
+  toast('Stock "'+prods[idx].nom+'" → '+val+' unités', 'tg');
+}
 // ════ START ════
+loadAll();
+fbInit();
 initClient();
 </script>
 </body>
