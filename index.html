@@ -2679,32 +2679,48 @@ const SITE_PHOTOS = [
 ]
 
 function renderSitePhotos(){
-  const el = document.getElementById('site-photos-list');
+  var el=document.getElementById('site-photos-list');
   if(!el) return;
-  el.innerHTML = SITE_PHOTOS.map(p => {
-    const imgHtml = p.current
-      ? `<img id="prev-${p.id}" class="photo-preview" src="${p.current}" alt="${p.label}" onerror="this.style.display='none';document.getElementById('prevph-${p.id}').style.display='flex'" onload="this.style.display='block';document.getElementById('prevph-${p.id}').style.display='none'">`
-      : '';
-    return `<div class="photo-row">
-      <div>
-        ${imgHtml}
-        <div id="prevph-${p.id}" class="photo-preview-ph" style="${p.current?'display:none':'display:flex'}">🖼️</div>
-      </div>
-      <div style="flex:1;min-width:0">
-        <div class="photo-label">${p.label}</div>
-        <div class="photo-desc">${p.desc}</div>
-        <label class="photo-zone" style="display:flex;align-items:center;gap:8px;cursor:pointer">
-          <input type="file" accept="image/*" style="display:none" onchange="photoUpload(event,'${p.id}')">
-          <span style="font-size:15px">📁</span>
-          <span class="photo-zone-txt">Uploader depuis mon PC (cliquez ici)</span>
-        </label>
-        <div class="photo-url-row">
-          <input class="photo-url-inp" id="url-${p.id}" type="url" placeholder="https://..." value="${p.current||''}">
-          <button class="photo-apply" onclick="applyPhotoUrl('${p.id}')">Appliquer</button>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
+  el.innerHTML='';
+  SITE_PHOTOS.forEach(function(p){
+    // Pour cat-*, utiliser CL_PHOTOS comme source de preview
+    var catMap={'cat-pneus':'Pneus','cat-jantes':'Jantes','cat-freinage':'Freinage','cat-services':'Services','cat-geometrie':'Geometrie'};
+    var previewSrc = p.current && p.current!=='b64-integre' ? p.current : '';
+    if(catMap[p.id] && typeof CL_PHOTOS!=='undefined' && CL_PHOTOS[catMap[p.id]]) previewSrc = CL_PHOTOS[catMap[p.id]];
+    // Pour svc-*, utiliser l'img du DOM
+    if(p.imgId){ var domImg=document.getElementById(p.imgId); if(domImg && domImg.src) previewSrc=domImg.src; if(domImg && domImg.style.backgroundImage) previewSrc=domImg.style.backgroundImage.replace(/url\(["']?([^"')]+)["']?\)/,'$1'); }
+
+    var row=document.createElement('div');
+    row.style.cssText='display:grid;grid-template-columns:150px 1fr;gap:14px;padding:14px 0;border-bottom:1px solid var(--b2);align-items:start';
+
+    var leftDiv=document.createElement('div'); leftDiv.style.position='relative';
+    var prevImg=document.createElement('img');
+    prevImg.id='prev-'+p.id; prevImg.src=previewSrc||''; prevImg.alt=p.label;
+    prevImg.style.cssText='width:150px;height:95px;object-fit:cover;border-radius:6px;border:1px solid var(--b2);display:block';
+    prevImg.onerror=function(){this.style.display='none';};
+    var overlay=document.createElement('div');
+    overlay.style.cssText='position:absolute;inset:0;background:rgba(0,0,0,.5);border-radius:6px;display:flex;align-items:center;justify-content:center;opacity:0;transition:.2s;cursor:pointer';
+    overlay.onmouseover=function(){this.style.opacity=1;}; overlay.onmouseout=function(){this.style.opacity=0;};
+    (function(pid){overlay.onclick=function(){var fi=document.getElementById('fup-'+pid);if(fi)fi.click();};})(p.id);
+    var chgSpan=document.createElement('span'); chgSpan.style.cssText='color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px'; chgSpan.textContent='Changer';
+    overlay.appendChild(chgSpan); leftDiv.appendChild(prevImg); leftDiv.appendChild(overlay);
+
+    var rightDiv=document.createElement('div');
+    var lbl=document.createElement('div'); lbl.style.cssText='font-size:13px;font-weight:700;color:#fff;margin-bottom:2px'; lbl.textContent=p.label;
+    var dsc=document.createElement('div'); dsc.style.cssText='font-size:11px;color:var(--mu);margin-bottom:10px'; dsc.textContent=p.desc;
+    var fileInp=document.createElement('input'); fileInp.type='file'; fileInp.accept='image/*'; fileInp.id='fup-'+p.id; fileInp.style.display='none';
+    (function(pid){fileInp.onchange=function(e){spUpload(e,pid);};})(p.id);
+    var upBtn=document.createElement('button'); upBtn.style.cssText='width:100%;background:var(--s2);border:1px dashed var(--b2);border-radius:5px;color:var(--t2);font-size:12px;padding:8px 10px;cursor:pointer;text-align:left;margin-bottom:7px;display:flex;align-items:center;gap:7px'; upBtn.innerHTML='<span>&#128193;</span><span>Uploader depuis mon PC</span>';
+    (function(pid){upBtn.onclick=function(){document.getElementById('fup-'+pid).click();};})(p.id);
+    var urlRow=document.createElement('div'); urlRow.style.display='flex'; urlRow.style.gap='6px';
+    var urlInp=document.createElement('input'); urlInp.type='text'; urlInp.id='url-'+p.id; urlInp.value=previewSrc&&!previewSrc.startsWith('data:')?previewSrc:''; urlInp.placeholder='https://...'; urlInp.style.cssText='flex:1;background:var(--s3);border:1px solid var(--b2);border-radius:4px;color:var(--t1);font-size:12px;padding:7px 9px;outline:none';
+    var applyBtn=document.createElement('button'); applyBtn.textContent='Appliquer'; applyBtn.style.cssText='background:var(--r);border:none;border-radius:4px;color:#fff;font-size:12px;font-weight:700;padding:7px 13px;cursor:pointer;white-space:nowrap';
+    (function(pid){applyBtn.onclick=function(){spApplyUrl(pid);};})(p.id);
+    urlRow.appendChild(urlInp); urlRow.appendChild(applyBtn);
+    rightDiv.appendChild(lbl); rightDiv.appendChild(dsc); rightDiv.appendChild(fileInp); rightDiv.appendChild(upBtn); rightDiv.appendChild(urlRow);
+    row.appendChild(leftDiv); row.appendChild(rightDiv);
+    el.appendChild(row);
+  });
 }
 
 function photoUpload(e, photoId){
@@ -3309,36 +3325,38 @@ function clearAll(){if(confirm('Reinitialiser ?')){localStorage.removeItem(LS_KE
 function spUpload(e,pid){var file=e.target.files[0];if(!file)return;var r=new FileReader();r.onload=function(ev){spApply(pid,ev.target.result);var inp=document.getElementById('url-'+pid);if(inp)inp.value=file.name;toast('Photo mise a jour !','tg');};r.readAsDataURL(file);e.target.value='';}
 function spApplyUrl(pid){var inp=document.getElementById('url-'+pid);if(!inp||!inp.value.trim()){toast('Entrez une URL','ta');return;}spApply(pid,inp.value.trim());toast('Photo mise a jour !','tg');}
 function spApply(pid,url){
-  var catPhotoMap={'cat-pneus':'Pneus','cat-jantes':'Jantes','cat-freinage':'Freinage','cat-services':'Services','cat-geometrie':'Geometrie','cat-accessoires':'Accessoires'};
-  if(catPhotoMap[pid]){
-    var key=catPhotoMap[pid];
-    if(typeof CL_PHOTOS!=='undefined') CL_PHOTOS[key]=url;
-    var prev=document.getElementById('prev-'+pid); if(prev) prev.src=url;
-    var urlInp=document.getElementById('url-'+pid); if(urlInp) urlInp.value=url.startsWith('data:')? '(photo integree)':url;
+  if(!url) return;
+  // 1. Mettre à jour la preview admin
+  var prev=document.getElementById('prev-'+pid); if(prev) prev.src=url;
+  var urlEl=document.getElementById('url-'+pid); if(urlEl) urlEl.value=url.startsWith('data:')?'(photo integree)':url;
+
+  // 2. Onglets catalogue (cat-pneus → CL_PHOTOS['Pneus'])
+  var catMap={'cat-pneus':'Pneus','cat-jantes':'Jantes','cat-freinage':'Freinage','cat-services':'Services','cat-geometrie':'Geometrie','cat-accessoires':'Accessoires'};
+  if(catMap[pid]){
+    if(typeof CL_PHOTOS!=='undefined') CL_PHOTOS[catMap[pid]]=url;
     if(typeof clRender==='function') clRender();
-    setTimeout(saveAll,200);
-    return;
+    var p2=SITE_PHOTOS.find(function(x){return x.id===pid;}); if(p2) p2.current=url;
+    setTimeout(saveAll,200); return;
   }
-  var p=SITE_PHOTOS.find(function(x){return x.id===pid;});
-  if(!p)return;
-  p.current=url;
-  // Mettre à jour la preview admin
-  var prev=document.getElementById('prev-'+pid);if(prev)prev.src=url;
-  // Mettre à jour l'image sur le site client
-  var imgId=p.imgId||('img-'+pid);
-  var img=document.getElementById(imgId);if(img)img.src=url;
-  // Hero background
+
+  // 3. Mettre à jour SITE_PHOTOS
+  var p=SITE_PHOTOS.find(function(x){return x.id===pid;}); if(!p) return; p.current=url;
+
+  // 4. Mettre à jour l'image dans le DOM client
+  var imgId = p.imgId || ('img-'+pid);
+  var img=document.getElementById(imgId);
+  if(img){
+    if(img.tagName==='IMG') img.src=url;
+    else img.style.backgroundImage="url('"+url+"')";
+  }
+
+  // 5. Hero background
   if(pid==='hero-main'){var bg=document.querySelector('.hero div[style*="background-image"]');if(bg)bg.style.backgroundImage="url('"+url+"')";}
-  // Cards catalogue
-  var cat={'svc-pneus':'Pneus','svc-jantes':'Jantes','svc-freinage':'Freinage','svc-services':'Services'};
-  if(cat[pid]&&typeof CL_PHOTOS!=='undefined'){CL_PHOTOS[cat[pid]]=url;if(typeof clRender==='function')clRender();}
-  // Images dans les cards NOS SERVICES
-  var svcEl=document.getElementById('img-'+pid);
-  if(svcEl){
-    if(svcEl.tagName==='IMG') svcEl.src=url;
-    else svcEl.style.backgroundImage="url('"+url+"')";
-  }
-  var whyImg=document.getElementById('img-'+pid);if(whyImg)whyImg.src=url;
+
+  // 6. Cards catalogue via CL_PHOTOS
+  var svcCat={'svc-pneus':'Pneus','svc-jantes':'Jantes','svc-freinage':'Freinage','svc-services':'Services','svc-geometrie':'Geometrie'};
+  if(svcCat[pid]&&typeof CL_PHOTOS!=='undefined'){CL_PHOTOS[svcCat[pid]]=url;if(typeof clRender==='function')clRender();}
+
   setTimeout(saveAll,200);
   toast('Photo mise a jour !','tg');
 }
