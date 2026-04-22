@@ -3317,8 +3317,68 @@ function applyAtelierData(a){if(a.tel){['cl-tel','cl-tel2','cl-tel3'].forEach(fu
 
 // ════ PERSISTANCE ════
 const LS_KEY='drjantes_v1';
-function saveAll(){try{localStorage.setItem('drjantes_logo',JSON.stringify(LOGO_DATA));var d={prods:prods,medias:medias,hors:hors,crens:crens,rdvs:rdvs,dvis:dvis,dvCtr:dvCtr,mIdN:mIdN,PIN:PIN};localStorage.setItem(LS_KEY,JSON.stringify(d));}catch(e){}}
-function loadAll(){try{var raw=localStorage.getItem(LS_KEY);if(!raw)return false;var d=JSON.parse(raw);if(d.prods&&d.prods.length)prods=d.prods;if(d.medias&&d.medias.length)medias=d.medias;if(d.hors&&d.hors.length)hors=d.hors;if(d.crens&&d.crens.length)crens=d.crens;if(d.rdvs&&d.rdvs.length)rdvs=d.rdvs;if(d.dvis&&d.dvis.length)dvis=d.dvis;if(d.dvCtr)dvCtr=d.dvCtr;if(d.mIdN)mIdN=d.mIdN;if(d.PIN)PIN=d.PIN;return true;}catch(e){return false;}}
+function saveAll(){
+  try{
+    // Sauvegarder logo
+    localStorage.setItem('drjantes_logo', JSON.stringify(LOGO_DATA));
+    // Sauvegarder données admin
+    var d={prods:prods,medias:medias,hors:hors,crens:crens,rdvs:rdvs,dvis:dvis,dvCtr:dvCtr,mIdN:mIdN,PIN:PIN};
+    localStorage.setItem(LS_KEY, JSON.stringify(d));
+    // Sauvegarder photos du site (SITE_PHOTOS + CL_PHOTOS)
+    var photosData = {
+      sitePhotos: SITE_PHOTOS.map(function(p){return {id:p.id, current:p.current};}),
+      clPhotos:   JSON.parse(JSON.stringify(CL_PHOTOS))
+    };
+    localStorage.setItem('drjantes_photos', JSON.stringify(photosData));
+  }catch(e){console.warn('saveAll error',e);}
+}
+function loadAll(){
+  try{
+    // Charger données admin
+    var raw=localStorage.getItem(LS_KEY);
+    if(raw){
+      var d=JSON.parse(raw);
+      if(d.prods&&d.prods.length) prods=d.prods;
+      if(d.medias&&d.medias.length) medias=d.medias;
+      if(d.hors&&d.hors.length) hors=d.hors;
+      if(d.crens&&d.crens.length) crens=d.crens;
+      if(d.rdvs&&d.rdvs.length) rdvs=d.rdvs;
+      if(d.dvis&&d.dvis.length) dvis=d.dvis;
+      if(d.dvCtr) dvCtr=d.dvCtr;
+      if(d.mIdN) mIdN=d.mIdN;
+      if(d.PIN) PIN=d.PIN;
+    }
+    // Charger et appliquer les photos
+    var photosRaw=localStorage.getItem('drjantes_photos');
+    if(photosRaw){
+      var pd=JSON.parse(photosRaw);
+      // Restaurer CL_PHOTOS (onglets catalogue)
+      if(pd.clPhotos) Object.assign(CL_PHOTOS, pd.clPhotos);
+      // Restaurer SITE_PHOTOS + appliquer au DOM
+      if(pd.sitePhotos && Array.isArray(pd.sitePhotos)){
+        pd.sitePhotos.forEach(function(saved){
+          var p=SITE_PHOTOS.find(function(x){return x.id===saved.id;});
+          if(p && saved.current && saved.current!=='b64-integre'){
+            p.current=saved.current;
+            // Appliquer au DOM
+            var imgId = p.imgId || ('img-'+p.id);
+            var el = document.getElementById(imgId);
+            if(el){
+              if(el.tagName==='IMG') el.src=saved.current;
+              else el.style.backgroundImage="url('"+saved.current+"')";
+            }
+            // Hero background
+            if(p.id==='hero-main'){
+              var bg=document.querySelector('.hero div[style*="background-image"]');
+              if(bg) bg.style.backgroundImage="url('"+saved.current+"')";
+            }
+          }
+        });
+      }
+    }
+    return true;
+  }catch(e){console.warn('loadAll error',e);return false;}
+}
 function clearAll(){if(confirm('Reinitialiser ?')){localStorage.removeItem(LS_KEY);localStorage.removeItem('drjantes_logo');location.reload();}}
 
 
