@@ -884,47 +884,183 @@ tbody tr:hover td{background:var(--s2)}
 
   <div class="cpage" id="cp-rdv">
     <div class="ccontent">
-      <div class="cttl">Rendez-vous</div><div class="csub">Réservez en ligne</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:880px">
+      <div class="cttl">Rendez-vous</div>
+      <div class="csub">Réservez en ligne — Confirmation immédiate</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:960px">
+
+        <!-- GAUCHE -->
         <div>
-          <div class="fpanel">
-            <h3>Vos informations</h3>
-            <div class="fg"><label>Nom *</label><input id="cn" placeholder="Votre nom"></div>
-            <div class="fg"><label>Téléphone</label><input id="ct" placeholder="06..."></div>
-            <div class="fg"><label>Email</label><input id="ce" placeholder="votre@email.com"></div>
-            <div class="fg"><label>Véhicule</label><input id="cv" placeholder="ex: Renault Clio 3 2008"></div>
+          <div class="fpanel" style="margin-bottom:14px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+              <div style="width:28px;height:28px;border-radius:50%;background:var(--r);color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center">1</div>
+              <h3 style="margin:0;font-size:15px;color:#fff">Vos informations</h3>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div class="fg"><label>Nom *</label><input id="cn" placeholder="Votre nom complet"></div>
+              <div class="fg"><label>Téléphone *</label><input id="ct" placeholder="06 XX XX XX XX" type="tel"></div>
+            </div>
+            <div class="fg"><label>Email</label><input id="ce" placeholder="votre@email.com" type="email"></div>
+          </div>
+
+          <div class="fpanel" style="margin-bottom:14px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+              <div style="width:28px;height:28px;border-radius:50%;background:var(--r);color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center">2</div>
+              <h3 style="margin:0;font-size:15px;color:#fff">Votre véhicule</h3>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div class="fg"><label>Marque</label>
+                <select id="rdv-marque" onchange="rdvUpdateModeles()">
+                  <option value="">— Marque —</option>
+                  <option>Renault</option><option>Peugeot</option><option>Citroën</option>
+                  <option>Volkswagen</option><option>BMW</option><option>Mercedes</option>
+                  <option>Audi</option><option>Toyota</option><option>Ford</option>
+                  <option>Opel</option><option>Fiat</option><option>Nissan</option>
+                  <option>Hyundai</option><option>Kia</option><option>Dacia</option><option>Autre</option>
+                </select>
+              </div>
+              <div class="fg"><label>Modèle</label><input id="rdv-modele" placeholder="ex: Clio, 308..."></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div class="fg"><label>Année</label><input id="rdv-annee" placeholder="ex: 2019" type="number" min="1990" max="2025"></div>
+              <div class="fg"><label>Immatriculation</label><input id="rdv-immat" placeholder="AA-123-BB" style="text-transform:uppercase"></div>
+            </div>
+            <div class="fg"><label>Kilométrage</label><input id="rdv-km" placeholder="ex: 85000" type="number"></div>
+          </div>
+
+          <div class="fpanel" style="margin-bottom:14px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+              <div style="width:28px;height:28px;border-radius:50%;background:var(--r);color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center">3</div>
+              <h3 style="margin:0;font-size:15px;color:#fff">Prestation souhaitée</h3>
+            </div>
             <div class="fg"><label>Service *</label>
               <select id="cs">
-                <option value="">— Choisir —</option>
-                <option>Montage pneus + équilibrage</option><option>Équilibrage seul</option>
-                <option>Diagnostic (valise)</option><option>Pose plaquettes avant</option>
-                <option>Pose plaquettes arrière</option><option>Changement disque avant</option>
-                <option>Changement disque arrière</option><option>Rénovation jante</option>
+                <option value="">— Choisir une prestation —</option>
+                <optgroup label="Pneus">
+                  <option>Montage pneus + équilibrage</option>
+                  <option>Équilibrage seul</option>
+                  <option>Permutation 4 pneus</option>
+                  <option>Réparation crevaison (champignon)</option>
+                  <option>Contrôle pression + gonflage</option>
+                </optgroup>
+                <optgroup label="Géométrie">
+                  <option>Parallélisme 2 roues</option>
+                  <option>Parallélisme 4 roues (3D)</option>
+                  <option>Réglage train avant</option>
+                  <option>Réglage train arrière</option>
+                  <option>Contrôle géométrie</option>
+                </optgroup>
+                <optgroup label="Jantes">
+                  <option>Rénovation jante</option>
+                  <option>Réparation jante voilée</option>
+                </optgroup>
+                <optgroup label="Freinage">
+                  <option>Pose plaquettes avant</option>
+                  <option>Pose plaquettes arrière</option>
+                  <option>Changement disque avant</option>
+                  <option>Changement disque arrière</option>
+                  <option>Kit freinage complet AV+AR</option>
+                </optgroup>
+                <optgroup label="Services">
+                  <option>Diagnostic électronique (valise)</option>
+                  <option>Recharge climatisation R134A</option>
+                  <option>Recharge climatisation R1234YF</option>
+                  <option>Contrôle visuel général</option>
+                </optgroup>
               </select>
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
-              <div class="fg"><label>Date *</label><input type="date" id="cd"></div>
-              <div class="fg"><label>Heure *</label><select id="ch">
-                <option value="">-- Choisir une heure --</option>
-              </select></div>
+            <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+              <label style="font-size:12px;color:var(--mu);width:100%;margin-bottom:4px">Niveau d'urgence</label>
+              <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:12px;color:var(--t2)"><input type="radio" name="rdv-urgence" value="Normal" checked style="accent-color:var(--r)"> Normal</label>
+              <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:12px;color:var(--t2)"><input type="radio" name="rdv-urgence" value="Urgent" style="accent-color:var(--r)"> Urgent</label>
+              <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:12px;color:var(--t2)"><input type="radio" name="rdv-urgence" value="Flexible" style="accent-color:var(--r)"> Flexible</label>
             </div>
-            <div class="fg"><label>Notes</label><textarea id="cno" placeholder="Informations complémentaires..." style="height:55px"></textarea></div>
-            <button class="bigbtn" onclick="submitRdv()">Confirmer le rendez-vous →</button>
           </div>
+
+          <div class="fpanel" style="margin-bottom:14px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+              <div style="width:28px;height:28px;border-radius:50%;background:var(--r);color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center">4</div>
+              <h3 style="margin:0;font-size:15px;color:#fff">Date et heure</h3>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div class="fg"><label>Date *</label><input type="date" id="cd" onchange="filterCreneauxByDate();rdvCheckDisponibilite()"></div>
+              <div class="fg"><label>Heure *</label><select id="ch"><option value="">-- Choisir --</option></select></div>
+            </div>
+            <div id="rdv-dispo-msg" style="display:none;font-size:12px;margin-top:8px;padding:7px 10px;border-radius:4px"></div>
+          </div>
+
+          <div class="fpanel" style="margin-bottom:14px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+              <div style="width:28px;height:28px;border-radius:50%;background:var(--r);color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center">5</div>
+              <h3 style="margin:0;font-size:15px;color:#fff">Options</h3>
+            </div>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:10px;font-size:13px;color:var(--t2)">
+              <input type="checkbox" id="rdv-want-devis" style="accent-color:var(--r);width:16px;height:16px">
+              <span>Créer aussi une demande de devis avec ce RDV</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:10px;font-size:13px;color:var(--t2)">
+              <input type="checkbox" id="rdv-rappel" checked style="accent-color:var(--r);width:16px;height:16px">
+              <span>Je souhaite être rappelé en cas de modification</span>
+            </label>
+            <div class="fg"><label>Notes complémentaires</label>
+              <textarea id="cno" placeholder="Décrivez le problème, les symptômes, ou toute information utile..." style="height:70px;resize:vertical"></textarea>
+            </div>
+          </div>
+
+          <input type="hidden" id="cv" value="">
+          <button class="bigbtn" onclick="submitRdvNew()" style="width:100%;font-size:15px;padding:15px">
+            Confirmer mon rendez-vous
+          </button>
         </div>
+
+        <!-- DROITE -->
         <div>
-          <div class="crenbox"><h3>Créneaux disponibles</h3><div id="c-crens"></div></div>
-          <div class="crenbox" style="margin-top:10px">
-            <h3>Horaires d'ouverture</h3>
-            <div id="c-horaires-rdv"></div>
+          <div id="rdv-ok" style="display:none" class="confirmbox">
+            <div style="font-size:32px;margin-bottom:8px">&#10003;</div>
+            <h4 style="color:#2ecc71;margin:0 0 8px">Rendez-vous confirmé !</h4>
+            <p id="rdv-ok-txt" style="font-size:13px;color:var(--t2)"></p>
+            <button onclick="rdvReset()" style="margin-top:10px;background:var(--s2);border:1px solid var(--b2);border-radius:5px;color:var(--t2);padding:7px 16px;cursor:pointer;font-size:12px">Nouveau RDV</button>
           </div>
-          <div id="rdv-ok" style="display:none" class="confirmbox"><div style="font-size:24px;margin-bottom:5px">✅</div><h4>Rendez-vous confirmé !</h4><p id="rdv-ok-txt"></p></div>
+
+          <div class="crenbox" style="margin-bottom:12px">
+            <h3>Notre atelier</h3>
+            <div style="font-size:13px;color:var(--t2);line-height:1.9">
+              <div>18 Rue de Tourneuve, 44700 Orvault</div>
+              <div><a href="tel:0766350539" style="color:var(--r);font-weight:700;text-decoration:none">07 66 35 05 39</a></div>
+              <div><a href="mailto:drjantes44@gmail.com" style="color:var(--mu);font-size:12px;text-decoration:none">drjantes44@gmail.com</a></div>
+              <div style="margin-top:8px;padding:6px 10px;background:var(--s3);border-radius:4px;font-size:12px" id="rdv-statut-box">
+                <span id="rdv-statut-icon">&#128308;</span> <span id="rdv-statut-label">Chargement...</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="crenbox" style="margin-bottom:12px">
+            <h3>Horaires d'ouverture</h3>
+            <div id="c-horaires-rdv" style="font-size:12px"></div>
+          </div>
+
+          <div class="crenbox" style="margin-bottom:12px">
+            <h3>Créneaux disponibles</h3>
+            <div style="font-size:11px;color:var(--mu);margin-bottom:8px">Sélectionnez une date pour voir les créneaux</div>
+            <div id="c-crens" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+          </div>
+
+          <div class="crenbox" style="margin-bottom:12px">
+            <h3>Mes rendez-vous</h3>
+            <div id="rdv-mes-rdv">
+              <div style="text-align:center;padding:10px;color:var(--mu);font-size:12px">Vos prochains RDV apparaissent ici</div>
+            </div>
+          </div>
+
+          <div id="rdv-devis-lie-block" style="display:none" class="crenbox">
+            <h3>Devis associé</h3>
+            <div id="rdv-devis-lie-content" style="font-size:12px;color:var(--t2)"></div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="cpage" id="cp-devis">
+    <div class="cpage" id="cp-devis">
     <div class="ccontent">
       <div class="cttl">Demande de devis</div>
       <div class="csub">Remplissez le formulaire — nous vous recontactons rapidement</div>
@@ -2295,6 +2431,7 @@ function checkPin(){
 // ════ CLIENT ════
 function initClient(){renderCCrens();renderCDvForm();renderGallery();document.getElementById('h-nprods').textContent=prods.filter(p=>p.statut==='Actif').length;initCatalogue();}
 function cPage(id,el){
+  if(id==='rdv') setTimeout(initRdvPage,50);
   document.querySelectorAll('.cpage').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.ctab').forEach(t=>t.classList.remove('on'));
   const pg=document.getElementById('cp-'+id);if(pg)pg.classList.add('on');
@@ -3495,6 +3632,85 @@ function loadTheme(){
   var saved = localStorage.getItem('drjantes_theme');
   if(saved && THEMES[saved]) applyTheme(saved);
 }
+
+// ════ RDV AVANCÉ ════
+function rdvUpdateModeles(){var m=document.getElementById('rdv-marque');var mo=document.getElementById('rdv-modele');if(mo&&m)mo.placeholder='ex: '+(m.value||'modèle')+'...';}
+
+function rdvCheckDisponibilite(){
+  var d=document.getElementById('cd').value,msg=document.getElementById('rdv-dispo-msg');
+  if(!d||!msg){if(msg)msg.style.display='none';return;}
+  var date=new Date(d),days=['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'],jour=days[date.getDay()];
+  var h=hors.find(function(x){return x.j===jour||x.jour===jour;});
+  msg.style.display='block';
+  if(!h||!h.on){msg.style.cssText='display:block;font-size:12px;margin-top:8px;padding:7px 10px;border-radius:4px;background:rgba(231,76,60,.15);color:#e74c3c;border:1px solid rgba(231,76,60,.3)';msg.textContent='Atelier ferme ce jour ('+jour+')';}
+  else{msg.style.cssText='display:block;font-size:12px;margin-top:8px;padding:7px 10px;border-radius:4px;background:rgba(46,204,113,.15);color:#2ecc71;border:1px solid rgba(46,204,113,.3)';msg.textContent='Disponible le '+jour+' de '+(h.o||h.deb||'10:00')+' a '+(h.f||h.fin||'20:00');}
+}
+
+function rdvReset(){
+  ['cn','ct','ce','rdv-modele','rdv-annee','rdv-immat','rdv-km','cno'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
+  ['cs','cd','ch','rdv-marque'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
+  var ok=document.getElementById('rdv-ok');if(ok)ok.style.display='none';
+  var msg=document.getElementById('rdv-dispo-msg');if(msg)msg.style.display='none';
+  var dvb=document.getElementById('rdv-devis-lie-block');if(dvb)dvb.style.display='none';
+}
+
+function rdvAfficherMesRdv(){
+  var box=document.getElementById('rdv-mes-rdv');if(!box)return;
+  if(!rdvs||!rdvs.length){box.innerHTML='<div style="text-align:center;padding:10px;color:var(--mu);font-size:12px">Aucun rendez-vous</div>';return;}
+  var today=new Date().toISOString().split('T')[0];
+  var upcoming=rdvs.filter(function(r){return r.date>=today;}).slice(-5);
+  if(!upcoming.length){box.innerHTML='<div style="text-align:center;padding:10px;color:var(--mu);font-size:12px">Aucun RDV a venir</div>';return;}
+  box.innerHTML=upcoming.map(function(r){
+    var d=r.date?r.date.split('-').reverse().join('/'):'?';
+    var col=r.statut==='Confirmé'?'#2ecc71':r.statut==='Annulé'?'#e74c3c':'#f39c12';
+    return '<div style="padding:8px;border-bottom:1px solid var(--b2);display:flex;justify-content:space-between;align-items:center">'
+      +'<div><div style="font-size:12px;font-weight:700;color:#fff">'+(r.svc||r.nom||'RDV')+'</div>'
+      +'<div style="font-size:11px;color:var(--mu)">'+d+(r.heure?' a '+r.heure:'')+' — '+(r.nom||'')+'</div></div>'
+      +'<div style="font-size:10px;font-weight:700;color:'+col+';padding:2px 8px;border-radius:10px;background:'+col+'22">'+(r.statut||'En attente')+'</div></div>';
+  }).join('');
+}
+
+function rdvAfficherStatut(){
+  var icon=document.getElementById('rdv-statut-icon'),lbl=document.getElementById('rdv-statut-label');
+  if(!icon||!lbl)return;
+  var now=new Date(),days=['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'],jour=days[now.getDay()];
+  var h=hors.find(function(x){return x.j===jour||x.jour===jour;});
+  var t=('0'+now.getHours()).slice(-2)+':'+('0'+now.getMinutes()).slice(-2);
+  if(h&&h.on&&t>=(h.o||'10:00')&&t<=(h.f||'20:00')){icon.textContent='&#128994;';lbl.textContent='Ouvert maintenant';document.getElementById('rdv-statut-box').style.background='rgba(46,204,113,.1)';}
+  else{icon.textContent='&#128308;';lbl.textContent='Fermé — Réservez en ligne';document.getElementById('rdv-statut-box').style.background='rgba(231,76,60,.1)';}
+}
+
+function submitRdvNew(){
+  var n=document.getElementById('cn').value.trim(),tel=document.getElementById('ct').value.trim(),s=document.getElementById('cs').value,d=document.getElementById('cd').value,h=document.getElementById('ch').value;
+  if(!n){toast('Votre nom est requis','ta');return;}
+  if(!tel){toast('Votre telephone est requis','ta');return;}
+  if(!s){toast('Choisissez une prestation','ta');return;}
+  if(!d){toast('Choisissez une date','ta');return;}
+  if(!h){toast('Choisissez une heure','ta');return;}
+  var marque=document.getElementById('rdv-marque').value,modele=document.getElementById('rdv-modele').value,annee=document.getElementById('rdv-annee').value,immat=document.getElementById('rdv-immat').value,km=document.getElementById('rdv-km').value;
+  var urgEl=document.querySelector('input[name="rdv-urgence"]:checked'),urgence=urgEl?urgEl.value:'Normal';
+  var veh=[marque,modele,annee].filter(Boolean).join(' ');
+  var note=document.getElementById('cno').value;
+  var wantDevis=document.getElementById('rdv-want-devis').checked;
+  var newRdv={id:Date.now(),nom:n,tel:tel,email:document.getElementById('ce').value||'',veh:veh,immat:immat,km:km,svc:s,date:d,heure:h,urgence:urgence,note:note,statut:'Confirmé',rap:true};
+  rdvs.push(newRdv);
+  // ── SYNC RDV → DEVIS ──
+  var devisRef=null;
+  if(wantDevis){dvCtr++;devisRef='DRJ-0'+dvCtr;newRdv.devisRef=devisRef;var newDv={ref:devisRef,client:n,tel:tel,email:document.getElementById('ce').value||'',veh:veh,svc:s,date:d,statut:'En attente',rdvRef:newRdv.id,note:note};dvis.push(newDv);var dvb=document.getElementById('rdv-devis-lie-block'),dvc=document.getElementById('rdv-devis-lie-content');if(dvb&&dvc){dvb.style.display='block';dvc.innerHTML='<div style="padding:8px;background:var(--s2);border-radius:5px"><div style="font-weight:700;color:#fff">'+devisRef+'</div><div style="color:var(--mu)">'+s+' — '+d.split('-').reverse().join('/')+'</div><div style="color:var(--r);font-size:11px;margin-top:4px">Devis créé et synchronisé</div></div>';}}
+  var fd=new FormData();fd.append('_subject','RDV DR JANTES - '+n);fd.append('Nom',n);fd.append('Tel',tel);fd.append('Email',document.getElementById('ce').value||'');fd.append('Vehicule',veh||'');fd.append('Immat',immat||'');fd.append('Km',km||'');fd.append('Service',s);fd.append('Date',d.split('-').reverse().join('/'));fd.append('Heure',h);fd.append('Urgence',urgence);if(devisRef)fd.append('Devis_ref',devisRef);fd.append('Notes',note||'');
+  fetch('https://formspree.io/f/mlgabdza',{method:'POST',body:fd,headers:{'Accept':'application/json'}}).catch(function(){});
+  if(typeof fbReady!=='undefined'&&fbReady&&typeof fbDb!=='undefined'){fbDb.ref('rdvs').set(rdvs);if(wantDevis)fbDb.ref('devis').set(dvis);}
+  saveAll();
+  var dateF=d.split('-').reverse().join('/');
+  document.getElementById('rdv-ok-txt').innerHTML='<strong>'+n+'</strong><br>'+s+'<br>'+dateF+' a '+h+(immat?' - '+immat.toUpperCase():'')+(devisRef?'<br><span style="color:var(--r)">Devis '+devisRef+' cree</span>':'');
+  document.getElementById('rdv-ok').style.display='block';
+  document.getElementById('rdv-ok').scrollIntoView({behavior:'smooth',block:'center'});
+  rdvAfficherMesRdv();
+  toast(wantDevis?'RDV + Devis crées !':'Rendez-vous confirmé !','tg');
+}
+
+function initRdvPage(){rdvAfficherStatut();rdvAfficherMesRdv();if(typeof initHeureRdv==='function')initHeureRdv();}
+
 // ════ START ════
 loadAll();
 fbInit();
