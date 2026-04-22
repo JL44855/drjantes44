@@ -3513,6 +3513,7 @@ function loadAll(){
         });
       }
     }
+    if(typeof clRender==='function') setTimeout(clRender,100);
     return true;
   }catch(e){console.warn('loadAll error',e);return false;}
 }
